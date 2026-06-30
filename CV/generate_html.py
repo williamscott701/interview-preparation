@@ -419,13 +419,8 @@ blockquote{border-left:4px solid var(--sa);
   transform:translateX(-50%) translateY(0)}
 .img-name{font-family:var(--mono);font-size:.7rem;color:#CBD5E1;
   background:rgba(255,255,255,.08);padding:2px 8px;border-radius:20px}
-.img-sizes{display:inline-flex;gap:3px}
-.img-sizes button{border:1px solid rgba(255,255,255,.18);background:transparent;
-  color:#CBD5E1;border-radius:7px;padding:2px 9px;cursor:pointer;font-size:.72rem;
-  font-weight:600;transition:all .12s}
-.img-sizes button:hover{background:rgba(255,255,255,.12)}
-.img-sizes button.on{background:var(--sa);border-color:var(--sa);color:#fff}
-.img-slider{width:84px;cursor:pointer;accent-color:var(--sa)}
+.img-slider{width:150px;cursor:pointer;accent-color:var(--sa)}
+.img-pct{font-family:var(--mono);font-size:.7rem;color:#CBD5E1;min-width:38px;text-align:right}
 
 /* ─ Back to top ─────────────────────────────────────────── */
 #back-top{position:fixed;bottom:30px;right:24px;width:44px;height:44px;
@@ -588,7 +583,7 @@ function initScrollSpy() {
 function initImages() {
   /* Bump this when the default sizes change → clears stale saved sizes so the
      new defaults take effect (manual resizes made afterwards still persist). */
-  const IMG_DEFAULTS_VERSION = '2';
+  const IMG_DEFAULTS_VERSION = '9';
   if (localStorage.getItem('imgDefaultsVersion') !== IMG_DEFAULTS_VERSION) {
     Object.keys(localStorage)
       .filter(k => k.indexOf('imgsize:') === 0)
@@ -611,7 +606,7 @@ function initImages() {
     img.removeAttribute('width');
     img.removeAttribute('height');
     img.title = name;
-    img.style.maxWidth = origW + 'px';
+    img.style.maxWidth = '100%';   // never overflow the content column
 
     /* drop the filename badge that precedes the image */
     let prev = img.previousSibling;
@@ -626,38 +621,39 @@ function initImages() {
     img.parentNode.insertBefore(fig, img);
     fig.appendChild(img);
 
-    /* Default size: Full (100%) for all images, except §11.3 → S (30%). */
-    const defW   = /^11\.3\b/.test(subOf.get(img) || '') ? 30 : 100;
-    const KEY    = 'imgsize:' + name;
-    const savedW = parseInt(localStorage.getItem(KEY));
-    const initW  = (savedW >= 15 && savedW <= 100) ? savedW : defW;
-    img.style.width = initW + '%';
+    /* Default size = % of the image's natural width. Full (100%) by default;
+       a few figures get fixed sizes, and §11.3 (Diagonal BiLSTM) → S (30%). */
+    const stem     = name.replace(/\.(png|jpe?g|gif)$/i, '');
+    const OVERRIDE = { image9: 60, image16: 140, image18: 140, image26: 130,
+                       image40: 120, image50: 120, image52: 150, image55: 120,
+                       image62: 75, image64: 75, image65: 120, image69: 120,
+                       image70: 90, image81: 140 };
+    const defW     = (stem in OVERRIDE) ? OVERRIDE[stem]
+                   : (/^11\.3\b/.test(subOf.get(img) || '') ? 30 : 100);
+    const KEY      = 'imgsize:' + name;
+    const savedW   = parseInt(localStorage.getItem(KEY));
+    const initW    = (savedW >= 15 && savedW <= 150) ? savedW : defW;
+    const setWidth = w => { img.style.width = Math.round(origW * w / 100) + 'px'; };
+    setWidth(initW);
 
     const bar = document.createElement('div');
     bar.className = 'img-bar';
     bar.innerHTML =
       `<span class="img-name">${name}</span>` +
-      `<span class="img-sizes">` +
-        `<button data-w="30">S</button>` +
-        `<button data-w="50">M</button>` +
-        `<button data-w="75">L</button>` +
-        `<button data-w="100">Full</button>` +
-      `</span>` +
-      `<input type="range" class="img-slider" min="15" max="100" value="${initW}">`;
+      `<input type="range" class="img-slider" min="15" max="150" value="${initW}">` +
+      `<span class="img-pct">${initW}%</span>`;
     fig.appendChild(bar);
 
     const slider = bar.querySelector('.img-slider');
-    const chips  = bar.querySelectorAll('.img-sizes button');
+    const pctEl  = bar.querySelector('.img-pct');
     function setW(w) {
-      w = Math.max(15, Math.min(100, Math.round(w)));
-      img.style.width = w + '%';
+      w = Math.max(15, Math.min(150, Math.round(w)));
+      setWidth(w);
       slider.value = w;
+      pctEl.textContent = w + '%';
       localStorage.setItem(KEY, w);
-      chips.forEach(b => b.classList.toggle('on', +b.dataset.w === w));
     }
-    chips.forEach(b => b.addEventListener('click', () => setW(+b.dataset.w)));
     slider.addEventListener('input', () => setW(+slider.value));
-    chips.forEach(b => b.classList.toggle('on', +b.dataset.w === initW));
   });
 }
 

@@ -167,13 +167,19 @@ $$\begin{vmatrix} -\lambda & 1 \\ -2 & -3-\lambda \end{vmatrix} = \lambda^2 + 3\
 
 **Finding Eigenvectors:**
 
-For each eigenvalue, solve $(A - \lambda I)\mathbf{v} = 0$:
+Substitute each eigenvalue back into $(A - \lambda I)\mathbf{v} = 0$ and solve the resulting homogeneous system. Because $A - \lambda I$ is **singular**, its rows are linearly dependent (one equation is redundant), so a free variable remains — the eigenvector is determined only **up to a scalar** $k$ (any nonzero multiple is also an eigenvector, usually normalized to unit length).
 
-*For $\lambda_1 = -1$:* Solving gives $v_{1,1} + v_{1,2} = 0$, so $v_{1,1} = -v_{1,2}$, giving $\mathbf{v}_1 = k_1\begin{bmatrix}+1\\-1\end{bmatrix}$
+*For $\lambda_1 = -1$:* substitute into $A - \lambda_1 I = A + I$:
 
-*For $\lambda_2 = -2$:* $(A - \lambda_2 I)\mathbf{v}_2 = \begin{bmatrix}2 & 1\\-2 & -1\end{bmatrix}\begin{bmatrix}v_{2,1}\\v_{2,2}\end{bmatrix} = 0$
+$$(A - \lambda_1 I)\mathbf{v}_1 = \begin{bmatrix}1 & 1\\-2 & -2\end{bmatrix}\begin{bmatrix}v_{1,1}\\v_{1,2}\end{bmatrix} = 0$$
 
-From row 1: $2v_{2,1} + v_{2,2} = 0 \Rightarrow v_{2,2} = -2v_{2,1}$, giving $\mathbf{v}_2 = k_2\begin{bmatrix}+1\\-2\end{bmatrix}$
+Both rows reduce to the same equation $v_{1,1} + v_{1,2} = 0 \Rightarrow v_{1,1} = -v_{1,2}$, giving $\mathbf{v}_1 = k_1\begin{bmatrix}+1\\-1\end{bmatrix}$
+
+*For $\lambda_2 = -2$:* substitute into $A - \lambda_2 I = A + 2I$:
+
+$$(A - \lambda_2 I)\mathbf{v}_2 = \begin{bmatrix}2 & 1\\-2 & -1\end{bmatrix}\begin{bmatrix}v_{2,1}\\v_{2,2}\end{bmatrix} = 0$$
+
+Both rows reduce to $2v_{2,1} + v_{2,2} = 0 \Rightarrow v_{2,2} = -2v_{2,1}$, giving $\mathbf{v}_2 = k_2\begin{bmatrix}+1\\-2\end{bmatrix}$
 
 ---
 
@@ -255,6 +261,8 @@ where $O$ = observed frequency, $E$ = expected frequency.
 
 $$Z = \frac{\bar{x} - \mu}{\sigma / \sqrt{n}}$$
 
+where $\bar{x}$ = sample mean, $\mu$ = hypothesized population mean, $\sigma$ = population standard deviation, $n$ = sample size, and $Z_{stat}$ = the computed $Z$ value.
+
 - Two-tailed: $p = 2 \times P(Z > |Z_{stat}|)$
 - One-tailed: $p = P(Z > Z_{stat})$
 
@@ -262,15 +270,21 @@ $$Z = \frac{\bar{x} - \mu}{\sigma / \sqrt{n}}$$
 
 $$t = \frac{\bar{x}_1 - \bar{x}_2}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}$$
 
+where $\bar{x}_1, \bar{x}_2$ = the two sample means, $s_1^2, s_2^2$ = the sample variances, and $n_1, n_2$ = the sample sizes.
+
 Use t-distribution with appropriate degrees of freedom.
 
 #### Chi-Square Test
 
 $$\chi^2 = \sum \frac{(O - E)^2}{E}, \quad df = \text{categories} - 1$$
 
+where $O$ = observed frequency, $E$ = expected frequency under the null hypothesis, and $df$ = degrees of freedom.
+
 #### ANOVA (F-Test)
 
 $$F = \frac{\text{Between-group variability}}{\text{Within-group variability}}$$
+
+where the numerator is the mean square *between* groups (spread of the group means around the grand mean) and the denominator is the mean square *within* groups (average spread inside each group); a larger $F$ ⇒ stronger evidence that the group means differ.
 
 **General Steps:** Calculate statistic → Identify distribution → Look up p-value → Compare to α → Report conclusion.
 
@@ -475,6 +489,8 @@ $$Macro - F - Score = 2 \cdot \frac{Macro{-}Precision \cdot Macro{-}Recall}{Macr
 
 $$R^2 = 1 - \frac{SS_{\text{residual}}}{SS_{\text{total}}}$$
 
+where $SS_{\text{residual}} = \sum_i (y_i - \hat{y}_i)^2$ (sum of squared residuals) and $SS_{\text{total}} = \sum_i (y_i - \bar{y})^2$ (total sum of squares about the mean $\bar{y}$); $y_i$ = actual value, $\hat{y}_i$ = predicted value.
+
 - Range: 0 to 1
 - Higher = more variance explained by the model
 - **Limitation**: Increases with more predictors even if they don't help → doesn't penalize overfitting
@@ -619,7 +635,13 @@ $$P(x = v \mid c) = \frac{1}{\sqrt{2\pi\sigma_c^2}} \exp\!\left(-\frac{(v - \mu_
 
 ### 5.4 Decision Trees
 
-**Information Gain** guides splits (see §1.7).
+**Choosing the split at each node:** Grown greedily, top-down — at each node, test every feature (and threshold, for numeric features) and pick the one with the **highest Information Gain** (largest impurity drop), then recurse until a stopping rule (pure node, max depth, or min samples).
+
+**Information Gain** — the reduction in entropy after splitting on attribute $A$ (see §1.7):
+
+$$IG(A) = H(S) - \sum_{v} \frac{|S_v|}{|S|} H(S_v), \qquad H(S) = -\sum_i p_i \log_2 p_i$$
+
+where $S$ is the data at the node, $S_v$ the subset where attribute $A$ takes value $v$, and $H(\cdot)$ the entropy. The feature with the largest $IG$ is chosen for the split. (**Gini impurity** $= 1 - \sum_i p_i^2$ is the common alternative criterion used by CART.)
 
 `image40.png`
 <img src="images/image40.png" alt="Decision Tree Example" width="700" />
@@ -659,15 +681,13 @@ Binary target = 1 if rating > 4  →  model predicts P(Target > 4)
 
 **Convert to class probabilities:**
 
-$$P(y=1) = 1 - P(T>1)$$
-
-$$P(y=2) = P(T>1) - P(T>2)$$
-
-$$P(y=3) = P(T>2) - P(T>3)$$
-
-$$P(y=4) = P(T>3) - P(T>4)$$
-
-$$P(y=5) = P(T>4)$$
+$$\begin{aligned}
+P(y=1) &= 1 - P(T>1) \\
+P(y=2) &= P(T>1) - P(T>2) \\
+P(y=3) &= P(T>2) - P(T>3) \\
+P(y=4) &= P(T>3) - P(T>4) \\
+P(y=5) &= P(T>4)
+\end{aligned}$$
 
 `image50.png`
 <img src="images/image50.png" alt="Ordinal Regression Example" width="700" />
@@ -845,23 +865,24 @@ Subgradient methods are used to handle this.
 
 **Regression Losses:**
 
-| Loss Function | Description | Formula |
-|:---|:---|:---|
-| **Mean Bias Error (MBE)** | Captures average bias; rarely used for training | $\frac{1}{N}\sum_{i=1}^N (y_i - f(x_i))$ |
-| **Mean Absolute Error (MAE)** | Measures absolute bias; also called L1 Loss | $\frac{1}{N}\sum_{i=1}^N \|y_i - f(x_i)\|$ |
-| **Mean Squared Error (MSE)** | Average squared distance; also called L2 Loss | $\frac{1}{N}\sum_{i=1}^N (y_i - f(x_i))^2$ |
-| **Root MSE (RMSE)** | Square root of MSE; same units as dependent variable | $\sqrt{\frac{1}{N}\sum_{i=1}^N (y_i - f(x_i))^2}$ |
-| **Huber Loss** | Combines MSE and MAE; less sensitive to outliers | $\frac{1}{2}(y - f(x))^2$ if $\|y-f(x)\| \leq \delta$, else $\delta\|y-f(x)\| - \frac{\delta^2}{2}$ |
-| **Log-Cosh Loss** | Like Huber but smooth everywhere; computationally expensive | $\frac{1}{N}\sum \log(\cosh(f(x_i) - y_i))$ |
+| Loss Function | Description | Formula | When to Use |
+|:---|:---|:---|:---|
+| **Mean Bias Error (MBE)** | Captures average bias; rarely used for training | $\frac{1}{N}\sum_{i=1}^N (y_i - f(x_i))$ | Diagnosing directional bias (over- vs under-prediction), not training |
+| **Mean Absolute Error (MAE)** | Measures absolute bias; also called L1 Loss | $\frac{1}{N}\sum_{i=1}^N \|y_i - f(x_i)\|$ | Data with outliers you don't want to dominate; errors in original units |
+| **Mean Squared Error (MSE)** | Average squared distance; also called L2 Loss | $\frac{1}{N}\sum_{i=1}^N (y_i - f(x_i))^2$ | Clean data where large errors must be punished hard; smooth gradient |
+| **Root MSE (RMSE)** | Square root of MSE; same units as dependent variable | $\sqrt{\frac{1}{N}\sum_{i=1}^N (y_i - f(x_i))^2}$ | Reporting/comparing MSE-based error in the target's units |
+| **Huber Loss** | Combines MSE and MAE; less sensitive to outliers | $\frac{1}{2}(y - f(x))^2$ if $\|y-f(x)\| \leq \delta$, else $\delta\|y-f(x)\| - \frac{\delta^2}{2}$ | Regression with some outliers — MSE near zero, MAE in the tails (tune $\delta$) |
+| **Log-Cosh Loss** | Like Huber but smooth everywhere; computationally expensive | $\frac{1}{N}\sum \log(\cosh(f(x_i) - y_i))$ | Huber-like robustness when you need a smooth, twice-differentiable loss |
+| **Lp Loss (Lp-norm)** | General p-norm of the error; recovers MAE at $p=1$ and RMSE at $p=2$ — larger $p$ penalizes big errors more | $\left(\frac{1}{N}\sum_{i=1}^N \|y_i - f(x_i)\|^p\right)^{1/p}$ | When you want to tune outlier sensitivity via $p$ |
 
 **Classification Losses:**
 
-| Loss Function | Description | Formula |
-|:---|:---|:---|
-| **Binary Cross-Entropy (BCE)** | Loss function for binary classification | $-\frac{1}{N}\sum_{i=1}^N \left[y_i\log(p_i) + (1-y_i)\log(1-p_i)\right]$ |
-| **Hinge Loss** | Penalizes wrong and less confident predictions; used in SVMs | $\max(0, 1 - f(x) \cdot y)$ |
-| **Cross-Entropy** (multi-class) | Extension of BCE; $N$ samples, $M$ classes | $-\sum_{i=1}^N\sum_{j=1}^M y_{ij}\log(f(x_i)_j)$ |
-| **KL Divergence** | Minimises divergence between predicted and true distribution | $\sum_x f(x)\log\frac{f(x)}{y(x)}$ |
+| Loss Function | Description | Formula | When to Use |
+|:---|:---|:---|:---|
+| **Binary Cross-Entropy (BCE)** | Loss function for binary classification | $-\frac{1}{N}\sum_{i=1}^N \left[y_i\log(p_i) + (1-y_i)\log(1-p_i)\right]$ | Binary or multi-label classification with sigmoid outputs |
+| **Hinge Loss** | Penalizes wrong and less confident predictions; used in SVMs | $\max(0, 1 - f(x) \cdot y)$ | Max-margin classifiers (SVMs); when probabilities aren't needed |
+| **Cross-Entropy** (multi-class) | Extension of BCE; $N$ samples, $M$ classes | $-\sum_{i=1}^N\sum_{j=1}^M y_{ij}\log(f(x_i)_j)$ | Single-label multi-class classification with softmax outputs |
+| **KL Divergence** | Minimises divergence between predicted and true distribution | $\sum_x f(x)\log\frac{f(x)}{y(x)}$ | Matching full distributions — soft labels, knowledge distillation, VAEs |
 
 **Softmax** converts raw scores $s$ into probabilities before Cross-Entropy Loss is applied:
 
@@ -872,8 +893,6 @@ $$f(s)_i = \frac{e^{s_i}}{\sum_j e^{s_j}}, \quad \text{then } CE = -\sum_i t_i \
 - **Triplet Loss** (Siamese Networks / face recognition) — uses Euclidean distance to push anchor (A) closer to positive (P) and away from negative (N):
 
 $$\mathcal{L}(A, P, N) = \max\!\left(\|f(A) - f(P)\|_2^2 - \|f(A) - f(N)\|_2^2 + \alpha,\ 0\right)$$
-
-- **KL Divergence**: See §12.8
 
 ---
 

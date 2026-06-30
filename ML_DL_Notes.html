@@ -199,13 +199,8 @@ blockquote{border-left:4px solid var(--sa);
   transform:translateX(-50%) translateY(0)}
 .img-name{font-family:var(--mono);font-size:.7rem;color:#CBD5E1;
   background:rgba(255,255,255,.08);padding:2px 8px;border-radius:20px}
-.img-sizes{display:inline-flex;gap:3px}
-.img-sizes button{border:1px solid rgba(255,255,255,.18);background:transparent;
-  color:#CBD5E1;border-radius:7px;padding:2px 9px;cursor:pointer;font-size:.72rem;
-  font-weight:600;transition:all .12s}
-.img-sizes button:hover{background:rgba(255,255,255,.12)}
-.img-sizes button.on{background:var(--sa);border-color:var(--sa);color:#fff}
-.img-slider{width:84px;cursor:pointer;accent-color:var(--sa)}
+.img-slider{width:150px;cursor:pointer;accent-color:var(--sa)}
+.img-pct{font-family:var(--mono);font-size:.7rem;color:#CBD5E1;min-width:38px;text-align:right}
 
 /* ─ Back to top ─────────────────────────────────────────── */
 #back-top{position:fixed;bottom:30px;right:24px;width:44px;height:44px;
@@ -428,10 +423,13 @@ blockquote{border-left:4px solid var(--sa);
 <p><em>Example with $A = \begin{bmatrix} 0 & 1 \\ -2 & -3 \end{bmatrix}$:</em></p>
 <div class="math-display">$$\begin{vmatrix} -\lambda & 1 \\ -2 & -3-\lambda \end{vmatrix} = \lambda^2 + 3\lambda + 2 = 0 \quad \Rightarrow \quad \lambda_1 = -1,\ \lambda_2 = -2$$</div>
 <p><strong>Finding Eigenvectors:</strong></p>
-<p>For each eigenvalue, solve $(A - \lambda I)\mathbf{v} = 0$:</p>
-<p><em>For $\lambda_1 = -1$:</em> Solving gives $v_{1,1} + v_{1,2} = 0$, so $v_{1,1} = -v_{1,2}$, giving $\mathbf{v}_1 = k_1\begin{bmatrix}+1\\-1\end{bmatrix}$</p>
-<p><em>For $\lambda_2 = -2$:</em> $(A - \lambda_2 I)\mathbf{v}_2 = \begin{bmatrix}2 & 1\\-2 & -1\end{bmatrix}\begin{bmatrix}v_{2,1}\\v_{2,2}\end{bmatrix} = 0$</p>
-<p>From row 1: $2v_{2,1} + v_{2,2} = 0 \Rightarrow v_{2,2} = -2v_{2,1}$, giving $\mathbf{v}_2 = k_2\begin{bmatrix}+1\\-2\end{bmatrix}$</p>
+<p>Substitute each eigenvalue back into $(A - \lambda I)\mathbf{v} = 0$ and solve the resulting homogeneous system. Because $A - \lambda I$ is <strong>singular</strong>, its rows are linearly dependent (one equation is redundant), so a free variable remains — the eigenvector is determined only <strong>up to a scalar</strong> $k$ (any nonzero multiple is also an eigenvector, usually normalized to unit length).</p>
+<p><em>For $\lambda_1 = -1$:</em> substitute into $A - \lambda_1 I = A + I$:</p>
+<div class="math-display">$$(A - \lambda_1 I)\mathbf{v}_1 = \begin{bmatrix}1 & 1\\-2 & -2\end{bmatrix}\begin{bmatrix}v_{1,1}\\v_{1,2}\end{bmatrix} = 0$$</div>
+<p>Both rows reduce to the same equation $v_{1,1} + v_{1,2} = 0 \Rightarrow v_{1,1} = -v_{1,2}$, giving $\mathbf{v}_1 = k_1\begin{bmatrix}+1\\-1\end{bmatrix}$</p>
+<p><em>For $\lambda_2 = -2$:</em> substitute into $A - \lambda_2 I = A + 2I$:</p>
+<div class="math-display">$$(A - \lambda_2 I)\mathbf{v}_2 = \begin{bmatrix}2 & 1\\-2 & -1\end{bmatrix}\begin{bmatrix}v_{2,1}\\v_{2,2}\end{bmatrix} = 0$$</div>
+<p>Both rows reduce to $2v_{2,1} + v_{2,2} = 0 \Rightarrow v_{2,2} = -2v_{2,1}$, giving $\mathbf{v}_2 = k_2\begin{bmatrix}+1\\-2\end{bmatrix}$</p>
 <hr />
 </div>
 <div class="content-section sec-2">
@@ -558,17 +556,21 @@ blockquote{border-left:4px solid var(--sa);
 <h3 id="23-p-value-calculation">2.3 P-Value Calculation</h3>
 <h4>Z-Test (known population std dev)</h4>
 <div class="math-display">$$Z = \frac{\bar{x} - \mu}{\sigma / \sqrt{n}}$$</div>
+<p>where $\bar{x}$ = sample mean, $\mu$ = hypothesized population mean, $\sigma$ = population standard deviation, $n$ = sample size, and $Z_{stat}$ = the computed $Z$ value.</p>
 <ul>
 <li>Two-tailed: $p = 2 \times P(Z > |Z_{stat}|)$</li>
 <li>One-tailed: $p = P(Z > Z_{stat})$</li>
 </ul>
 <h4>Independent T-Test</h4>
 <div class="math-display">$$t = \frac{\bar{x}_1 - \bar{x}_2}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}$$</div>
+<p>where $\bar{x}_1, \bar{x}_2$ = the two sample means, $s_1^2, s_2^2$ = the sample variances, and $n_1, n_2$ = the sample sizes.</p>
 <p>Use t-distribution with appropriate degrees of freedom.</p>
 <h4>Chi-Square Test</h4>
 <div class="math-display">$$\chi^2 = \sum \frac{(O - E)^2}{E}, \quad df = \text{categories} - 1$$</div>
+<p>where $O$ = observed frequency, $E$ = expected frequency under the null hypothesis, and $df$ = degrees of freedom.</p>
 <h4>ANOVA (F-Test)</h4>
 <div class="math-display">$$F = \frac{\text{Between-group variability}}{\text{Within-group variability}}$$</div>
+<p>where the numerator is the mean square <em>between</em> groups (spread of the group means around the grand mean) and the denominator is the mean square <em>within</em> groups (average spread inside each group); a larger $F$ ⇒ stronger evidence that the group means differ.</p>
 <p><strong>General Steps:</strong> Calculate statistic → Identify distribution → Look up p-value → Compare to α → Report conclusion.</p>
 <hr />
 <h3 id="24-probability-vs-likelihood">2.4 Probability vs Likelihood</h3>
@@ -846,6 +848,7 @@ blockquote{border-left:4px solid var(--sa);
 <h3 id="37-r²-and-adjusted-r²">3.7 R² and Adjusted R²</h3>
 <p><strong>R² (Coefficient of Determination):</strong></p>
 <div class="math-display">$$R^2 = 1 - \frac{SS_{\text{residual}}}{SS_{\text{total}}}$$</div>
+<p>where $SS_{\text{residual}} = \sum_i (y_i - \hat{y}_i)^2$ (sum of squared residuals) and $SS_{\text{total}} = \sum_i (y_i - \bar{y})^2$ (total sum of squares about the mean $\bar{y}$); $y_i$ = actual value, $\hat{y}_i$ = predicted value.</p>
 <ul>
 <li>Range: 0 to 1</li>
 <li>Higher = more variance explained by the model</li>
@@ -1067,7 +1070,10 @@ blockquote{border-left:4px solid var(--sa);
 </table>
 <hr />
 <h3 id="54-decision-trees">5.4 Decision Trees</h3>
-<p><strong>Information Gain</strong> guides splits (see §1.7).</p>
+<p><strong>Choosing the split at each node:</strong> Grown greedily, top-down — at each node, test every feature (and threshold, for numeric features) and pick the one with the <strong>highest Information Gain</strong> (largest impurity drop), then recurse until a stopping rule (pure node, max depth, or min samples).</p>
+<p><strong>Information Gain</strong> — the reduction in entropy after splitting on attribute $A$ (see §1.7):</p>
+<div class="math-display">$$IG(A) = H(S) - \sum_{v} \frac{|S_v|}{|S|} H(S_v), \qquad H(S) = -\sum_i p_i \log_2 p_i$$</div>
+<p>where $S$ is the data at the node, $S_v$ the subset where attribute $A$ takes value $v$, and $H(\cdot)$ the entropy. The feature with the largest $IG$ is chosen for the split. (<strong>Gini impurity</strong> $= 1 - \sum_i p_i^2$ is the common alternative criterion used by CART.)</p>
 <p><code>image40.png</code>
 <img src="ML%20DL/images/image40.png" alt="Decision Tree Example" width="700" /></p>
 <p><code>image55.png</code>
@@ -1122,11 +1128,13 @@ Binary target = 1 if rating &gt; 3  →  model predicts P(Target &gt; 3)
 Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 </code></pre>
 <p><strong>Convert to class probabilities:</strong></p>
-<div class="math-display">$$P(y=1) = 1 - P(T>1)$$</div>
-<div class="math-display">$$P(y=2) = P(T>1) - P(T>2)$$</div>
-<div class="math-display">$$P(y=3) = P(T>2) - P(T>3)$$</div>
-<div class="math-display">$$P(y=4) = P(T>3) - P(T>4)$$</div>
-<div class="math-display">$$P(y=5) = P(T>4)$$</div>
+<div class="math-display">$$\begin{aligned}
+P(y=1) &= 1 - P(T>1) \\
+P(y=2) &= P(T>1) - P(T>2) \\
+P(y=3) &= P(T>2) - P(T>3) \\
+P(y=4) &= P(T>3) - P(T>4) \\
+P(y=5) &= P(T>4)
+\end{aligned}$$</div>
 <p><code>image50.png</code>
 <img src="ML%20DL/images/image50.png" alt="Ordinal Regression Example" width="700" /></p>
 <p><code>image65.png</code>
@@ -1416,6 +1424,7 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <th style="text-align:left">Loss Function</th>
 <th style="text-align:left">Description</th>
 <th style="text-align:left">Formula</th>
+<th style="text-align:left">When to Use</th>
 </tr>
 </thead>
 <tbody>
@@ -1423,31 +1432,43 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <td style="text-align:left"><strong>Mean Bias Error (MBE)</strong></td>
 <td style="text-align:left">Captures average bias; rarely used for training</td>
 <td style="text-align:left">$\frac{1}{N}\sum_{i=1}^N (y_i - f(x_i))$</td>
+<td style="text-align:left">Diagnosing directional bias (over- vs under-prediction), not training</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Mean Absolute Error (MAE)</strong></td>
 <td style="text-align:left">Measures absolute bias; also called L1 Loss</td>
 <td style="text-align:left">$\frac{1}{N}\sum_{i=1}^N \|y_i - f(x_i)\|$</td>
+<td style="text-align:left">Data with outliers you don't want to dominate; errors in original units</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Mean Squared Error (MSE)</strong></td>
 <td style="text-align:left">Average squared distance; also called L2 Loss</td>
 <td style="text-align:left">$\frac{1}{N}\sum_{i=1}^N (y_i - f(x_i))^2$</td>
+<td style="text-align:left">Clean data where large errors must be punished hard; smooth gradient</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Root MSE (RMSE)</strong></td>
 <td style="text-align:left">Square root of MSE; same units as dependent variable</td>
 <td style="text-align:left">$\sqrt{\frac{1}{N}\sum_{i=1}^N (y_i - f(x_i))^2}$</td>
+<td style="text-align:left">Reporting/comparing MSE-based error in the target's units</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Huber Loss</strong></td>
 <td style="text-align:left">Combines MSE and MAE; less sensitive to outliers</td>
 <td style="text-align:left">$\frac{1}{2}(y - f(x))^2$ if $\|y-f(x)\| \leq \delta$, else $\delta\|y-f(x)\| - \frac{\delta^2}{2}$</td>
+<td style="text-align:left">Regression with some outliers — MSE near zero, MAE in the tails (tune $\delta$)</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Log-Cosh Loss</strong></td>
 <td style="text-align:left">Like Huber but smooth everywhere; computationally expensive</td>
 <td style="text-align:left">$\frac{1}{N}\sum \log(\cosh(f(x_i) - y_i))$</td>
+<td style="text-align:left">Huber-like robustness when you need a smooth, twice-differentiable loss</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Lp Loss (Lp-norm)</strong></td>
+<td style="text-align:left">General p-norm of the error; recovers MAE at $p=1$ and RMSE at $p=2$ — larger $p$ penalizes big errors more</td>
+<td style="text-align:left">$\left(\frac{1}{N}\sum_{i=1}^N \|y_i - f(x_i)\|^p\right)^{1/p}$</td>
+<td style="text-align:left">When you want to tune outlier sensitivity via $p$</td>
 </tr>
 </tbody>
 </table>
@@ -1458,6 +1479,7 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <th style="text-align:left">Loss Function</th>
 <th style="text-align:left">Description</th>
 <th style="text-align:left">Formula</th>
+<th style="text-align:left">When to Use</th>
 </tr>
 </thead>
 <tbody>
@@ -1465,21 +1487,25 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <td style="text-align:left"><strong>Binary Cross-Entropy (BCE)</strong></td>
 <td style="text-align:left">Loss function for binary classification</td>
 <td style="text-align:left">$-\frac{1}{N}\sum_{i=1}^N \left[y_i\log(p_i) + (1-y_i)\log(1-p_i)\right]$</td>
+<td style="text-align:left">Binary or multi-label classification with sigmoid outputs</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Hinge Loss</strong></td>
 <td style="text-align:left">Penalizes wrong and less confident predictions; used in SVMs</td>
 <td style="text-align:left">$\max(0, 1 - f(x) \cdot y)$</td>
+<td style="text-align:left">Max-margin classifiers (SVMs); when probabilities aren't needed</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Cross-Entropy</strong> (multi-class)</td>
 <td style="text-align:left">Extension of BCE; $N$ samples, $M$ classes</td>
 <td style="text-align:left">$-\sum_{i=1}^N\sum_{j=1}^M y_{ij}\log(f(x_i)_j)$</td>
+<td style="text-align:left">Single-label multi-class classification with softmax outputs</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>KL Divergence</strong></td>
 <td style="text-align:left">Minimises divergence between predicted and true distribution</td>
 <td style="text-align:left">$\sum_x f(x)\log\frac{f(x)}{y(x)}$</td>
+<td style="text-align:left">Matching full distributions — soft labels, knowledge distillation, VAEs</td>
 </tr>
 </tbody>
 </table>
@@ -1494,9 +1520,6 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 </li>
 </ul>
 <div class="math-display">$$\mathcal{L}(A, P, N) = \max\!\left(\|f(A) - f(P)\|_2^2 - \|f(A) - f(N)\|_2^2 + \alpha,\ 0\right)$$</div>
-<ul>
-<li><strong>KL Divergence</strong>: See §12.8</li>
-</ul>
 <hr />
 <h3 id="73-convex-vs-non-convex-problems">7.3 Convex vs Non-Convex Problems</h3>
 <p><strong>Convex Problems</strong> (guaranteed global minimum):</p>
@@ -3143,7 +3166,7 @@ function initScrollSpy() {
 function initImages() {
   /* Bump this when the default sizes change → clears stale saved sizes so the
      new defaults take effect (manual resizes made afterwards still persist). */
-  const IMG_DEFAULTS_VERSION = '2';
+  const IMG_DEFAULTS_VERSION = '9';
   if (localStorage.getItem('imgDefaultsVersion') !== IMG_DEFAULTS_VERSION) {
     Object.keys(localStorage)
       .filter(k => k.indexOf('imgsize:') === 0)
@@ -3166,7 +3189,7 @@ function initImages() {
     img.removeAttribute('width');
     img.removeAttribute('height');
     img.title = name;
-    img.style.maxWidth = origW + 'px';
+    img.style.maxWidth = '100%';   // never overflow the content column
 
     /* drop the filename badge that precedes the image */
     let prev = img.previousSibling;
@@ -3181,38 +3204,39 @@ function initImages() {
     img.parentNode.insertBefore(fig, img);
     fig.appendChild(img);
 
-    /* Default size: Full (100%) for all images, except §11.3 → S (30%). */
-    const defW   = /^11\.3\b/.test(subOf.get(img) || '') ? 30 : 100;
-    const KEY    = 'imgsize:' + name;
-    const savedW = parseInt(localStorage.getItem(KEY));
-    const initW  = (savedW >= 15 && savedW <= 100) ? savedW : defW;
-    img.style.width = initW + '%';
+    /* Default size = % of the image's natural width. Full (100%) by default;
+       a few figures get fixed sizes, and §11.3 (Diagonal BiLSTM) → S (30%). */
+    const stem     = name.replace(/\.(png|jpe?g|gif)$/i, '');
+    const OVERRIDE = { image9: 60, image16: 140, image18: 140, image26: 130,
+                       image40: 120, image50: 120, image52: 150, image55: 120,
+                       image62: 75, image64: 75, image65: 120, image69: 120,
+                       image70: 90, image81: 140 };
+    const defW     = (stem in OVERRIDE) ? OVERRIDE[stem]
+                   : (/^11\.3\b/.test(subOf.get(img) || '') ? 30 : 100);
+    const KEY      = 'imgsize:' + name;
+    const savedW   = parseInt(localStorage.getItem(KEY));
+    const initW    = (savedW >= 15 && savedW <= 150) ? savedW : defW;
+    const setWidth = w => { img.style.width = Math.round(origW * w / 100) + 'px'; };
+    setWidth(initW);
 
     const bar = document.createElement('div');
     bar.className = 'img-bar';
     bar.innerHTML =
       `<span class="img-name">${name}</span>` +
-      `<span class="img-sizes">` +
-        `<button data-w="30">S</button>` +
-        `<button data-w="50">M</button>` +
-        `<button data-w="75">L</button>` +
-        `<button data-w="100">Full</button>` +
-      `</span>` +
-      `<input type="range" class="img-slider" min="15" max="100" value="${initW}">`;
+      `<input type="range" class="img-slider" min="15" max="150" value="${initW}">` +
+      `<span class="img-pct">${initW}%</span>`;
     fig.appendChild(bar);
 
     const slider = bar.querySelector('.img-slider');
-    const chips  = bar.querySelectorAll('.img-sizes button');
+    const pctEl  = bar.querySelector('.img-pct');
     function setW(w) {
-      w = Math.max(15, Math.min(100, Math.round(w)));
-      img.style.width = w + '%';
+      w = Math.max(15, Math.min(150, Math.round(w)));
+      setWidth(w);
       slider.value = w;
+      pctEl.textContent = w + '%';
       localStorage.setItem(KEY, w);
-      chips.forEach(b => b.classList.toggle('on', +b.dataset.w === w));
     }
-    chips.forEach(b => b.addEventListener('click', () => setW(+b.dataset.w)));
     slider.addEventListener('input', () => setW(+slider.value));
-    chips.forEach(b => b.classList.toggle('on', +b.dataset.w === initW));
   });
 }
 

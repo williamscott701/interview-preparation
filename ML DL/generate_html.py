@@ -21,7 +21,13 @@ from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).parent
 MD_FILE    = SCRIPT_DIR / "ML_DL_Notes.md"
-OUT_FILE   = SCRIPT_DIR / "ML_DL_Notes.html"
+OUT_FILE   = SCRIPT_DIR.parent / "ML_DL_Notes.html"   # written to the repo root
+
+# Images live in this folder relative to the repo root (space → %20 for URLs).
+IMG_BASE   = "ML%20DL"
+# Cross-link to the sibling notes page (also at the repo root).
+OTHER_HREF  = "CV_Notes.html"
+OTHER_LABEL = "Computer Vision ↗"
 
 # ── Section palette  (num, accent, light-bg, dark-accent) ────────────────────
 SECTIONS = [
@@ -296,6 +302,10 @@ h1{font-size:2rem;font-weight:800;letter-spacing:-.03em}
 #dark-btn{font-size:.8rem;font-weight:600;background:none;border:1px solid var(--border);
   cursor:pointer;color:var(--muted);padding:6px 14px;border-radius:20px;white-space:nowrap}
 #dark-btn:hover{background:var(--bg-sub)}
+#cross-link{font-size:.8rem;font-weight:600;background:none;border:1px solid var(--border);
+  cursor:pointer;color:var(--muted);padding:6px 14px;border-radius:20px;white-space:nowrap;
+  text-decoration:none}
+#cross-link:hover{background:var(--bg-sub);text-decoration:none}
 
 /* ─ Sidebar ─────────────────────────────────────────────── */
 #sidebar{position:fixed;top:var(--th);left:0;width:var(--sw);
@@ -716,6 +726,7 @@ __CSS__
 <div id="topbar">
   <button id="tog-btn">☰</button>
   <span id="bar-title">ML / DL Interview Preparation Notes</span>
+  __CROSSLINK__
   <button id="dark-btn">🌙  Dark</button>
 </div>
 <div id="progress"></div>
@@ -743,6 +754,10 @@ def assemble(body: str) -> str:
     html = html.replace('__CSS__', get_css())
     html = html.replace('__BODY__', body)
     html = html.replace('__JS__', get_js())
+    html = html.replace('__CROSSLINK__',
+                        f'<a id="cross-link" href="{OTHER_HREF}">{OTHER_LABEL}</a>')
+    # Page sits at the repo root; point images at the subfolder that holds them.
+    html = html.replace('src="images/', f'src="{IMG_BASE}/images/')
     return html
 
 

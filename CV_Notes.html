@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Computer Vision — Interview Notes</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- MathJax: render $...$ and $$...$$ -->
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$','$'],['\\(','\\)']],
+    displayMath: [['$$','$$'],['\\[','\\]']],
+    processEscapes: true,
+    processEnvironments: true
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+
+<style>
+
+/* ─ Reset ───────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ─ Variables ───────────────────────────────────────────── */
+:root{
+  --bg:#F1F5F9;--bg-card:#FFFFFF;--bg-sub:#F8FAFC;
+  --text:#0F172A;--muted:#64748B;--border:#E6EAF0;
+  --shadow:0 1px 2px rgba(16,24,40,.04),0 4px 16px rgba(16,24,40,.06);
+  --shadow-lg:0 10px 30px rgba(16,24,40,.12);
+  --sw:280px;--th:54px;--r:14px;
+  --sa:#2563EB;--sl:#EFF6FF;--sd:#60A5FA;
+  --font:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+  --mono:'JetBrains Mono',Consolas,Monaco,"Courier New",monospace;
+}
+[data-theme=dark]{
+  --bg:#0B1120;--bg-card:#131C2E;--bg-sub:#0F1830;
+  --text:#E5ECF5;--muted:#93A4BD;--border:#24314A;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.35);
+  --shadow-lg:0 14px 40px rgba(0,0,0,.5);
+}
+
+/* ─ Base ────────────────────────────────────────────────── */
+html{scroll-behavior:smooth;scroll-padding-top:66px}
+body{font-family:var(--font);background:var(--bg);color:var(--text);
+  line-height:1.72;font-size:15.5px;-webkit-font-smoothing:antialiased;
+  transition:background .2s,color .2s}
+a{color:var(--sa);text-decoration:none}
+a:hover{text-decoration:underline}
+p{margin:10px 0}
+ul,ol{padding-left:24px;margin:10px 0}
+li{margin:4px 0}
+li>ul,li>ol{margin:4px 0}
+strong{font-weight:700}
+em{font-style:italic}
+hr{border:none;border-top:1px solid var(--border);margin:20px 0}
+h1{font-size:2rem;font-weight:800;letter-spacing:-.03em}
+
+/* ─ Reading progress ────────────────────────────────────── */
+#progress{position:fixed;top:var(--th);left:0;height:3px;width:0;z-index:199;
+  background:linear-gradient(90deg,#2563EB,#7C3AED,#DB2777,#15803D);
+  transition:width .08s linear}
+
+/* ─ Top bar ─────────────────────────────────────────────── */
+#topbar{position:fixed;top:0;left:0;right:0;height:var(--th);
+  background:var(--bg-card);
+  background:color-mix(in srgb,var(--bg-card) 84%,transparent);
+  backdrop-filter:saturate(180%) blur(12px);
+  border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;
+  padding:0 18px;z-index:200}
+#tog-btn{font-size:1rem;background:none;border:1px solid var(--border);
+  cursor:pointer;color:var(--muted);padding:6px 10px;border-radius:9px;line-height:1}
+#tog-btn:hover{background:var(--bg-sub)}
+#bar-title{font-weight:700;font-size:.95rem;color:var(--text);flex:1;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.01em}
+#dark-btn{font-size:.8rem;font-weight:600;background:none;border:1px solid var(--border);
+  cursor:pointer;color:var(--muted);padding:6px 14px;border-radius:20px;white-space:nowrap}
+#dark-btn:hover{background:var(--bg-sub)}
+#cross-link{font-size:.8rem;font-weight:600;background:none;border:1px solid var(--border);
+  cursor:pointer;color:var(--muted);padding:6px 14px;border-radius:20px;white-space:nowrap;
+  text-decoration:none}
+#cross-link:hover{background:var(--bg-sub);text-decoration:none}
+
+/* ─ Sidebar ─────────────────────────────────────────────── */
+#sidebar{position:fixed;top:var(--th);left:0;width:var(--sw);
+  height:calc(100vh - var(--th));background:var(--bg-card);
+  border-right:1px solid var(--border);overflow-y:auto;overflow-x:hidden;
+  z-index:150;transition:transform .25s ease}
+#sidebar.hidden{transform:translateX(-100%)}
+#sidebar::-webkit-scrollbar{width:5px}
+#sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+#sb-inner{padding:14px 0 60px}
+
+.sb-h2-btn{display:flex;align-items:center;gap:10px;width:100%;position:relative;
+  padding:8px 16px;border:none;background:none;text-align:left;cursor:pointer;
+  color:var(--text);font-weight:600;font-size:.82rem;transition:background .12s}
+.sb-h2-btn:hover,.sb-h2-btn.active{background:var(--bg-sub)}
+.sb-h2-btn.active::before{content:'';position:absolute;left:0;top:6px;bottom:6px;
+  width:3px;border-radius:0 3px 3px 0;background:var(--ac,var(--sa))}
+.sb-dot{width:22px;height:22px;border-radius:7px;display:flex;align-items:center;
+  justify-content:center;color:#fff;font-size:.66rem;font-weight:800;flex-shrink:0}
+.sb-label{flex:1;line-height:1.3}
+.sb-chev{font-size:.6rem;color:var(--muted);transition:transform .2s;flex-shrink:0;
+  padding:2px 4px;border-radius:5px}
+.sb-chev:hover{background:var(--border)}
+.sb-h2-btn.open .sb-chev{transform:rotate(90deg)}
+
+.sb-subs{display:none;padding:2px 0 8px 42px}
+.sb-subs.open{display:block}
+.sb-h3-link{display:block;padding:5px 14px 5px 10px;color:var(--muted);
+  font-size:.76rem;line-height:1.4;border-left:2px solid transparent;
+  transition:color .12s,border-color .12s}
+.sb-h3-link:hover{color:var(--text);text-decoration:none}
+.sb-h3-link.active{color:var(--text);font-weight:600;border-left-color:var(--ac,var(--sa))}
+
+/* ─ Main layout ─────────────────────────────────────────── */
+#main-wrap{margin-left:var(--sw);padding-top:var(--th);transition:margin-left .25s ease}
+#main-wrap.wide{margin-left:0}
+#content{max-width:900px;margin:0 auto;padding:30px 26px 120px}
+
+/* ─ Section cards ───────────────────────────────────────── */
+.content-section{background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--r);margin-bottom:24px;box-shadow:var(--shadow);
+  overflow:hidden;padding:0 24px 24px}
+.content-section h2{font-size:1.4rem;font-weight:800;letter-spacing:-.02em;color:#fff;
+  padding:15px 24px;margin:0 -24px 18px;line-height:1.3;display:flex;align-items:center;
+  background:var(--sa);
+  background:linear-gradient(120deg,var(--sa),color-mix(in srgb,var(--sa) 66%,#0B1020))}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;
+  min-width:1.8em;height:1.8em;padding:0 .45em;margin-right:.6em;
+  background:rgba(255,255,255,.22);border-radius:9px;font-size:.82em;font-weight:800}
+.content-section h3{font-size:1.08rem;font-weight:700;letter-spacing:-.01em;
+  color:var(--sa);margin:26px 0 12px;padding-bottom:6px;
+  border-bottom:2px solid var(--sl);
+  border-bottom:2px solid color-mix(in srgb,var(--sa) 24%,transparent)}
+[data-theme=dark] .content-section h3{color:var(--sd);border-bottom-color:#24314A}
+
+/* title card (h1 + preamble before first section) */
+.title-card{padding:0 0 14px;border:none}
+.title-card h1{padding:32px 28px;margin:0;color:#F8FAFC;font-size:2.1rem;
+  font-weight:800;letter-spacing:-.035em;
+  background:linear-gradient(135deg,#0F172A,#1E293B 55%,#334155)}
+.title-card>:not(h1){margin-left:28px;margin-right:28px}
+.title-card hr{display:none}
+
+/* ─ Tables ──────────────────────────────────────────────── */
+.content-section table{width:100%;border-collapse:separate;border-spacing:0;
+  margin:16px 0;font-size:.9rem;border:1px solid var(--border);
+  border-radius:10px;overflow:hidden;box-shadow:var(--shadow)}
+table thead{background:var(--sa)}
+table thead th{color:#fff;padding:11px 14px;text-align:left;font-weight:600;
+  font-size:.78rem;letter-spacing:.04em;text-transform:uppercase}
+table td,table th{padding:10px 14px;vertical-align:top;
+  border-bottom:1px solid var(--border)}
+table tbody tr:last-child td{border-bottom:none}
+table tbody tr:nth-child(even){background:var(--bg-sub)}
+table tbody tr:hover{background:color-mix(in srgb,var(--sa) 7%,var(--bg-card))}
+
+/* ─ Code ────────────────────────────────────────────────── */
+pre{background:#0D1426;color:#CBD5E1;padding:16px 18px;border-radius:12px;
+  overflow-x:auto;font-family:var(--mono);font-size:.84rem;line-height:1.6;
+  margin:16px 0;border:1px solid #1E293B}
+[data-theme=dark] pre{background:#070D1A}
+code{font-family:var(--mono);font-size:.86em;background:var(--bg-sub);
+  color:var(--text);padding:1.5px 6px;border-radius:6px;border:1px solid var(--border)}
+pre code{background:none;color:inherit;padding:0;border:none}
+
+/* ─ Blockquotes ─────────────────────────────────────────── */
+blockquote{border-left:4px solid var(--sa);
+  background:var(--sl);
+  background:color-mix(in srgb,var(--sa) 8%,var(--bg-card));
+  padding:12px 16px;margin:14px 0;border-radius:0 10px 10px 0;font-size:.95rem}
+[data-theme=dark] blockquote{background:rgba(148,163,184,.08)}
+
+/* ─ Math ────────────────────────────────────────────────── */
+.math-display{overflow-x:auto;margin:14px 0;padding:12px 18px;text-align:center;
+  background:var(--bg-sub);border:1px solid var(--border);
+  border-left:3px solid var(--sa);border-radius:10px}
+
+/* ─ Images ──────────────────────────────────────────────── */
+.img-fig{position:relative;margin:20px 0;text-align:center}
+.img-fig img{display:block;margin:0 auto;height:auto;max-width:100%;
+  border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow);
+  transition:width .15s ease}
+.img-bar{position:absolute;left:50%;bottom:10px;
+  transform:translateX(-50%) translateY(6px);
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;
+  background:rgba(8,12,22,.86);backdrop-filter:blur(8px);
+  padding:6px 10px;border-radius:12px;border:1px solid rgba(255,255,255,.12);
+  opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;
+  box-shadow:0 8px 24px rgba(0,0,0,.32);z-index:5}
+.img-fig:hover .img-bar{opacity:1;pointer-events:auto;
+  transform:translateX(-50%) translateY(0)}
+.img-name{font-family:var(--mono);font-size:.7rem;color:#CBD5E1;
+  background:rgba(255,255,255,.08);padding:2px 8px;border-radius:20px}
+.img-sizes{display:inline-flex;gap:3px}
+.img-sizes button{border:1px solid rgba(255,255,255,.18);background:transparent;
+  color:#CBD5E1;border-radius:7px;padding:2px 9px;cursor:pointer;font-size:.72rem;
+  font-weight:600;transition:all .12s}
+.img-sizes button:hover{background:rgba(255,255,255,.12)}
+.img-sizes button.on{background:var(--sa);border-color:var(--sa);color:#fff}
+.img-slider{width:84px;cursor:pointer;accent-color:var(--sa)}
+
+/* ─ Back to top ─────────────────────────────────────────── */
+#back-top{position:fixed;bottom:30px;right:24px;width:44px;height:44px;
+  border:1px solid var(--border);border-radius:14px;background:var(--bg-card);
+  color:var(--text);box-shadow:var(--shadow-lg);font-size:1.1rem;cursor:pointer;
+  display:none;align-items:center;justify-content:center;z-index:300;
+  transition:transform .15s}
+#back-top:hover{transform:translateY(-2px)}
+#back-top.show{display:flex}
+
+/* ─ Responsive ──────────────────────────────────────────── */
+@media(max-width:860px){
+  #sidebar{transform:translateX(-100%)}
+  #sidebar.mobile-open{transform:translateX(0);box-shadow:var(--shadow-lg)}
+  #main-wrap{margin-left:0!important}
+  #content{padding:20px 16px 100px}
+}
+.sec-0{--sa:#64748B;--sl:#F8FAFC;--sd:#94A3B8;}
+.sec-1{--sa:#2563EB;--sl:#EFF6FF;--sd:#60A5FA;}
+.sec-2{--sa:#059669;--sl:#ECFDF5;--sd:#34D399;}
+.sec-3{--sa:#7C3AED;--sl:#F5F3FF;--sd:#A78BFA;}
+.sec-4{--sa:#16A34A;--sl:#F0FDF4;--sd:#4ADE80;}
+.sec-5{--sa:#EA580C;--sl:#FFF7ED;--sd:#FB923C;}
+.sec-6{--sa:#DB2777;--sl:#FDF2F8;--sd:#F472B6;}
+.sec-7{--sa:#DC2626;--sl:#FEF2F2;--sd:#F87171;}
+.sec-8{--sa:#9333EA;--sl:#FAF5FF;--sd:#C084FC;}
+.sec-9{--sa:#4F46E5;--sl:#EEF2FF;--sd:#818CF8;}
+.sec-10{--sa:#0891B2;--sl:#ECFEFF;--sd:#22D3EE;}
+.sec-11{--sa:#0D9488;--sl:#F0FDFA;--sd:#2DD4BF;}
+.sec-12{--sa:#15803D;--sl:#F0FDF4;--sd:#4ADE80;}
+.sec-13{--sa:#475569;--sl:#F8FAFC;--sd:#94A3B8;}
+.sec-14{--sa:#B45309;--sl:#FFFBEB;--sd:#FBBF24;}
+.sec-15{--sa:#64748B;--sl:#F8FAFC;--sd:#94A3B8;}
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <button id="tog-btn">☰</button>
+  <span id="bar-title">Computer Vision — Interview Notes</span>
+  <a id="cross-link" href="ML_DL_Notes.html">ML/DL Notes ↗</a>
+  <button id="dark-btn">🌙  Dark</button>
+</div>
+<div id="progress"></div>
+
+<nav id="sidebar"><div id="sb-inner"></div></nav>
+
+<div id="main-wrap">
+  <main id="content">
+<div class="content-section sec-1">
+<h2 id="1-generative-models">1. Generative Models</h2>
+
+<p>Autoencoders (AE), Variational Autoencoders (VAE), and Generative Adversarial Networks (GAN) are all types of neural network architectures used for <strong>unsupervised learning</strong>, particularly for tasks involving data generation and representation learning. The diagrams below illustrate related self-supervised / contrastive representation learning.</p>
+<p><code>image1.png</code>
+<img src="CV/images/image1.png" alt="Self-supervised contrastive learning (SimCLR) framework" width="640" /></p>
+<p><code>image2.png</code>
+<img src="CV/images/image2.png" alt="Contrastive-loss network architecture" width="640" /></p>
+<h3 id="11-autoencoders-ae">1.1 Autoencoders (AE)</h3>
+<p><strong>Architecture</strong></p>
+<ul>
+<li>Consist of an encoder and a decoder.</li>
+<li>The encoder maps the input data to a lower-dimensional latent space.</li>
+<li>The decoder reconstructs the original data from the latent representation.</li>
+</ul>
+<p><strong>Objective</strong></p>
+<ul>
+<li>Minimize the reconstruction error, typically measured by Mean Squared Error (MSE) or Binary Cross-Entropy.</li>
+</ul>
+<p><strong>Applications</strong></p>
+<ul>
+<li>Dimensionality reduction.</li>
+<li>Data denoising.</li>
+<li>Feature learning.</li>
+<li>Anomaly detection.</li>
+</ul>
+<p><strong>Strengths</strong></p>
+<ul>
+<li>Simple and effective for reconstruction tasks.</li>
+<li>Can be used for compressing data.</li>
+</ul>
+<p><strong>Limitations</strong></p>
+<ul>
+<li>May not generate new data samples that are as realistic as those produced by VAEs or GANs.</li>
+<li>Can suffer from overfitting if not regularized properly.</li>
+</ul>
+<h3 id="12-variational-autoencoders-vae">1.2 Variational Autoencoders (VAE)</h3>
+<p><strong>Architecture</strong></p>
+<ul>
+<li>Similar to autoencoders but with a probabilistic approach.</li>
+<li>The encoder outputs parameters of a probability distribution (mean and variance) instead of a single point.</li>
+<li>During training, latent variables are sampled from this distribution.</li>
+<li>The decoder reconstructs the data from the sampled latent variables.</li>
+</ul>
+<p><strong>Objective</strong></p>
+<ul>
+<li>Minimize a combination of the reconstruction loss and the Kullback-Leibler (KL) divergence, which regularizes the latent space to follow a standard normal distribution.</li>
+</ul>
+<p><strong>Applications</strong></p>
+<ul>
+<li>Similar to autoencoders but also include generating new, realistic samples.</li>
+<li>Anomaly detection.</li>
+<li>Semi-supervised learning.</li>
+</ul>
+<p><strong>Strengths</strong></p>
+<ul>
+<li>Can generate new data samples by sampling from the latent space.</li>
+<li>Regularizes the latent space, making it smooth and continuous, which improves the quality of generated samples.</li>
+</ul>
+<p><strong>Limitations</strong></p>
+<ul>
+<li>Training can be more complex due to the KL divergence term.</li>
+<li>Generated samples might still be of lower quality compared to GANs.</li>
+</ul>
+<h3 id="13-generative-adversarial-networks-gan">1.3 Generative Adversarial Networks (GAN)</h3>
+<p><strong>Architecture</strong></p>
+<ul>
+<li>Consist of two networks: a generator and a discriminator.</li>
+<li>The generator creates fake data samples from random noise.</li>
+<li>The discriminator attempts to distinguish between real and fake samples.</li>
+<li>Both networks are trained simultaneously in a minimax game.</li>
+</ul>
+<p><strong>Objective</strong></p>
+<ul>
+<li>The generator aims to minimize the discriminator's ability to correctly classify real vs. fake samples.</li>
+<li>The discriminator aims to maximize its classification accuracy.</li>
+</ul>
+<p><strong>Applications</strong></p>
+<ul>
+<li>High-quality data generation (images, text, etc.).</li>
+<li>Image-to-image translation.</li>
+<li>Super-resolution.</li>
+<li>Style transfer.</li>
+</ul>
+<p><strong>Strengths</strong></p>
+<ul>
+<li>Capable of generating highly realistic data samples.</li>
+<li>Versatile and widely used in various applications involving data generation.</li>
+</ul>
+<p><strong>Limitations</strong></p>
+<ul>
+<li>Training can be unstable and difficult to converge.</li>
+<li>Susceptible to mode collapse, where the generator produces a limited variety of samples.</li>
+<li>Requires careful tuning of hyperparameters.</li>
+</ul>
+<h3 id="14-summary">1.4 Summary</h3>
+<ul>
+<li><strong>Autoencoders</strong> are simple and effective for reconstruction tasks and dimensionality reduction but may not produce realistic new samples.</li>
+<li><strong>Variational Autoencoders (VAE)</strong> introduce a probabilistic approach to improve sample generation quality and regularize the latent space, though the generated samples might not be as realistic as those from GANs.</li>
+<li><strong>Generative Adversarial Networks (GAN)</strong> are powerful for generating highly realistic samples, but they are challenging to train and can suffer from issues like mode collapse.</li>
+</ul>
+<p>Each of these architectures has its strengths and weaknesses, making them suitable for different applications and scenarios in unsupervised learning and data generation.</p>
+<hr />
+</div>
+<div class="content-section sec-2">
+<h2 id="2-cnn-fundamentals">2. CNN Fundamentals</h2>
+
+<h3 id="21-what-is-a-convolutional-neural-network-cnn">2.1 What is a Convolutional Neural Network (CNN)?</h3>
+<p><em>Can you explain what a Convolutional Neural Network (CNN) is and how it differs from a regular neural network?</em></p>
+<p>A Convolutional Neural Network (CNN) is a specialized type of neural network designed for processing structured grid data like images. Unlike regular neural networks, CNNs use a mathematical operation called convolution to extract spatial features from the input data. CNNs consist of layers such as convolutional layers, pooling layers, and fully connected layers. These layers help in detecting patterns and features in images, making CNNs particularly effective for tasks like image classification, object detection, and image segmentation.</p>
+<h3 id="22-purpose-of-the-convolutional-layer">2.2 Purpose of the Convolutional Layer</h3>
+<p><em>What role does the convolutional layer play in a CNN, and how does it work?</em></p>
+<p>The convolutional layer is the core building block of a CNN. It applies a set of filters (also called kernels) to the input image to create feature maps. Each filter slides (convolves) over the input image and performs element-wise multiplication and summation to produce a single value at each position. The purpose of the convolutional layer is to detect various features in the input data, such as edges, textures, and shapes, by learning different filters during the training process.</p>
+<h3 id="23-pooling">2.3 Pooling</h3>
+<p><em>Can you explain what pooling is in the context of CNNs and why it is important?</em></p>
+<p>Pooling, also known as subsampling or downsampling, is a technique used in CNNs to reduce the spatial dimensions (width and height) of the feature maps while retaining important information. The most common types of pooling are max pooling and average pooling. Max pooling selects the maximum value from each patch of the feature map, while average pooling calculates the average value. Pooling is important because it helps reduce the computational complexity, prevents overfitting, and makes the network more invariant to small translations in the input image.</p>
+<h3 id="24-activation-functions">2.4 Activation Functions</h3>
+<p><em>Why are activation functions used in CNNs, and which ones are commonly used?</em></p>
+<p>Activation functions introduce non-linearity into the network, allowing it to learn complex patterns and representations in the data. Without non-linear activation functions, a neural network would behave like a linear model, limiting its capability to model complex relationships. Commonly used activation functions in CNNs include ReLU (Rectified Linear Unit), which sets all negative values to zero, and its variants like Leaky ReLU and Parametric ReLU, which allow a small gradient for negative values. Sigmoid and tanh are also used, though less frequently in modern architectures due to issues like vanishing gradients.</p>
+<h3 id="25-common-cnn-architectures">2.5 Common CNN Architectures</h3>
+<p><em>Can you name and briefly describe some popular CNN architectures?</em></p>
+<p>Some popular CNN architectures include:</p>
+<ul>
+<li><strong>LeNet-5</strong>: One of the earliest CNN architectures, designed for handwritten digit recognition (MNIST dataset). It consists of two convolutional layers followed by two fully connected layers.</li>
+<li><strong>AlexNet</strong>: Won the 2012 ImageNet competition. It has five convolutional layers, some followed by max pooling layers, and three fully connected layers. It introduced the use of ReLU activation and dropout for regularization.</li>
+<li><strong>VGGNet</strong>: Known for its simplicity, using only 3x3 convolutional filters and increasing depth by stacking more layers. VGG16 and VGG19 are common variants with 16 and 19 weight layers, respectively.</li>
+<li><strong>GoogLeNet (Inception)</strong>: Introduced the Inception module, which applies multiple filters of different sizes in parallel and concatenates their outputs. GoogLeNet has a deeper architecture with 22 layers.</li>
+<li><strong>ResNet</strong>: Introduced residual learning with skip connections, allowing the network to be significantly deeper (e.g., ResNet-50, ResNet-101) by addressing the vanishing gradient problem.</li>
+</ul>
+<h3 id="26-receptive-field">2.6 Receptive Field</h3>
+<p><em>What do you understand by the term 'receptive field' in the context of CNNs?</em></p>
+<p>The receptive field in a CNN refers to the region of the input image that influences a particular activation in a feature map. It represents the spatial extent of the input that a particular convolutional layer's neuron is sensitive to. As we go deeper into the network, the receptive field increases, allowing neurons in higher layers to capture more global and complex features of the input image.</p>
+<h3 id="27-filters--kernels">2.7 Filters / Kernels</h3>
+<p><em>Can you explain what a filter (or kernel) is in the context of CNNs and its purpose?</em></p>
+<p>A filter or kernel in a CNN is a small matrix of weights used to scan the input image or feature map. During the convolution operation, the filter slides over the input, performing element-wise multiplication and summation at each position to produce a feature map. Each filter detects different features, such as edges, textures, or patterns, by learning the optimal weights during the training process. Multiple filters are used in each convolutional layer to capture a diverse set of features from the input data.</p>
+<hr />
+</div>
+<div class="content-section sec-3">
+<h2 id="3-cnn-advanced-concepts">3. CNN Advanced Concepts</h2>
+
+<h3 id="31-padding">3.1 Padding</h3>
+<p><em>What is padding in the context of CNNs, and what are its benefits?</em></p>
+<p>Padding in CNNs involves adding extra pixels around the border of the input image before applying the convolution operation. The primary types of padding are &quot;valid&quot; (no padding) and &quot;same&quot; (padding such that the output size is the same as the input size). Padding is used for several reasons:</p>
+<ul>
+<li>It helps preserve the spatial dimensions of the input, allowing deeper networks without reducing the feature map size too quickly.</li>
+<li>It enables the use of convolutions at the edges of the input, ensuring that all pixels in the original image contribute to the output.</li>
+<li>It can help maintain information at the boundaries of the image, which might otherwise be lost during convolution.</li>
+</ul>
+<h3 id="32-stride">3.2 Stride</h3>
+<p><em>Can you explain what stride is in CNNs and how it influences the output feature maps?</em></p>
+<p>Stride in CNNs refers to the number of pixels by which the filter or kernel moves (or &quot;strides&quot;) across the input image during the convolution operation. A stride of 1 means the filter moves one pixel at a time, while a stride of 2 means it moves two pixels at a time, and so on. Stride affects the size of the output feature maps as follows:</p>
+<ul>
+<li>Increasing the stride reduces the spatial dimensions of the output feature map, as fewer positions are sampled.</li>
+<li>A larger stride can lead to faster computations and reduced memory usage but might result in a loss of spatial resolution and detail.</li>
+<li>The output size can be calculated using the formula:</li>
+</ul>
+<div class="math-display">$$\text{Output size} = \left\lfloor \frac{\text{Input size} - \text{Filter size}}{\text{Stride}} \right\rfloor + 1$$</div>
+<h3 id="33-dilated-convolutions">3.3 Dilated Convolutions</h3>
+<p><em>What are dilated convolutions, and what advantages do they offer over standard convolutions?</em></p>
+<p>Dilated convolutions, also known as atrous convolutions, introduce spaces between the filter weights by skipping certain pixels. This is controlled by a dilation rate parameter, which defines the spacing between the weights. For a dilation rate of 1, the dilated convolution is equivalent to a standard convolution. Higher dilation rates spread the filter weights further apart, allowing the network to have a larger receptive field without increasing the number of parameters. The advantages of dilated convolutions include:</p>
+<ul>
+<li>They enable capturing more contextual information at various scales.</li>
+<li>They are particularly useful in tasks like semantic segmentation where capturing multi-scale context is crucial.</li>
+<li>They help preserve spatial resolution while expanding the receptive field.</li>
+</ul>
+<h3 id="34-batch-normalization-vs-layer-normalization">3.4 Batch Normalization vs Layer Normalization</h3>
+<p><em>Can you compare Batch Normalization and Layer Normalization and their roles in CNNs?</em></p>
+<p>Both Batch Normalization and Layer Normalization are techniques used to normalize the activations of neurons to improve training stability and performance, but they operate differently:</p>
+<ul>
+<li><strong>Batch Normalization</strong>: Normalizes the inputs of each layer across the mini-batch. It calculates the mean and variance for each feature over the mini-batch and then normalizes the data. Batch Normalization helps reduce internal covariate shift, accelerates training, and acts as a regularizer. However, it depends on the mini-batch size, which can cause issues with small batch sizes or in certain tasks like recurrent neural networks.</li>
+<li><strong>Layer Normalization</strong>: Normalizes the inputs across the features for each individual data point (sample). It computes the mean and variance for each sample and then normalizes the data. Layer Normalization is independent of the mini-batch size, making it more suitable for tasks with variable-length inputs or small batch sizes.</li>
+</ul>
+<h3 id="35-residual-blocks-resnet">3.5 Residual Blocks (ResNet)</h3>
+<p><em>Explain the concept of a residual block in ResNet architectures and its importance.</em></p>
+<p>The residual block is a key component of ResNet (Residual Networks) architectures, designed to address the problem of vanishing/exploding gradients in very deep networks. A residual block consists of a few convolutional layers with an identity shortcut connection that skips one or more layers. The output of the residual block is the sum of the input to the block and the output of the convolutional layers:</p>
+<div class="math-display">$$\mathbf{y} = \mathcal{F}(\mathbf{x}, \{W_i\}) + \mathbf{x}$$</div>
+<p>where $\mathbf{x}$ is the input, $\mathcal{F}$ represents the convolutional layers, and $W_i$ are the weights. The importance of the residual block includes:</p>
+<ul>
+<li>It allows gradients to flow more easily through the network, enabling the training of much deeper networks.</li>
+<li>It mitigates the degradation problem, where adding more layers leads to higher training error.</li>
+<li>It encourages feature reuse and model generalization by allowing the network to learn residual functions instead of direct mappings.</li>
+</ul>
+<h3 id="36-transfer-learning">3.6 Transfer Learning</h3>
+<p><em>What is transfer learning in CNNs, and how is it typically applied?</em></p>
+<p>Transfer learning involves leveraging pre-trained CNN models on large datasets (such as ImageNet) for tasks on different but related datasets. Instead of training a CNN from scratch, transfer learning adapts a pre-trained model to a new task by:</p>
+<ul>
+<li><strong>Fine-tuning</strong>: Retraining some or all of the layers of the pre-trained model on the new dataset. This can involve retraining the entire network or only a few top layers.</li>
+<li><strong>Feature extraction</strong>: Using the pre-trained model as a fixed feature extractor. The pre-trained network's convolutional layers are used to extract features from the new dataset, and only the final classification layer is trained.</li>
+</ul>
+<p>Transfer learning is advantageous because it:</p>
+<ul>
+<li>Reduces the computational resources and time required for training.</li>
+<li>Improves performance, especially when the new dataset is small or lacks diversity.</li>
+<li>Benefits from the learned representations and features from the pre-trained model, which are often generalizable across different tasks.</li>
+</ul>
+</div>
+
+  </main>
+</div>
+
+<button id="back-top" title="Back to top">↑</button>
+
+<script>
+
+const SEC = {"0":{"accent":"#64748B","light":"#F8FAFC","dark":"#94A3B8"},"1":{"accent":"#2563EB","light":"#EFF6FF","dark":"#60A5FA"},"2":{"accent":"#059669","light":"#ECFDF5","dark":"#34D399"},"3":{"accent":"#7C3AED","light":"#F5F3FF","dark":"#A78BFA"},"4":{"accent":"#16A34A","light":"#F0FDF4","dark":"#4ADE80"},"5":{"accent":"#EA580C","light":"#FFF7ED","dark":"#FB923C"},"6":{"accent":"#DB2777","light":"#FDF2F8","dark":"#F472B6"},"7":{"accent":"#DC2626","light":"#FEF2F2","dark":"#F87171"},"8":{"accent":"#9333EA","light":"#FAF5FF","dark":"#C084FC"},"9":{"accent":"#4F46E5","light":"#EEF2FF","dark":"#818CF8"},"10":{"accent":"#0891B2","light":"#ECFEFF","dark":"#22D3EE"},"11":{"accent":"#0D9488","light":"#F0FDFA","dark":"#2DD4BF"},"12":{"accent":"#15803D","light":"#F0FDF4","dark":"#4ADE80"},"13":{"accent":"#475569","light":"#F8FAFC","dark":"#94A3B8"},"14":{"accent":"#B45309","light":"#FFFBEB","dark":"#FBBF24"},"15":{"accent":"#64748B","light":"#F8FAFC","dark":"#94A3B8"}};
+
+/* ── Dark mode ───────────────────────────────────────────── */
+const darkBtn = document.getElementById('dark-btn');
+const saved   = localStorage.getItem('theme') || 'light';
+if (saved === 'dark') document.documentElement.setAttribute('data-theme','dark');
+darkBtn.textContent = saved === 'dark' ? '☀  Light' : '🌙  Dark';
+darkBtn.addEventListener('click', () => {
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', dark ? 'light' : 'dark');
+  darkBtn.textContent = dark ? '🌙  Dark' : '☀  Light';
+  localStorage.setItem('theme', dark ? 'light' : 'dark');
+});
+
+/* ── Sidebar toggle ──────────────────────────────────────── */
+const sidebar  = document.getElementById('sidebar');
+const mainWrap = document.getElementById('main-wrap');
+const togBtn   = document.getElementById('tog-btn');
+togBtn.addEventListener('click', () => {
+  if (window.matchMedia('(max-width:860px)').matches) {
+    sidebar.classList.toggle('mobile-open');
+  } else {
+    sidebar.classList.toggle('hidden');
+    mainWrap.classList.toggle('wide');
+  }
+});
+
+/* ── Build sidebar ───────────────────────────────────────── */
+function buildSidebar() {
+  const inner = document.getElementById('sb-inner');
+  inner.innerHTML = '';
+  document.querySelectorAll('.content-section').forEach(sec => {
+    const cls   = sec.className.match(/sec-(\d+)/);
+    const secN  = cls ? +cls[1] : 0;
+    const color = (SEC[secN] || SEC[0]).accent;
+    const h2 = sec.querySelector('h2');
+    if (!h2) return;
+
+    const numM = h2.textContent.match(/^(\d+)\./);
+    const chip = numM ? numM[1] : '';
+    const h3s  = sec.querySelectorAll('h3');
+
+    const secDiv = document.createElement('div');
+    secDiv.className = 'sb-sec';
+    secDiv.style.setProperty('--ac', color);
+
+    const btn = document.createElement('button');
+    btn.className = 'sb-h2-btn';
+    btn.dataset.id = h2.id || '';
+    btn.innerHTML = `
+      <span class="sb-dot" style="background:${color}">${chip}</span>
+      <span class="sb-label">${h2.textContent}</span>
+      ${h3s.length ? '<span class="sb-chev">▶</span>' : ''}`;
+
+    const subs = document.createElement('div');
+    subs.className = 'sb-subs';
+    h3s.forEach(h3 => {
+      const a = document.createElement('a');
+      a.className   = 'sb-h3-link';
+      a.href        = '#' + (h3.id || '');
+      a.textContent = h3.textContent;
+      subs.appendChild(a);
+    });
+
+    const chev = btn.querySelector('.sb-chev');
+    if (chev) {
+      chev.addEventListener('click', e => {
+        e.stopPropagation();
+        subs.classList.toggle('open');
+        btn.classList.toggle('open');
+      });
+    }
+    btn.addEventListener('click', e => {
+      if (e.target === chev) return;
+      subs.classList.add('open');
+      btn.classList.add('open');
+      if (h2.id) document.getElementById(h2.id)
+        ?.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+
+    secDiv.appendChild(btn);
+    secDiv.appendChild(subs);
+    inner.appendChild(secDiv);
+  });
+}
+
+/* ── Section-number chip in each h2 ──────────────────────── */
+function decorateHeadings() {
+  document.querySelectorAll('.content-section h2').forEach(h2 => {
+    const m = h2.textContent.match(/^(\d+)\.\s*(.+)$/);
+    if (m) h2.innerHTML = `<span class="sec-num">${m[1]}</span>${m[2]}`;
+  });
+}
+
+/* ── Scroll spy ──────────────────────────────────────────── */
+function initScrollSpy() {
+  const heads = Array.from(document.querySelectorAll('h2[id],h3[id]'));
+  let raf = false;
+  function update() {
+    const cut = window.scrollY + window.innerHeight * 0.22;
+    let active = null;
+    for (const h of heads) {
+      if (h.getBoundingClientRect().top + window.scrollY <= cut) active = h;
+      else break;
+    }
+    if (!active) return;
+    document.querySelectorAll('.sb-h2-btn.active,.sb-h3-link.active')
+      .forEach(el => el.classList.remove('active'));
+    const id = active.id;
+    if (active.tagName === 'H2') {
+      document.querySelector(`.sb-h2-btn[data-id="${id}"]`)?.classList.add('active');
+    } else {
+      const link = document.querySelector(`.sb-h3-link[href="#${id}"]`);
+      if (link) {
+        link.classList.add('active');
+        const par = link.closest('.sb-subs');
+        if (par) {
+          par.classList.add('open');
+          par.previousElementSibling?.classList.add('open');
+        }
+      }
+    }
+  }
+  window.addEventListener('scroll', () => {
+    if (!raf) { raf = true; requestAnimationFrame(() => { update(); raf = false; }); }
+  });
+  update();
+}
+
+/* ── Images: hover filename + size control + persistence ─── */
+function initImages() {
+  /* Bump this when the default sizes change → clears stale saved sizes so the
+     new defaults take effect (manual resizes made afterwards still persist). */
+  const IMG_DEFAULTS_VERSION = '2';
+  if (localStorage.getItem('imgDefaultsVersion') !== IMG_DEFAULTS_VERSION) {
+    Object.keys(localStorage)
+      .filter(k => k.indexOf('imgsize:') === 0)
+      .forEach(k => localStorage.removeItem(k));
+    localStorage.setItem('imgDefaultsVersion', IMG_DEFAULTS_VERSION);
+  }
+
+  /* Map each image to its subsection (nearest preceding h3). */
+  const subOf = new Map();
+  let curH3 = '';
+  document.querySelectorAll('#content h3, #content img').forEach(el => {
+    if (el.tagName === 'H3') curH3 = el.textContent.trim();
+    else subOf.set(el, curH3);
+  });
+
+  document.querySelectorAll('#content img').forEach(img => {
+    const src  = img.getAttribute('src') || '';
+    const name = src.split('/').pop();
+    const origW = parseInt(img.getAttribute('width')) || 700;
+    img.removeAttribute('width');
+    img.removeAttribute('height');
+    img.title = name;
+    img.style.maxWidth = origW + 'px';
+
+    /* drop the filename badge that precedes the image */
+    let prev = img.previousSibling;
+    while (prev && prev.nodeType === 3 && !prev.textContent.trim())
+      prev = prev.previousSibling;
+    if (prev && prev.nodeType === 1 && prev.tagName === 'CODE'
+        && /^image\d+\.(png|jpe?g|gif)$/i.test(prev.textContent.trim()))
+      prev.remove();
+
+    const fig = document.createElement('div');
+    fig.className = 'img-fig';
+    img.parentNode.insertBefore(fig, img);
+    fig.appendChild(img);
+
+    /* Default size: Full (100%) for all images, except §11.3 → S (30%). */
+    const defW   = /^11\.3\b/.test(subOf.get(img) || '') ? 30 : 100;
+    const KEY    = 'imgsize:' + name;
+    const savedW = parseInt(localStorage.getItem(KEY));
+    const initW  = (savedW >= 15 && savedW <= 100) ? savedW : defW;
+    img.style.width = initW + '%';
+
+    const bar = document.createElement('div');
+    bar.className = 'img-bar';
+    bar.innerHTML =
+      `<span class="img-name">${name}</span>` +
+      `<span class="img-sizes">` +
+        `<button data-w="30">S</button>` +
+        `<button data-w="50">M</button>` +
+        `<button data-w="75">L</button>` +
+        `<button data-w="100">Full</button>` +
+      `</span>` +
+      `<input type="range" class="img-slider" min="15" max="100" value="${initW}">`;
+    fig.appendChild(bar);
+
+    const slider = bar.querySelector('.img-slider');
+    const chips  = bar.querySelectorAll('.img-sizes button');
+    function setW(w) {
+      w = Math.max(15, Math.min(100, Math.round(w)));
+      img.style.width = w + '%';
+      slider.value = w;
+      localStorage.setItem(KEY, w);
+      chips.forEach(b => b.classList.toggle('on', +b.dataset.w === w));
+    }
+    chips.forEach(b => b.addEventListener('click', () => setW(+b.dataset.w)));
+    slider.addEventListener('input', () => setW(+slider.value));
+    chips.forEach(b => b.classList.toggle('on', +b.dataset.w === initW));
+  });
+}
+
+/* ── Reading progress ────────────────────────────────────── */
+function initProgress() {
+  const bar = document.getElementById('progress');
+  function upd() {
+    const h = document.documentElement;
+    const max = h.scrollHeight - h.clientHeight;
+    bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+  }
+  window.addEventListener('scroll', upd);
+  upd();
+}
+
+/* ── Back to top ─────────────────────────────────────────── */
+const bt = document.getElementById('back-top');
+window.addEventListener('scroll', () => bt.classList.toggle('show', window.scrollY > 350));
+bt.addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));
+
+/* ── Init ────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  buildSidebar();
+  decorateHeadings();
+  initScrollSpy();
+  initImages();
+  initProgress();
+});
+
+</script>
+</body>
+</html>

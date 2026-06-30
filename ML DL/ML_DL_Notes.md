@@ -1599,6 +1599,34 @@ Modifiers in sentiment analysis that alter the polarity or intensity of sentimen
 
 Expect to be asked about data-driven modeling, train/test protocols, error analysis, and statistical significance.
 
+### 14.1 Frequently Asked Question Topics
+
+Specific topics that have come up in Amazon Applied Scientist interviews:
+
+- Linear regression model
+- SVM loss function
+- Gradient saturation
+- Regularization methods in DNNs
+- GMM — EM algorithm
+- Model tuning and evaluation metrics
+- Matrix factorization methods
+- SVD and eigendecomposition
+- Boosting
+- Explore/exploit strategies
+- Model calibration
+- Supervised learning
+- Tree-based models
+- Bagging vs Boosting
+- Evaluation metrics
+- Deep learning
+- Non-parametric models
+- Skip-gram, CBOW, GloVe, FastText
+- LSTM and GRU
+- Batch normalization
+- XGBoost and GBM
+
+### 14.2 Topics by Area
+
 **Supervised Learning**
 - Linear regression, Logistic regression
 - Random Forest, Gradient Boosted Trees (GBT)
@@ -1707,6 +1735,126 @@ Expect to be asked about data-driven modeling, train/test protocols, error analy
 - [Aman's AI Notes](https://aman.ai/)
 - [Vinija AI Concepts](https://vinija.ai/)
 - [Vinija AI Concepts Library](https://vinija.ai/concepts/)
+
+### Further Reading & Saved Resources
+
+*Imported from saved bookmarks, grouped by topic.*
+
+**Courses & Books**
+- [CS229: Machine Learning — Syllabus (Stanford)](http://cs229.stanford.edu/syllabus.html)
+- [CS229 — Stanford Engineering Everywhere (full course)](https://see.stanford.edu/Course/CS229)
+- [CS229 — Course Projects (Fall 2017)](http://cs229.stanford.edu/proj2017/)
+- [Machine Learning — Andrew Ng (Coursera)](https://www.coursera.org/learn/machine-learning/home/week/1)
+- [Machine Learning Lecture 3 — Andrew Ng (Stanford, YouTube)](https://www.youtube.com/watch?v=HZ4cvaztQEs&list=PLA89DCFA6ADACE599&index=3)
+- [Multivariable Derivatives — Khan Academy](https://www.khanacademy.org/math/multivariable-calculus/multivariable-derivatives/modal/v/directional-derivatives-and-slope)
+- [Deep Learning Book — Goodfellow, Bengio & Courville](http://www.deeplearningbook.org/)
+- [Deep Learning Book — Companion Videos (YouTube)](https://www.youtube.com/playlist?list=PLsXu9MHQGs8df5A4PzQGw-kfviylC-R9b)
+- [PyTorch Deep Learning — Alfredo Canziani (NYU)](https://atcold.github.io/pytorch-Deep-Learning/)
+- [Tom Mitchell — Home Page (CMU)](http://www.cs.cmu.edu/~tom/)
+- [10-701/15-781 Machine Learning — CMU](http://www.cs.cmu.edu/~epxing/Class/10701-08f/project.html)
+- [applied-ml — Curated Industry ML Resources (Eugene Yan)](https://github.com/eugeneyan/applied-ml)
+- [Scipy Lecture Notes](http://www.scipy-lectures.org/)
+
+**Data Science & ML Interviews**
+- [Top 30 Data Science Interview Questions — Towards Data Science](https://towardsdatascience.com/top-30-data-science-interview-questions-7dd9a96d3f5c)
+- [Cracking the Data Scientist Interview — KDnuggets](https://www.kdnuggets.com/2019/01/cracking-data-scientist-interview.html)
+- [Apple AI Interview Questions — Acing the AI Interview](https://medium.com/acing-ai/apple-ai-interview-questions-acing-the-ai-interview-803a65b0e795)
+- [Everything You Need to Know About Neural Networks — Hackernoon](https://hackernoon.com/everything-you-need-to-know-about-neural-networks-8988c3ee4491)
+- [Cheat Sheets for AI, ML, DL & Big Data — Becoming Human](https://becominghuman.ai/cheat-sheets-for-ai-neural-networks-machine-learning-deep-learning-big-data-678c51b4b463)
+- [Machine Learning Archives — MonkeyLearn Blog](https://monkeylearn.com/blog/category/machine-learning/)
+
+**Optimization & Training**
+- [The Vanishing Gradient Problem — Towards Data Science](https://towardsdatascience.com/the-vanishing-gradient-problem-69bf08b15484)
+- [A Gentle Introduction to Exploding Gradients — Machine Learning Mastery](https://machinelearningmastery.com/exploding-gradients-in-neural-networks/)
+- [Batch Normalization: Theory and TensorFlow — Towards Data Science](https://towardsdatascience.com/batch-normalization-theory-and-how-to-use-it-with-tensorflow-1892ca0173ad)
+- [Why Internal Covariate Shift Slows Training — Quora](https://www.quora.com/Why-does-an-internal-covariate-shift-slow-down-the-training-procedure)
+- [Loss Functions in Deep Learning — yeephycho](http://yeephycho.github.io/2017/09/16/Loss-Functions-In-Deep-Learning/)
+- [L1 vs L2 as Loss Function and Regularization — chioka.in](http://www.chioka.in/differences-between-l1-and-l2-as-loss-function-and-regularization/)
+
+**Bias–Variance**
+- [Bias-Variance Tradeoff (Lecture 12) — Cornell CS4780](http://www.cs.cornell.edu/courses/cs4780/2018fa/lectures/lecturenote12.html)
+- [Bias–Variance Tradeoff — Wikipedia](https://en.wikipedia.org/wiki/Bias%E2%80%93variance_tradeoff)
+
+**Classical ML**
+- [MLE vs MAP — Zhiya Zuo](https://zhiyzuo.github.io/MLE-vs-MAP/)
+- [Introduction to Naive Bayes (YouTube)](https://www.youtube.com/watch?v=sjUDlJfdnKM)
+- [A Practical Explanation of a Naive Bayes Classifier — MonkeyLearn](https://monkeylearn.com/blog/practical-explanation-naive-bayes-classifier/)
+- [Decision Trees in Machine Learning — Towards Data Science](https://towardsdatascience.com/decision-trees-in-machine-learning-641b9c4e8052)
+- [Why Bother with the Dual Problem When Fitting SVM? — Cross Validated](https://stats.stackexchange.com/questions/19181/why-bother-with-the-dual-problem-when-fitting-svm)
+
+**Probability & Linear Algebra**
+- [Distribution Functions — HyperPhysics](http://hyperphysics.phy-astr.gsu.edu/hbase/Math/disfcn.html#c2)
+- [Multinomial Distribution — Stattrek](https://stattrek.com/probability-distributions/multinomial.aspx)
+- [Real-Life Examples for Eigenvalues / Eigenvectors — Mathematics Stack Exchange](https://math.stackexchange.com/questions/1520832/real-life-examples-for-eigenvalues-eigenvectors)
+- [What Do Eigenvalues and Eigenvectors Represent Intuitively? — Quora](https://www.quora.com/What-do-eigenvalues-and-eigenvectors-represent-intuitively-What-is-their-significance)
+- [A Simple Explanation of Eigenvectors and Eigenvalues — Mathematics Stack Exchange](https://math.stackexchange.com/questions/36815/a-simple-explanation-of-eigenvectors-and-eigenvalues-with-big-picture-ideas-of)
+
+**Clustering & Topic Models**
+- [Determining the Number of Clusters in a Data Set — Wikipedia](https://en.wikipedia.org/wiki/Determining_the_number_of_clusters_in_a_data_set)
+- [Non-parametric Clustering with Dirichlet Processes — Univ. at Buffalo (PDF)](https://cse.buffalo.edu/~jcorso/t/2009S_555/files/lecture7.dirichlet.pdf)
+- [LDA (Latent Dirichlet Allocation) Algorithm — YouTube](https://www.youtube.com/watch?v=DWJYZq_fQ2A)
+
+**CNNs & Object Detection**
+- [R-CNN vs Fast R-CNN — Quora](https://www.quora.com/What-is-the-difference-between-R-CNN-and-Fast-R-CNN)
+- [Fast R-CNN and Faster R-CNN — Jonathan Hui](https://jhui.github.io/2017/03/15/Fast-R-CNN-and-Faster-R-CNN/)
+- [From R-CNN to Faster R-CNN: The Evolution of Object Detection — Alibaba Cloud](https://medium.com/@Alibaba_Cloud/from-r-cnn-to-faster-r-cnn-the-evolution-of-object-detection-technology-8fcf46029397)
+- [SSD: Single Shot MultiBox Detector — ShortScience](https://www.shortscience.org/paper?bibtexKey=conf/eccv/LiuAESRFB16)
+- [Understanding SSD MultiBox — Towards Data Science](https://towardsdatascience.com/understanding-ssd-multibox-real-time-object-detection-in-deep-learning-495ef744fab)
+- [How Does the Single-Shot MultiBox Detector (SSD) Work? — Quora](https://www.quora.com/How-does-the-Single-Shot-MultiBox-Detector-SSD-really-work)
+- [SSD Explained — Manish Chablani (Medium)](https://medium.com/@ManishChablani/ssd-single-shot-multibox-detector-explained-38533c27f75f)
+
+**Generative Models**
+- [What Is a GAN? — Jonathan Hui](https://medium.com/@jonathan_hui/gan-whats-generative-adversarial-networks-and-its-application-f39ed278ef09)
+- [What Is a Variational Autoencoder? — Jaan Altosaar](https://jaan.io/what-is-variational-autoencoder-vae-tutorial/)
+- [InfoGAN — GANs Part III — Towards Data Science](https://towardsdatascience.com/infogan-generative-adversarial-networks-part-iii-380c0c6712cd)
+
+**NLP & Transformers**
+- [Self-Attention Mechanisms in NLP — Alibaba Cloud (Medium)](https://medium.com/@Alibaba_Cloud/self-attention-mechanisms-in-natural-language-processing-9f28315ff905)
+- [Understanding Encoder-Decoder Seq2Seq Models — Towards Data Science](https://towardsdatascience.com/understanding-encoder-decoder-sequence-to-sequence-model-679e04af4346)
+
+**RNNs / LSTMs**
+- [Stateful vs Stateless LSTM for Time-Series Forecasting — Machine Learning Mastery](https://machinelearningmastery.com/stateful-stateless-lstm-time-series-forecasting-python/)
+
+**Reinforcement Learning**
+- [Meta Reinforcement Learning (RL²) — Hackernoon](https://hackernoon.com/learning-policies-for-learning-policies-meta-reinforcement-learning-rl%C2%B2-in-tensorflow-b15b592a2ddf)
+
+**Explainable AI**
+- [Interpretable AI — Towards Data Science](https://towardsdatascience.com/interpretable-ai-or-how-i-learned-to-stop-worrying-and-trust-ai-e61f9e8ee2c2)
+- ["Explainable AI": Who Takes the Decisions for Us? — Towards Data Science](https://towardsdatascience.com/explainable-ai-who-takes-the-decisions-for-us-97b1d33edd91)
+
+**Coding & DSA Practice**
+- [LeetCode — Problem Set](https://leetcode.com/problemset/all/)
+- [HackerRank — Dashboard](https://www.hackerrank.com/dashboard)
+- [HackerRank — Interview Prep Contest](https://www.hackerrank.com/contests/pep-interviewprep-9june/challenges)
+- [HackerEarth — Coding Challenges](https://www.hackerearth.com/challenges/)
+- [GeeksforGeeks — Placements](https://www.geeksforgeeks.org/placements-gq/)
+- [The Top Data Structures for Your Next Coding Interview — freeCodeCamp](https://medium.freecodecamp.org/the-top-data-structures-you-should-know-for-your-next-coding-interview-36af0831f5e3)
+- [Data Structures Essay — hexapodia (Web Archive)](https://web.archive.org/web/20111223104325/http://essays.hexapodia.net/datastructures)
+- [Python Programs — OmkarPathak (GitHub)](https://github.com/OmkarPathak/Python-Programs)
+- [Beginning Java: Data Types, Variables, and Arrays — SitePoint](https://www.sitepoint.com/beginning-java-data-types-variables-and-arrays/)
+- [C Storage Classes — Guru99](https://www.guru99.com/c-storage-classes.html)
+
+**Tools & Miscellaneous**
+- [How to Rewrite Your SQL Queries in Pandas — Medium](https://medium.com/jbennetcodes/how-to-rewrite-your-sql-queries-in-pandas-and-more-149d341fc53e)
+- [TensorFlow — Convolutional VAE Example (GitHub)](https://github.com/tensorflow/tensorflow/blob/r1.13/tensorflow/contrib/eager/python/examples/generative_examples/cvae.ipynb)
+- [Design Rule Checks (DRC) for 28nm Technology — Design & Reuse](https://www.design-reuse.com/articles/41504/design-rule-checks-drc-a-practical-view-for-28nm-technology.html)
+- [Student Perspectives on Applying to NLP PhD Programs — Nelson Liu](https://blog.nelsonliu.me/2019/10/24/student-perspectives-on-applying-to-nlp-phd-programs/)
+
+**Careers & Job Boards**
+- [Tesla — Careers](https://www.tesla.com/careers/search)
+- [Gartner — Jobs and Careers](https://jobs.gartner.com/)
+- [StepStone — Job Exchange (DE)](https://www.stepstone.de/)
+- [Joblift (DE)](https://joblift.de/)
+- [Absolventa — Jobs for Graduates (DE)](https://www.absolventa.de/)
+- [Jobs in Berlin for English Speakers](http://www.jobsinberlin.eu/search?q=data+science)
+- [BambooHR — Jobs](https://fcg.bamboohr.com/jobs/)
+- [XING](https://www.xing.com/home)
+- [Hays — UK Jobs and Recruitment](https://www.hays.co.uk/)
+- [BearingPoint (DE)](https://www.bearingpoint.com/de-de/)
+- [neuvoo — Job Search](https://neuvoo.com/)
+- [bigshyft — Job Search](https://www.bigshyft.com/jobs)
+- [Jobbio — Job Search](https://jobbio.com/search)
+- [AngelList / Wellfound](https://angel.co/)
 
 ---
 

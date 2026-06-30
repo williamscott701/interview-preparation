@@ -2,12 +2,20 @@
 """
 generate_html.py
 Convert ML_DL_Notes.md → ML_DL_Notes.html
-A beautiful, self-contained HTML with colored sections, MathJax, image sliders,
-collapsible sidebar, dark mode, and scroll spy.
+
+A self-contained, modern HTML build:
+  • CommonMark + GFM rendering via markdown-it-py (matches an MD preview exactly —
+    nested lists, tables, raw <img> HTML)
+  • MathJax for $…$ / $$…$$  (consecutive "= …" lines auto-aligned)
+  • GitHub-style heading IDs (so the hand-written TOC anchors resolve)
+  • Per-section accent colours, collapsible sidebar, scroll-spy, dark mode,
+    reading-progress bar
+  • Images: filename shown on hover, fade-in size control, size persisted per image
 """
 
 import re
 import sys
+import html as _html
 import subprocess
 from pathlib import Path
 
@@ -36,10 +44,67 @@ SECTIONS = [
 ]
 
 
+# ── Equation alignment ───────────────────────────────────────────────────────
+# Merge runs of single-line  $$ … $$  blocks (separated only by blank lines)
+# where the continuation blocks start with a relational operator, so MathJax
+# lines them up on the "=".
+
+_BLOCK_RE  = re.compile(r'^\s*\$\$(.+?)\$\$\s*$')
+_REL_START = re.compile(
+    r'^\s*(=|\\leq|\\geq|\\approx|\\Rightarrow|\\rightarrow|\\to|\\equiv|\\propto|\\le|\\ge)'
+)
+_REL_OPS = ['=', r'\leq', r'\geq', r'\approx', r'\Rightarrow', r'\equiv', r'\propto']
+
+
+def _amp_first(expr: str) -> str:
+    """Insert an alignment '&' before the first relational operator."""
+    best = None
+    for op in _REL_OPS:
+        idx = expr.find(op)
+        if idx != -1 and (best is None or idx < best):
+            best = idx
+    if best is None:
+        return expr
+    return expr[:best] + '&' + expr[best:]
+
+
+def merge_aligned_blocks(text: str) -> str:
+    lines = text.split('\n')
+    out, i, n = [], 0, len(text.split('\n'))
+    while i < n:
+        m = _BLOCK_RE.match(lines[i])
+        if m:
+            run = [m.group(1).strip()]
+            j = i + 1
+            while j < n:
+                k = j
+                while k < n and lines[k].strip() == '':
+                    k += 1
+                if k >= n:
+                    break
+                m2 = _BLOCK_RE.match(lines[k])
+                if m2 and _REL_START.match(m2.group(1)):
+                    run.append(m2.group(1).strip())
+                    j = k + 1
+                else:
+                    break
+            if len(run) > 1:
+                body = [(_amp_first(e) if idx == 0 else '&' + e)
+                        for idx, e in enumerate(run)]
+                out.append('$$\\begin{aligned}\n'
+                           + ' \\\\\n'.join(body)
+                           + '\n\\end{aligned}$$')
+                i = j
+                continue
+        out.append(lines[i])
+        i += 1
+    return '\n'.join(out)
+
+
 # ── Math protection ───────────────────────────────────────────────────────────
 
 def protect_math(text):
-    """Replace $...$ and $$...$$ with plain-text placeholders markdown won't alter."""
+    """Replace $…$ and $$…$$ with plain-text placeholders markdown won't alter."""
     store = []
 
     def save(m):
@@ -47,76 +112,99 @@ def protect_math(text):
         store.append(m.group(0))
         return f"MLMATH{idx}MLEND"
 
-    # Display math first (allow newlines inside)
-    text = re.sub(r'\$\$[\s\S]*?\$\$', save, text)
-    # Inline math (no newlines)
-    text = re.sub(r'\$[^\$\n]+?\$', save, text)
+    text = re.sub(r'\$\$[\s\S]*?\$\$', save, text)   # display first
+    text = re.sub(r'\$[^\$\n]+?\$', save, text)       # then inline
     return text, store
 
 
 def restore_math(html, store):
-    # Display math: markdown wraps the lone placeholder in <p>…</p>; replace whole <p>
     def repl_block(m):
-        expr = store[int(m.group(1))]
-        return f'<div class="math-display">{expr}</div>'
+        return f'<div class="math-display">{store[int(m.group(1))]}</div>'
 
     html = re.sub(r'<p>\s*MLMATH(\d+)MLEND\s*</p>', repl_block, html)
-
-    # Inline math (placeholder still inside other tags)
     html = re.sub(r'MLMATH(\d+)MLEND', lambda m: store[int(m.group(1))], html)
     return html
+
+
+# ── Heading IDs (GitHub-compatible slugify) ───────────────────────────────────
+
+def _slug(text, used):
+    s = text.strip().lower()
+    s = re.sub(r'[^\w\s-]', '', s)   # drop punctuation, keep spaces/hyphens/word chars
+    s = s.replace(' ', '-')          # each space -> one hyphen (no collapsing)
+    base, c = s, 1
+    while s in used:
+        s, c = f'{base}-{c}', c + 1
+    used.add(s)
+    return s
+
+
+def add_heading_ids(html):
+    used = set()
+
+    def repl(m):
+        tag, attrs, inner = m.group(1), m.group(2), m.group(3)
+        if re.search(r'\bid=', attrs):
+            return m.group(0)
+        text = _html.unescape(re.sub(r'<[^>]+>', '', inner))
+        return f'<{tag}{attrs} id="{_slug(text, used)}">{inner}</{tag}>'
+
+    return re.sub(r'<(h[123])((?:\s[^>]*)?)>(.*?)</\1>', repl, html, flags=re.S)
 
 
 # ── Markdown conversion ───────────────────────────────────────────────────────
 
 def md_to_html(md_file: Path) -> str:
     try:
-        import markdown
+        from markdown_it import MarkdownIt
     except ImportError:
-        subprocess.run([sys.executable, '-m', 'pip', 'install', 'markdown'], check=True)
-        import markdown
+        subprocess.run([sys.executable, '-m', 'pip', 'install', 'markdown-it-py'],
+                       check=True)
+        from markdown_it import MarkdownIt
 
     text = md_file.read_text(encoding='utf-8')
+    text = merge_aligned_blocks(text)
     text, store = protect_math(text)
 
-    html = markdown.markdown(
-        text,
-        extensions=['extra', 'toc'],
-        extension_configs={
-            'toc': {'permalink': False}
-        }
-    )
+    md = MarkdownIt('commonmark', {'html': True})
+    for rule in ('table', 'strikethrough'):
+        try:
+            md.enable(rule)
+        except Exception:
+            pass
+    html = md.render(text)
 
     html = restore_math(html, store)
+    html = add_heading_ids(html)
     return html
 
 
 # ── Section wrapping ──────────────────────────────────────────────────────────
 
 def wrap_sections(body: str) -> str:
-    """Split body HTML at <h2> boundaries and wrap each chunk in a coloured section div."""
-    # Split while keeping the delimiters
+    """Split body HTML at <h2> boundaries and wrap each chunk in a coloured card.
+
+    The leading H1 title block and the "Table of Contents" section are dropped
+    from the rendered page — the top bar already shows the title and the sidebar
+    is the table of contents. (The source MD keeps both.)
+    """
     parts = re.split(r'(<h2[^>]*>[\s\S]*?</h2>)', body)
 
-    result = []
-    pre_buf = []          # content before first h2
-    open_sec = False
+    result, open_sec = [], False
 
     for part in parts:
         m = re.match(r'<h2[^>]*>([\s\S]*?)</h2>', part)
         if m:
-            # Close previous section
             if open_sec:
                 result.append('</div>\n')
-            elif pre_buf:
-                # Wrap pre-h2 content (h1 + hr)
-                result.append('<div class="content-section sec-0 title-card">\n')
-                result.extend(pre_buf)
-                result.append('</div>\n')
-                pre_buf = []
+                open_sec = False
 
-            # Determine colour class from section number
             heading_txt = re.sub(r'<[^>]+>', '', m.group(1)).strip()
+
+            # Skip the Table of Contents section (the sidebar replaces it)
+            if re.search(r'table of contents', heading_txt, re.I):
+                continue
+
             num_m = re.match(r'^(\d+)\.', heading_txt)
             if num_m:
                 sec_n = int(num_m.group(1))
@@ -129,15 +217,13 @@ def wrap_sections(body: str) -> str:
             result.append(f'<div class="content-section sec-{sec_n}">\n')
             result.append(part + '\n')
         else:
+            # Keep only content inside an open section; the pre-H1 title block
+            # and the TOC list (no section open) are dropped.
             if open_sec:
                 result.append(part)
-            else:
-                pre_buf.append(part)
 
     if open_sec:
         result.append('</div>\n')
-    elif pre_buf:
-        result.extend(pre_buf)
 
     return ''.join(result)
 
@@ -145,221 +231,207 @@ def wrap_sections(body: str) -> str:
 # ── CSS ───────────────────────────────────────────────────────────────────────
 
 def gen_section_css() -> str:
-    lines = []
-    for (n, accent, light, dark_a) in SECTIONS:
-        lines.append(f"""
-.sec-{n} h2 {{ background: {accent}; }}
-.sec-{n} h3 {{ color: {accent}; border-bottom-color: {light}; }}
-.sec-{n} table thead {{ background: {accent}; }}
-.sec-{n} blockquote {{ border-left-color: {accent}; background: {light}; }}
-.sec-{n} .img-ctrl input[type=range] {{ accent-color: {accent}; }}
-.sec-{n} a {{ color: {accent}; }}
-[data-theme=dark] .sec-{n} h3 {{ color: {dark_a}; border-bottom-color: #1e293b; }}
-[data-theme=dark] .sec-{n} blockquote {{ background: rgba(30,41,59,.7); border-left-color: {dark_a}; }}
-[data-theme=dark] .sec-{n} a {{ color: {dark_a}; }}""")
-    return "\n".join(lines)
+    return "\n".join(
+        f".sec-{n}{{--sa:{a};--sl:{l};--sd:{d};}}"
+        for (n, a, l, d) in SECTIONS
+    )
 
 
 def get_css() -> str:
     return """
-/* ─ Reset ──────────────────────────────────────────────── */
+/* ─ Reset ───────────────────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-/* ─ Variables ──────────────────────────────────────────── */
+/* ─ Variables ───────────────────────────────────────────── */
 :root{
-  --bg:#F1F5F9;--bg-card:#FFF;--bg-sub:#F8FAFC;
-  --text:#0F172A;--muted:#64748B;--border:#E2E8F0;
-  --shadow:0 1px 4px rgba(0,0,0,.07),0 2px 12px rgba(0,0,0,.05);
-  --sw:264px;--th:52px;--r:10px;
-  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
-  --mono:"JetBrains Mono",Consolas,Monaco,"Courier New",monospace;
+  --bg:#F1F5F9;--bg-card:#FFFFFF;--bg-sub:#F8FAFC;
+  --text:#0F172A;--muted:#64748B;--border:#E6EAF0;
+  --shadow:0 1px 2px rgba(16,24,40,.04),0 4px 16px rgba(16,24,40,.06);
+  --shadow-lg:0 10px 30px rgba(16,24,40,.12);
+  --sw:280px;--th:54px;--r:14px;
+  --sa:#2563EB;--sl:#EFF6FF;--sd:#60A5FA;
+  --font:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+  --mono:'JetBrains Mono',Consolas,Monaco,"Courier New",monospace;
 }
 [data-theme=dark]{
-  --bg:#0F172A;--bg-card:#1E293B;--bg-sub:#162032;
-  --text:#E2E8F0;--muted:#94A3B8;--border:#334155;
-  --shadow:0 2px 8px rgba(0,0,0,.4);
+  --bg:#0B1120;--bg-card:#131C2E;--bg-sub:#0F1830;
+  --text:#E5ECF5;--muted:#93A4BD;--border:#24314A;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.35);
+  --shadow-lg:0 14px 40px rgba(0,0,0,.5);
 }
 
 /* ─ Base ────────────────────────────────────────────────── */
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;scroll-padding-top:66px}
 body{font-family:var(--font);background:var(--bg);color:var(--text);
-  line-height:1.75;font-size:15.5px;transition:background .2s,color .2s}
-a{text-decoration:none}
+  line-height:1.72;font-size:15.5px;-webkit-font-smoothing:antialiased;
+  transition:background .2s,color .2s}
+a{color:var(--sa);text-decoration:none}
 a:hover{text-decoration:underline}
-p{margin:8px 0}
-ul,ol{padding-left:22px;margin:8px 0}
-li{margin:3px 0}
-strong{font-weight:600}
-hr{border:none;border-top:1px solid var(--border);margin:18px 0}
-h1{font-size:1.9rem;font-weight:800;letter-spacing:-.04em;margin-bottom:4px}
+p{margin:10px 0}
+ul,ol{padding-left:24px;margin:10px 0}
+li{margin:4px 0}
+li>ul,li>ol{margin:4px 0}
+strong{font-weight:700}
+em{font-style:italic}
+hr{border:none;border-top:1px solid var(--border);margin:20px 0}
+h1{font-size:2rem;font-weight:800;letter-spacing:-.03em}
+
+/* ─ Reading progress ────────────────────────────────────── */
+#progress{position:fixed;top:var(--th);left:0;height:3px;width:0;z-index:199;
+  background:linear-gradient(90deg,#2563EB,#7C3AED,#DB2777,#15803D);
+  transition:width .08s linear}
 
 /* ─ Top bar ─────────────────────────────────────────────── */
-#topbar{
-  position:fixed;top:0;left:0;right:0;height:var(--th);
-  background:var(--bg-card);border-bottom:1px solid var(--border);
-  display:flex;align-items:center;gap:10px;padding:0 16px;
-  z-index:200;box-shadow:var(--shadow);
-}
-#tog-btn{
-  font-size:1rem;background:none;border:1px solid var(--border);
-  cursor:pointer;color:var(--muted);padding:5px 9px;border-radius:6px;line-height:1;
-}
+#topbar{position:fixed;top:0;left:0;right:0;height:var(--th);
+  background:var(--bg-card);
+  background:color-mix(in srgb,var(--bg-card) 84%,transparent);
+  backdrop-filter:saturate(180%) blur(12px);
+  border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;
+  padding:0 18px;z-index:200}
+#tog-btn{font-size:1rem;background:none;border:1px solid var(--border);
+  cursor:pointer;color:var(--muted);padding:6px 10px;border-radius:9px;line-height:1}
 #tog-btn:hover{background:var(--bg-sub)}
 #bar-title{font-weight:700;font-size:.95rem;color:var(--text);flex:1;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#dark-btn{
-  font-size:.8rem;background:none;border:1px solid var(--border);
-  cursor:pointer;color:var(--muted);padding:4px 12px;border-radius:20px;white-space:nowrap;
-}
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.01em}
+#dark-btn{font-size:.8rem;font-weight:600;background:none;border:1px solid var(--border);
+  cursor:pointer;color:var(--muted);padding:6px 14px;border-radius:20px;white-space:nowrap}
 #dark-btn:hover{background:var(--bg-sub)}
 
-/* ─ Sidebar ──────────────────────────────────────────────── */
-#sidebar{
-  position:fixed;top:var(--th);left:0;width:var(--sw);
+/* ─ Sidebar ─────────────────────────────────────────────── */
+#sidebar{position:fixed;top:var(--th);left:0;width:var(--sw);
   height:calc(100vh - var(--th));background:var(--bg-card);
   border-right:1px solid var(--border);overflow-y:auto;overflow-x:hidden;
-  z-index:150;transition:transform .25s ease;
-}
-#sidebar.hidden{transform:translateX(calc(-1 * var(--sw)))}
-#sidebar::-webkit-scrollbar{width:4px}
-#sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
-#sb-inner{padding:10px 0 50px}
+  z-index:150;transition:transform .25s ease}
+#sidebar.hidden{transform:translateX(-100%)}
+#sidebar::-webkit-scrollbar{width:5px}
+#sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+#sb-inner{padding:14px 0 60px}
 
-.sb-sec{}
-.sb-h2-btn{
-  display:flex;align-items:center;gap:9px;
-  width:100%;padding:7px 14px;border:none;background:none;
-  text-align:left;cursor:pointer;color:var(--text);
-  font-weight:600;font-size:.83rem;transition:background .12s;
-}
+.sb-h2-btn{display:flex;align-items:center;gap:10px;width:100%;position:relative;
+  padding:8px 16px;border:none;background:none;text-align:left;cursor:pointer;
+  color:var(--text);font-weight:600;font-size:.82rem;transition:background .12s}
 .sb-h2-btn:hover,.sb-h2-btn.active{background:var(--bg-sub)}
-.sb-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.sb-h2-btn.active::before{content:'';position:absolute;left:0;top:6px;bottom:6px;
+  width:3px;border-radius:0 3px 3px 0;background:var(--ac,var(--sa))}
+.sb-dot{width:22px;height:22px;border-radius:7px;display:flex;align-items:center;
+  justify-content:center;color:#fff;font-size:.66rem;font-weight:800;flex-shrink:0}
 .sb-label{flex:1;line-height:1.3}
-.sb-chev{font-size:.65rem;color:var(--muted);transition:transform .2s;flex-shrink:0}
+.sb-chev{font-size:.6rem;color:var(--muted);transition:transform .2s;flex-shrink:0;
+  padding:2px 4px;border-radius:5px}
+.sb-chev:hover{background:var(--border)}
 .sb-h2-btn.open .sb-chev{transform:rotate(90deg)}
 
-.sb-subs{display:none;padding-left:32px}
+.sb-subs{display:none;padding:2px 0 8px 42px}
 .sb-subs.open{display:block}
-.sb-h3-link{
-  display:block;padding:4px 14px 4px 0;
-  color:var(--muted);font-size:.77rem;line-height:1.4;transition:color .1s;
-}
+.sb-h3-link{display:block;padding:5px 14px 5px 10px;color:var(--muted);
+  font-size:.76rem;line-height:1.4;border-left:2px solid transparent;
+  transition:color .12s,border-color .12s}
 .sb-h3-link:hover{color:var(--text);text-decoration:none}
-.sb-h3-link.active{color:var(--text);font-weight:600}
+.sb-h3-link.active{color:var(--text);font-weight:600;border-left-color:var(--ac,var(--sa))}
 
-/* ─ Main layout ──────────────────────────────────────────── */
+/* ─ Main layout ─────────────────────────────────────────── */
 #main-wrap{margin-left:var(--sw);padding-top:var(--th);transition:margin-left .25s ease}
 #main-wrap.wide{margin-left:0}
-#content{max-width:880px;margin:0 auto;padding:28px 22px 100px}
+#content{max-width:900px;margin:0 auto;padding:30px 26px 120px}
 
-/* ─ Section cards ────────────────────────────────────────── */
-.content-section{
-  background:var(--bg-card);border-radius:var(--r);
-  margin-bottom:26px;box-shadow:var(--shadow);overflow:hidden;
-  padding:0 22px 22px;
-}
-.content-section h2{
-  font-size:1.42rem;font-weight:700;letter-spacing:-.025em;
-  color:#fff;padding:14px 22px;margin-bottom:16px;
-  position:relative;left:-22px;width:calc(100% + 44px);line-height:1.3;
-}
-.content-section h3{
-  font-size:1.05rem;font-weight:600;padding-bottom:5px;
-  margin-top:22px;margin-bottom:10px;
-  border-bottom-width:2px;border-bottom-style:solid;
-}
+/* ─ Section cards ───────────────────────────────────────── */
+.content-section{background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--r);margin-bottom:24px;box-shadow:var(--shadow);
+  overflow:hidden;padding:0 24px 24px}
+.content-section h2{font-size:1.4rem;font-weight:800;letter-spacing:-.02em;color:#fff;
+  padding:15px 24px;margin:0 -24px 18px;line-height:1.3;display:flex;align-items:center;
+  background:var(--sa);
+  background:linear-gradient(120deg,var(--sa),color-mix(in srgb,var(--sa) 66%,#0B1020))}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;
+  min-width:1.8em;height:1.8em;padding:0 .45em;margin-right:.6em;
+  background:rgba(255,255,255,.22);border-radius:9px;font-size:.82em;font-weight:800}
+.content-section h3{font-size:1.08rem;font-weight:700;letter-spacing:-.01em;
+  color:var(--sa);margin:26px 0 12px;padding-bottom:6px;
+  border-bottom:2px solid var(--sl);
+  border-bottom:2px solid color-mix(in srgb,var(--sa) 24%,transparent)}
+[data-theme=dark] .content-section h3{color:var(--sd);border-bottom-color:#24314A}
 
-/* title card (h1 + hr before first section) */
-.title-card{padding:0}
-.title-card h1{
-  padding:22px 24px 18px;
-  background:linear-gradient(135deg,#0F172A,#1E293B);
-  color:#F8FAFC;border-radius:var(--r) var(--r) 0 0;
-}
+/* title card (h1 + preamble before first section) */
+.title-card{padding:0 0 14px;border:none}
+.title-card h1{padding:32px 28px;margin:0;color:#F8FAFC;font-size:2.1rem;
+  font-weight:800;letter-spacing:-.035em;
+  background:linear-gradient(135deg,#0F172A,#1E293B 55%,#334155)}
+.title-card>:not(h1){margin-left:28px;margin-right:28px}
 .title-card hr{display:none}
 
-/* ─ Tables ───────────────────────────────────────────────── */
-table{
-  width:100%;border-collapse:collapse;margin:14px 0;font-size:.9rem;
-  border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08);
-}
-table thead{color:#fff}
-table thead th{
-  padding:10px 14px;text-align:left;font-weight:600;
-  font-size:.8rem;letter-spacing:.03em;text-transform:uppercase;
-}
-table td{
-  padding:9px 14px;border-bottom:1px solid var(--border);vertical-align:top;
-}
-table tr:last-child td{border-bottom:none}
+/* ─ Tables ──────────────────────────────────────────────── */
+.content-section table{width:100%;border-collapse:separate;border-spacing:0;
+  margin:16px 0;font-size:.9rem;border:1px solid var(--border);
+  border-radius:10px;overflow:hidden;box-shadow:var(--shadow)}
+table thead{background:var(--sa)}
+table thead th{color:#fff;padding:11px 14px;text-align:left;font-weight:600;
+  font-size:.78rem;letter-spacing:.04em;text-transform:uppercase}
+table td,table th{padding:10px 14px;vertical-align:top;
+  border-bottom:1px solid var(--border)}
+table tbody tr:last-child td{border-bottom:none}
 table tbody tr:nth-child(even){background:var(--bg-sub)}
-table tbody tr:hover{filter:brightness(.97)}
-[data-theme=dark] table tbody tr:hover{filter:brightness(1.08)}
+table tbody tr:hover{background:color-mix(in srgb,var(--sa) 7%,var(--bg-card))}
 
-/* ─ Code ─────────────────────────────────────────────────── */
-pre{
-  background:#1E1E2E;color:#CDD6F4;padding:16px 20px;border-radius:8px;
-  overflow-x:auto;font-family:var(--mono);font-size:.84rem;
-  line-height:1.65;margin:14px 0;
-}
-code{
-  font-family:var(--mono);font-size:.855em;
-  background:var(--bg-sub);color:var(--muted);
-  padding:1px 5px;border-radius:4px;border:1px solid var(--border);
-}
+/* ─ Code ────────────────────────────────────────────────── */
+pre{background:#0D1426;color:#CBD5E1;padding:16px 18px;border-radius:12px;
+  overflow-x:auto;font-family:var(--mono);font-size:.84rem;line-height:1.6;
+  margin:16px 0;border:1px solid #1E293B}
+[data-theme=dark] pre{background:#070D1A}
+code{font-family:var(--mono);font-size:.86em;background:var(--bg-sub);
+  color:var(--text);padding:1.5px 6px;border-radius:6px;border:1px solid var(--border)}
 pre code{background:none;color:inherit;padding:0;border:none}
-code.img-badge{
-  display:inline-block;background:var(--bg-sub);color:var(--muted);
-  font-size:.71rem;padding:2px 9px;border-radius:20px;
-  border:1px solid var(--border);margin-bottom:6px;
-}
 
-/* ─ Blockquotes ──────────────────────────────────────────── */
-blockquote{
-  border-left-width:4px;border-left-style:solid;
-  padding:10px 16px;margin:12px 0;border-radius:0 6px 6px 0;
-  font-style:italic;font-size:.95rem;
-}
+/* ─ Blockquotes ─────────────────────────────────────────── */
+blockquote{border-left:4px solid var(--sa);
+  background:var(--sl);
+  background:color-mix(in srgb,var(--sa) 8%,var(--bg-card));
+  padding:12px 16px;margin:14px 0;border-radius:0 10px 10px 0;font-size:.95rem}
+[data-theme=dark] blockquote{background:rgba(148,163,184,.08)}
 
-/* ─ Math ─────────────────────────────────────────────────── */
-.math-display{
-  overflow-x:auto;padding:4px 0;text-align:center;margin:10px 0;
-}
+/* ─ Math ────────────────────────────────────────────────── */
+.math-display{overflow-x:auto;margin:14px 0;padding:12px 18px;text-align:center;
+  background:var(--bg-sub);border:1px solid var(--border);
+  border-left:3px solid var(--sa);border-radius:10px}
 
-/* ─ Images ───────────────────────────────────────────────── */
-.img-wrap{text-align:center;margin:16px 0}
-.img-wrap img{
-  display:block;margin:0 auto;max-width:100%;
-  border-radius:6px;height:auto;
-}
-.img-ctrl{
-  display:flex;align-items:center;justify-content:center;
-  gap:8px;margin-top:8px;font-size:.78rem;color:var(--muted);
-}
-.img-ctrl input[type=range]{width:110px;cursor:pointer}
-.img-ctrl .pct{min-width:34px;text-align:center;font-weight:600}
-.img-ctrl button{
-  background:none;border:1px solid var(--border);border-radius:4px;
-  padding:1px 8px;cursor:pointer;font-size:.72rem;color:var(--muted);
-}
-.img-ctrl button:hover{background:var(--bg-sub)}
+/* ─ Images ──────────────────────────────────────────────── */
+.img-fig{position:relative;margin:20px 0;text-align:center}
+.img-fig img{display:block;margin:0 auto;height:auto;max-width:100%;
+  border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow);
+  transition:width .15s ease}
+.img-bar{position:absolute;left:50%;bottom:10px;
+  transform:translateX(-50%) translateY(6px);
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;
+  background:rgba(8,12,22,.86);backdrop-filter:blur(8px);
+  padding:6px 10px;border-radius:12px;border:1px solid rgba(255,255,255,.12);
+  opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;
+  box-shadow:0 8px 24px rgba(0,0,0,.32);z-index:5}
+.img-fig:hover .img-bar{opacity:1;pointer-events:auto;
+  transform:translateX(-50%) translateY(0)}
+.img-name{font-family:var(--mono);font-size:.7rem;color:#CBD5E1;
+  background:rgba(255,255,255,.08);padding:2px 8px;border-radius:20px}
+.img-sizes{display:inline-flex;gap:3px}
+.img-sizes button{border:1px solid rgba(255,255,255,.18);background:transparent;
+  color:#CBD5E1;border-radius:7px;padding:2px 9px;cursor:pointer;font-size:.72rem;
+  font-weight:600;transition:all .12s}
+.img-sizes button:hover{background:rgba(255,255,255,.12)}
+.img-sizes button.on{background:var(--sa);border-color:var(--sa);color:#fff}
+.img-slider{width:84px;cursor:pointer;accent-color:var(--sa)}
 
-/* ─ Back to top ──────────────────────────────────────────── */
-#back-top{
-  position:fixed;bottom:28px;right:22px;
-  background:#334155;color:#fff;border:none;border-radius:50%;
-  width:40px;height:40px;font-size:1.1rem;cursor:pointer;
-  display:none;z-index:300;box-shadow:0 3px 10px rgba(0,0,0,.25);
-  align-items:center;justify-content:center;transition:background .15s;
-}
-#back-top:hover{background:#475569}
+/* ─ Back to top ─────────────────────────────────────────── */
+#back-top{position:fixed;bottom:30px;right:24px;width:44px;height:44px;
+  border:1px solid var(--border);border-radius:14px;background:var(--bg-card);
+  color:var(--text);box-shadow:var(--shadow-lg);font-size:1.1rem;cursor:pointer;
+  display:none;align-items:center;justify-content:center;z-index:300;
+  transition:transform .15s}
+#back-top:hover{transform:translateY(-2px)}
 #back-top.show{display:flex}
 
-/* ─ Responsive ───────────────────────────────────────────── */
-@media(max-width:768px){
-  #sidebar{transform:translateX(calc(-1 * var(--sw)))}
-  #sidebar.mobile-open{transform:translateX(0)}
+/* ─ Responsive ──────────────────────────────────────────── */
+@media(max-width:860px){
+  #sidebar{transform:translateX(-100%)}
+  #sidebar.mobile-open{transform:translateX(0);box-shadow:var(--shadow-lg)}
   #main-wrap{margin-left:0!important}
+  #content{padding:20px 16px 100px}
 }
 """ + gen_section_css()
 
@@ -372,269 +444,313 @@ def get_js() -> str:
         for (n, a, l, d) in SECTIONS
     ) + "}"
 
-    return f"""
-const SEC = {colors_json};
+    js = r'''
+const SEC = __SEC_JSON__;
 
-/* ── Dark mode ──────────────────────────────────────────────────────────── */
+/* ── Dark mode ───────────────────────────────────────────── */
 const darkBtn = document.getElementById('dark-btn');
 const saved   = localStorage.getItem('theme') || 'light';
 if (saved === 'dark') document.documentElement.setAttribute('data-theme','dark');
-darkBtn.textContent = saved === 'dark' ? '☀️  Light' : '🌙  Dark';
-
-darkBtn.addEventListener('click', () => {{
+darkBtn.textContent = saved === 'dark' ? '☀  Light' : '🌙  Dark';
+darkBtn.addEventListener('click', () => {
   const dark = document.documentElement.getAttribute('data-theme') === 'dark';
   document.documentElement.setAttribute('data-theme', dark ? 'light' : 'dark');
-  darkBtn.textContent = dark ? '🌙  Dark' : '☀️  Light';
+  darkBtn.textContent = dark ? '🌙  Dark' : '☀  Light';
   localStorage.setItem('theme', dark ? 'light' : 'dark');
-}});
+});
 
-/* ── Sidebar toggle ─────────────────────────────────────────────────────── */
+/* ── Sidebar toggle ──────────────────────────────────────── */
 const sidebar  = document.getElementById('sidebar');
 const mainWrap = document.getElementById('main-wrap');
 const togBtn   = document.getElementById('tog-btn');
+togBtn.addEventListener('click', () => {
+  if (window.matchMedia('(max-width:860px)').matches) {
+    sidebar.classList.toggle('mobile-open');
+  } else {
+    sidebar.classList.toggle('hidden');
+    mainWrap.classList.toggle('wide');
+  }
+});
 
-togBtn.addEventListener('click', () => {{
-  sidebar.classList.toggle('hidden');
-  mainWrap.classList.toggle('wide');
-}});
-
-/* ── Build sidebar ──────────────────────────────────────────────────────── */
-function buildSidebar() {{
+/* ── Build sidebar ───────────────────────────────────────── */
+function buildSidebar() {
   const inner = document.getElementById('sb-inner');
   inner.innerHTML = '';
-
-  document.querySelectorAll('.content-section').forEach(sec => {{
-    const cls   = sec.className.match(/sec-(\\d+)/);
+  document.querySelectorAll('.content-section').forEach(sec => {
+    const cls   = sec.className.match(/sec-(\d+)/);
     const secN  = cls ? +cls[1] : 0;
     const color = (SEC[secN] || SEC[0]).accent;
-
     const h2 = sec.querySelector('h2');
     if (!h2) return;
 
-    const h3s = sec.querySelectorAll('h3');
+    const numM = h2.textContent.match(/^(\d+)\./);
+    const chip = numM ? numM[1] : '';
+    const h3s  = sec.querySelectorAll('h3');
 
     const secDiv = document.createElement('div');
     secDiv.className = 'sb-sec';
+    secDiv.style.setProperty('--ac', color);
 
-    /* H2 button */
     const btn = document.createElement('button');
     btn.className = 'sb-h2-btn';
     btn.dataset.id = h2.id || '';
     btn.innerHTML = `
-      <span class="sb-dot" style="background:${{color}}"></span>
-      <span class="sb-label">${{h2.textContent}}</span>
-      ${{h3s.length ? '<span class="sb-chev">▶</span>' : ''}}`;
+      <span class="sb-dot" style="background:${color}">${chip}</span>
+      <span class="sb-label">${h2.textContent}</span>
+      ${h3s.length ? '<span class="sb-chev">▶</span>' : ''}`;
 
-    /* Subsections */
     const subs = document.createElement('div');
     subs.className = 'sb-subs';
-
-    h3s.forEach(h3 => {{
+    h3s.forEach(h3 => {
       const a = document.createElement('a');
       a.className   = 'sb-h3-link';
       a.href        = '#' + (h3.id || '');
       a.textContent = h3.textContent;
       subs.appendChild(a);
-    }});
+    });
 
-    /* Chevron toggles subs */
     const chev = btn.querySelector('.sb-chev');
-    if (chev) {{
-      chev.addEventListener('click', e => {{
+    if (chev) {
+      chev.addEventListener('click', e => {
         e.stopPropagation();
         subs.classList.toggle('open');
         btn.classList.toggle('open');
-      }});
-    }}
-
-    /* Button click → scroll to h2 + expand */
-    btn.addEventListener('click', e => {{
+      });
+    }
+    btn.addEventListener('click', e => {
       if (e.target === chev) return;
       subs.classList.add('open');
       btn.classList.add('open');
       if (h2.id) document.getElementById(h2.id)
-        ?.scrollIntoView({{behavior:'smooth',block:'start'}});
-    }});
+        ?.scrollIntoView({behavior:'smooth',block:'start'});
+    });
 
     secDiv.appendChild(btn);
     secDiv.appendChild(subs);
     inner.appendChild(secDiv);
-  }});
-}}
+  });
+}
 
-/* ── Scroll spy ─────────────────────────────────────────────────────────── */
-function initScrollSpy() {{
+/* ── Section-number chip in each h2 ──────────────────────── */
+function decorateHeadings() {
+  document.querySelectorAll('.content-section h2').forEach(h2 => {
+    const m = h2.textContent.match(/^(\d+)\.\s*(.+)$/);
+    if (m) h2.innerHTML = `<span class="sec-num">${m[1]}</span>${m[2]}`;
+  });
+}
+
+/* ── Scroll spy ──────────────────────────────────────────── */
+function initScrollSpy() {
   const heads = Array.from(document.querySelectorAll('h2[id],h3[id]'));
   let raf = false;
-
-  function update() {{
+  function update() {
     const cut = window.scrollY + window.innerHeight * 0.22;
     let active = null;
-    for (const h of heads) {{
+    for (const h of heads) {
       if (h.getBoundingClientRect().top + window.scrollY <= cut) active = h;
       else break;
-    }}
+    }
     if (!active) return;
-
     document.querySelectorAll('.sb-h2-btn.active,.sb-h3-link.active')
       .forEach(el => el.classList.remove('active'));
-
     const id = active.id;
-    if (active.tagName === 'H2') {{
-      document.querySelector(`.sb-h2-btn[data-id="${{id}}"]`)?.classList.add('active');
-    }} else {{
-      const link = document.querySelector(`.sb-h3-link[href="#${{id}}"]`);
-      if (link) {{
+    if (active.tagName === 'H2') {
+      document.querySelector(`.sb-h2-btn[data-id="${id}"]`)?.classList.add('active');
+    } else {
+      const link = document.querySelector(`.sb-h3-link[href="#${id}"]`);
+      if (link) {
         link.classList.add('active');
         const par = link.closest('.sb-subs');
-        if (par) {{
+        if (par) {
           par.classList.add('open');
           par.previousElementSibling?.classList.add('open');
-        }}
-      }}
-    }}
-  }}
-
-  window.addEventListener('scroll', () => {{
-    if (!raf) {{ raf = true; requestAnimationFrame(() => {{ update(); raf = false; }}); }}
-  }});
+        }
+      }
+    }
+  }
+  window.addEventListener('scroll', () => {
+    if (!raf) { raf = true; requestAnimationFrame(() => { update(); raf = false; }); }
+  });
   update();
-}}
+}
 
-/* ── Image resize ───────────────────────────────────────────────────────── */
-function initImages() {{
-  document.querySelectorAll('img').forEach(img => {{
+/* ── Images: hover filename + size control + persistence ─── */
+function initImages() {
+  /* Bump this when the default sizes change → clears stale saved sizes so the
+     new defaults take effect (manual resizes made afterwards still persist). */
+  const IMG_DEFAULTS_VERSION = '2';
+  if (localStorage.getItem('imgDefaultsVersion') !== IMG_DEFAULTS_VERSION) {
+    Object.keys(localStorage)
+      .filter(k => k.indexOf('imgsize:') === 0)
+      .forEach(k => localStorage.removeItem(k));
+    localStorage.setItem('imgDefaultsVersion', IMG_DEFAULTS_VERSION);
+  }
+
+  /* Map each image to its subsection (nearest preceding h3). */
+  const subOf = new Map();
+  let curH3 = '';
+  document.querySelectorAll('#content h3, #content img').forEach(el => {
+    if (el.tagName === 'H3') curH3 = el.textContent.trim();
+    else subOf.set(el, curH3);
+  });
+
+  document.querySelectorAll('#content img').forEach(img => {
+    const src  = img.getAttribute('src') || '';
+    const name = src.split('/').pop();
     const origW = parseInt(img.getAttribute('width')) || 700;
     img.removeAttribute('width');
     img.removeAttribute('height');
-    Object.assign(img.style, {{
-      display:'block', margin:'0 auto', maxWidth: origW + 'px', width:'70%',
-      borderRadius:'6px', height:'auto'
-    }});
+    img.title = name;
+    img.style.maxWidth = origW + 'px';
 
-    const wrap = document.createElement('div');
-    wrap.className = 'img-wrap';
-    img.parentNode.insertBefore(wrap, img);
-    wrap.appendChild(img);
+    /* drop the filename badge that precedes the image */
+    let prev = img.previousSibling;
+    while (prev && prev.nodeType === 3 && !prev.textContent.trim())
+      prev = prev.previousSibling;
+    if (prev && prev.nodeType === 1 && prev.tagName === 'CODE'
+        && /^image\d+\.(png|jpe?g|gif)$/i.test(prev.textContent.trim()))
+      prev.remove();
 
-    const ctrl    = document.createElement('div');
-    ctrl.className = 'img-ctrl';
+    const fig = document.createElement('div');
+    fig.className = 'img-fig';
+    img.parentNode.insertBefore(fig, img);
+    fig.appendChild(img);
 
-    const lbl = document.createElement('span');
-    lbl.textContent = 'Size:';
+    /* Default size: Full (100%) for all images, except §11.3 → S (30%). */
+    const defW   = /^11\.3\b/.test(subOf.get(img) || '') ? 30 : 100;
+    const KEY    = 'imgsize:' + name;
+    const savedW = parseInt(localStorage.getItem(KEY));
+    const initW  = (savedW >= 15 && savedW <= 100) ? savedW : defW;
+    img.style.width = initW + '%';
 
-    const slider = document.createElement('input');
-    slider.type = 'range'; slider.min = '10'; slider.max = '100'; slider.value = '70';
+    const bar = document.createElement('div');
+    bar.className = 'img-bar';
+    bar.innerHTML =
+      `<span class="img-name">${name}</span>` +
+      `<span class="img-sizes">` +
+        `<button data-w="30">S</button>` +
+        `<button data-w="50">M</button>` +
+        `<button data-w="75">L</button>` +
+        `<button data-w="100">Full</button>` +
+      `</span>` +
+      `<input type="range" class="img-slider" min="15" max="100" value="${initW}">`;
+    fig.appendChild(bar);
 
-    const pct = document.createElement('span');
-    pct.className = 'pct'; pct.textContent = '70%';
+    const slider = bar.querySelector('.img-slider');
+    const chips  = bar.querySelectorAll('.img-sizes button');
+    function setW(w) {
+      w = Math.max(15, Math.min(100, Math.round(w)));
+      img.style.width = w + '%';
+      slider.value = w;
+      localStorage.setItem(KEY, w);
+      chips.forEach(b => b.classList.toggle('on', +b.dataset.w === w));
+    }
+    chips.forEach(b => b.addEventListener('click', () => setW(+b.dataset.w)));
+    slider.addEventListener('input', () => setW(+slider.value));
+    chips.forEach(b => b.classList.toggle('on', +b.dataset.w === initW));
+  });
+}
 
-    const rst = document.createElement('button');
-    rst.textContent = '↺ Reset';
+/* ── Reading progress ────────────────────────────────────── */
+function initProgress() {
+  const bar = document.getElementById('progress');
+  function upd() {
+    const h = document.documentElement;
+    const max = h.scrollHeight - h.clientHeight;
+    bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+  }
+  window.addEventListener('scroll', upd);
+  upd();
+}
 
-    slider.addEventListener('input', () => {{
-      img.style.width = slider.value + '%'; pct.textContent = slider.value + '%';
-    }});
-    rst.addEventListener('click', () => {{
-      slider.value = '70'; img.style.width = '70%'; pct.textContent = '70%';
-    }});
-
-    ctrl.append(lbl, slider, pct, rst);
-    wrap.appendChild(ctrl);
-  }});
-}}
-
-/* ── Image filename badges ──────────────────────────────────────────────── */
-function badgeImageLabels() {{
-  document.querySelectorAll('code').forEach(c => {{
-    if (/^image\\d+\\.(png|jpg|gif)$/i.test(c.textContent.trim()))
-      c.classList.add('img-badge');
-  }});
-}}
-
-/* ── Back to top ────────────────────────────────────────────────────────── */
+/* ── Back to top ─────────────────────────────────────────── */
 const bt = document.getElementById('back-top');
 window.addEventListener('scroll', () => bt.classList.toggle('show', window.scrollY > 350));
-bt.addEventListener('click', () => window.scrollTo({{top:0,behavior:'smooth'}}));
+bt.addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));
 
-/* ── Init ────────────────────────────────────────────────────────────────── */
-document.addEventListener('DOMContentLoaded', () => {{
+/* ── Init ────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
   buildSidebar();
+  decorateHeadings();
   initScrollSpy();
   initImages();
-  badgeImageLabels();
-}});
-"""
+  initProgress();
+});
+'''
+    return js.replace('__SEC_JSON__', colors_json)
 
 
 # ── Assemble full HTML ────────────────────────────────────────────────────────
 
-def assemble(body: str) -> str:
-    body = wrap_sections(body)
-    css  = get_css()
-    js   = get_js()
-
-    return f"""<!DOCTYPE html>
+_HTML_TEMPLATE = """<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>ML / DL Interview Preparation Notes</title>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
 <!-- MathJax: render $...$ and $$...$$ -->
 <script>
-MathJax = {{
-  tex: {{
+MathJax = {
+  tex: {
     inlineMath: [['$','$'],['\\\\(','\\\\)']],
     displayMath: [['$$','$$'],['\\\\[','\\\\]']],
     processEscapes: true,
     processEnvironments: true
-  }},
-  options: {{ skipHtmlTags: ['script','noscript','style','textarea','pre'] }}
-}};
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
 </script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
 
 <style>
-{css}
+__CSS__
 </style>
 </head>
 <body>
 
-<!-- Top bar -->
 <div id="topbar">
   <button id="tog-btn">☰</button>
   <span id="bar-title">ML / DL Interview Preparation Notes</span>
   <button id="dark-btn">🌙  Dark</button>
 </div>
+<div id="progress"></div>
 
-<!-- Sidebar -->
-<nav id="sidebar">
-  <div id="sb-inner"></div>
-</nav>
+<nav id="sidebar"><div id="sb-inner"></div></nav>
 
-<!-- Main content -->
 <div id="main-wrap">
   <main id="content">
-{body}
+__BODY__
   </main>
 </div>
 
-<!-- Back to top -->
 <button id="back-top" title="Back to top">↑</button>
 
 <script>
-{js}
+__JS__
 </script>
 </body>
 </html>"""
+
+
+def assemble(body: str) -> str:
+    body = wrap_sections(body)
+    html = _HTML_TEMPLATE
+    html = html.replace('__CSS__', get_css())
+    html = html.replace('__BODY__', body)
+    html = html.replace('__JS__', get_js())
+    return html
 
 
 # ── Entry point ───────────────────────────────────────────────────────────────
 
 def main():
     print(f"Source : {MD_FILE}")
-    print("Converting markdown …")
+    print("Converting markdown (markdown-it-py) …")
     body = md_to_html(MD_FILE)
 
     print("Assembling HTML …")

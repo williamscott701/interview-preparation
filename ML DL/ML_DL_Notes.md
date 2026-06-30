@@ -278,8 +278,8 @@ $$F = \frac{\text{Between-group variability}}{\text{Within-group variability}}$$
 
 ### 2.4 Probability vs Likelihood
 
-`image49.png`
-<img src="images/image49.png" alt="Probability vs Likelihood" width="600" />
+`image49.jpg`
+<img src="images/image49.jpg" alt="Probability vs Likelihood" width="600" />
 
 | | Probability | Likelihood |
 |:---|:---|:---|

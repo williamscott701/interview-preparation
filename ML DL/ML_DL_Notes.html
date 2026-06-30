@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>ML / DL Interview Preparation Notes</title>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
 <!-- MathJax: render $...$ and $$...$$ -->
 <script>
 MathJax = {
@@ -21,410 +25,231 @@ MathJax = {
 
 <style>
 
-/* ─ Reset ──────────────────────────────────────────────── */
+/* ─ Reset ───────────────────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-/* ─ Variables ──────────────────────────────────────────── */
+/* ─ Variables ───────────────────────────────────────────── */
 :root{
-  --bg:#F1F5F9;--bg-card:#FFF;--bg-sub:#F8FAFC;
-  --text:#0F172A;--muted:#64748B;--border:#E2E8F0;
-  --shadow:0 1px 4px rgba(0,0,0,.07),0 2px 12px rgba(0,0,0,.05);
-  --sw:264px;--th:52px;--r:10px;
-  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
-  --mono:"JetBrains Mono",Consolas,Monaco,"Courier New",monospace;
+  --bg:#F1F5F9;--bg-card:#FFFFFF;--bg-sub:#F8FAFC;
+  --text:#0F172A;--muted:#64748B;--border:#E6EAF0;
+  --shadow:0 1px 2px rgba(16,24,40,.04),0 4px 16px rgba(16,24,40,.06);
+  --shadow-lg:0 10px 30px rgba(16,24,40,.12);
+  --sw:280px;--th:54px;--r:14px;
+  --sa:#2563EB;--sl:#EFF6FF;--sd:#60A5FA;
+  --font:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+  --mono:'JetBrains Mono',Consolas,Monaco,"Courier New",monospace;
 }
 [data-theme=dark]{
-  --bg:#0F172A;--bg-card:#1E293B;--bg-sub:#162032;
-  --text:#E2E8F0;--muted:#94A3B8;--border:#334155;
-  --shadow:0 2px 8px rgba(0,0,0,.4);
+  --bg:#0B1120;--bg-card:#131C2E;--bg-sub:#0F1830;
+  --text:#E5ECF5;--muted:#93A4BD;--border:#24314A;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.35);
+  --shadow-lg:0 14px 40px rgba(0,0,0,.5);
 }
 
 /* ─ Base ────────────────────────────────────────────────── */
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;scroll-padding-top:66px}
 body{font-family:var(--font);background:var(--bg);color:var(--text);
-  line-height:1.75;font-size:15.5px;transition:background .2s,color .2s}
-a{text-decoration:none}
+  line-height:1.72;font-size:15.5px;-webkit-font-smoothing:antialiased;
+  transition:background .2s,color .2s}
+a{color:var(--sa);text-decoration:none}
 a:hover{text-decoration:underline}
-p{margin:8px 0}
-ul,ol{padding-left:22px;margin:8px 0}
-li{margin:3px 0}
-strong{font-weight:600}
-hr{border:none;border-top:1px solid var(--border);margin:18px 0}
-h1{font-size:1.9rem;font-weight:800;letter-spacing:-.04em;margin-bottom:4px}
+p{margin:10px 0}
+ul,ol{padding-left:24px;margin:10px 0}
+li{margin:4px 0}
+li>ul,li>ol{margin:4px 0}
+strong{font-weight:700}
+em{font-style:italic}
+hr{border:none;border-top:1px solid var(--border);margin:20px 0}
+h1{font-size:2rem;font-weight:800;letter-spacing:-.03em}
+
+/* ─ Reading progress ────────────────────────────────────── */
+#progress{position:fixed;top:var(--th);left:0;height:3px;width:0;z-index:199;
+  background:linear-gradient(90deg,#2563EB,#7C3AED,#DB2777,#15803D);
+  transition:width .08s linear}
 
 /* ─ Top bar ─────────────────────────────────────────────── */
-#topbar{
-  position:fixed;top:0;left:0;right:0;height:var(--th);
-  background:var(--bg-card);border-bottom:1px solid var(--border);
-  display:flex;align-items:center;gap:10px;padding:0 16px;
-  z-index:200;box-shadow:var(--shadow);
-}
-#tog-btn{
-  font-size:1rem;background:none;border:1px solid var(--border);
-  cursor:pointer;color:var(--muted);padding:5px 9px;border-radius:6px;line-height:1;
-}
+#topbar{position:fixed;top:0;left:0;right:0;height:var(--th);
+  background:var(--bg-card);
+  background:color-mix(in srgb,var(--bg-card) 84%,transparent);
+  backdrop-filter:saturate(180%) blur(12px);
+  border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;
+  padding:0 18px;z-index:200}
+#tog-btn{font-size:1rem;background:none;border:1px solid var(--border);
+  cursor:pointer;color:var(--muted);padding:6px 10px;border-radius:9px;line-height:1}
 #tog-btn:hover{background:var(--bg-sub)}
 #bar-title{font-weight:700;font-size:.95rem;color:var(--text);flex:1;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#dark-btn{
-  font-size:.8rem;background:none;border:1px solid var(--border);
-  cursor:pointer;color:var(--muted);padding:4px 12px;border-radius:20px;white-space:nowrap;
-}
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.01em}
+#dark-btn{font-size:.8rem;font-weight:600;background:none;border:1px solid var(--border);
+  cursor:pointer;color:var(--muted);padding:6px 14px;border-radius:20px;white-space:nowrap}
 #dark-btn:hover{background:var(--bg-sub)}
 
-/* ─ Sidebar ──────────────────────────────────────────────── */
-#sidebar{
-  position:fixed;top:var(--th);left:0;width:var(--sw);
+/* ─ Sidebar ─────────────────────────────────────────────── */
+#sidebar{position:fixed;top:var(--th);left:0;width:var(--sw);
   height:calc(100vh - var(--th));background:var(--bg-card);
   border-right:1px solid var(--border);overflow-y:auto;overflow-x:hidden;
-  z-index:150;transition:transform .25s ease;
-}
-#sidebar.hidden{transform:translateX(calc(-1 * var(--sw)))}
-#sidebar::-webkit-scrollbar{width:4px}
-#sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
-#sb-inner{padding:10px 0 50px}
+  z-index:150;transition:transform .25s ease}
+#sidebar.hidden{transform:translateX(-100%)}
+#sidebar::-webkit-scrollbar{width:5px}
+#sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+#sb-inner{padding:14px 0 60px}
 
-.sb-sec{}
-.sb-h2-btn{
-  display:flex;align-items:center;gap:9px;
-  width:100%;padding:7px 14px;border:none;background:none;
-  text-align:left;cursor:pointer;color:var(--text);
-  font-weight:600;font-size:.83rem;transition:background .12s;
-}
+.sb-h2-btn{display:flex;align-items:center;gap:10px;width:100%;position:relative;
+  padding:8px 16px;border:none;background:none;text-align:left;cursor:pointer;
+  color:var(--text);font-weight:600;font-size:.82rem;transition:background .12s}
 .sb-h2-btn:hover,.sb-h2-btn.active{background:var(--bg-sub)}
-.sb-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.sb-h2-btn.active::before{content:'';position:absolute;left:0;top:6px;bottom:6px;
+  width:3px;border-radius:0 3px 3px 0;background:var(--ac,var(--sa))}
+.sb-dot{width:22px;height:22px;border-radius:7px;display:flex;align-items:center;
+  justify-content:center;color:#fff;font-size:.66rem;font-weight:800;flex-shrink:0}
 .sb-label{flex:1;line-height:1.3}
-.sb-chev{font-size:.65rem;color:var(--muted);transition:transform .2s;flex-shrink:0}
+.sb-chev{font-size:.6rem;color:var(--muted);transition:transform .2s;flex-shrink:0;
+  padding:2px 4px;border-radius:5px}
+.sb-chev:hover{background:var(--border)}
 .sb-h2-btn.open .sb-chev{transform:rotate(90deg)}
 
-.sb-subs{display:none;padding-left:32px}
+.sb-subs{display:none;padding:2px 0 8px 42px}
 .sb-subs.open{display:block}
-.sb-h3-link{
-  display:block;padding:4px 14px 4px 0;
-  color:var(--muted);font-size:.77rem;line-height:1.4;transition:color .1s;
-}
+.sb-h3-link{display:block;padding:5px 14px 5px 10px;color:var(--muted);
+  font-size:.76rem;line-height:1.4;border-left:2px solid transparent;
+  transition:color .12s,border-color .12s}
 .sb-h3-link:hover{color:var(--text);text-decoration:none}
-.sb-h3-link.active{color:var(--text);font-weight:600}
+.sb-h3-link.active{color:var(--text);font-weight:600;border-left-color:var(--ac,var(--sa))}
 
-/* ─ Main layout ──────────────────────────────────────────── */
+/* ─ Main layout ─────────────────────────────────────────── */
 #main-wrap{margin-left:var(--sw);padding-top:var(--th);transition:margin-left .25s ease}
 #main-wrap.wide{margin-left:0}
-#content{max-width:880px;margin:0 auto;padding:28px 22px 100px}
+#content{max-width:900px;margin:0 auto;padding:30px 26px 120px}
 
-/* ─ Section cards ────────────────────────────────────────── */
-.content-section{
-  background:var(--bg-card);border-radius:var(--r);
-  margin-bottom:26px;box-shadow:var(--shadow);overflow:hidden;
-  padding:0 22px 22px;
-}
-.content-section h2{
-  font-size:1.42rem;font-weight:700;letter-spacing:-.025em;
-  color:#fff;padding:14px 22px;margin-bottom:16px;
-  position:relative;left:-22px;width:calc(100% + 44px);line-height:1.3;
-}
-.content-section h3{
-  font-size:1.05rem;font-weight:600;padding-bottom:5px;
-  margin-top:22px;margin-bottom:10px;
-  border-bottom-width:2px;border-bottom-style:solid;
-}
+/* ─ Section cards ───────────────────────────────────────── */
+.content-section{background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--r);margin-bottom:24px;box-shadow:var(--shadow);
+  overflow:hidden;padding:0 24px 24px}
+.content-section h2{font-size:1.4rem;font-weight:800;letter-spacing:-.02em;color:#fff;
+  padding:15px 24px;margin:0 -24px 18px;line-height:1.3;display:flex;align-items:center;
+  background:var(--sa);
+  background:linear-gradient(120deg,var(--sa),color-mix(in srgb,var(--sa) 66%,#0B1020))}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;
+  min-width:1.8em;height:1.8em;padding:0 .45em;margin-right:.6em;
+  background:rgba(255,255,255,.22);border-radius:9px;font-size:.82em;font-weight:800}
+.content-section h3{font-size:1.08rem;font-weight:700;letter-spacing:-.01em;
+  color:var(--sa);margin:26px 0 12px;padding-bottom:6px;
+  border-bottom:2px solid var(--sl);
+  border-bottom:2px solid color-mix(in srgb,var(--sa) 24%,transparent)}
+[data-theme=dark] .content-section h3{color:var(--sd);border-bottom-color:#24314A}
 
-/* title card (h1 + hr before first section) */
-.title-card{padding:0}
-.title-card h1{
-  padding:22px 24px 18px;
-  background:linear-gradient(135deg,#0F172A,#1E293B);
-  color:#F8FAFC;border-radius:var(--r) var(--r) 0 0;
-}
+/* title card (h1 + preamble before first section) */
+.title-card{padding:0 0 14px;border:none}
+.title-card h1{padding:32px 28px;margin:0;color:#F8FAFC;font-size:2.1rem;
+  font-weight:800;letter-spacing:-.035em;
+  background:linear-gradient(135deg,#0F172A,#1E293B 55%,#334155)}
+.title-card>:not(h1){margin-left:28px;margin-right:28px}
 .title-card hr{display:none}
 
-/* ─ Tables ───────────────────────────────────────────────── */
-table{
-  width:100%;border-collapse:collapse;margin:14px 0;font-size:.9rem;
-  border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08);
-}
-table thead{color:#fff}
-table thead th{
-  padding:10px 14px;text-align:left;font-weight:600;
-  font-size:.8rem;letter-spacing:.03em;text-transform:uppercase;
-}
-table td{
-  padding:9px 14px;border-bottom:1px solid var(--border);vertical-align:top;
-}
-table tr:last-child td{border-bottom:none}
+/* ─ Tables ──────────────────────────────────────────────── */
+.content-section table{width:100%;border-collapse:separate;border-spacing:0;
+  margin:16px 0;font-size:.9rem;border:1px solid var(--border);
+  border-radius:10px;overflow:hidden;box-shadow:var(--shadow)}
+table thead{background:var(--sa)}
+table thead th{color:#fff;padding:11px 14px;text-align:left;font-weight:600;
+  font-size:.78rem;letter-spacing:.04em;text-transform:uppercase}
+table td,table th{padding:10px 14px;vertical-align:top;
+  border-bottom:1px solid var(--border)}
+table tbody tr:last-child td{border-bottom:none}
 table tbody tr:nth-child(even){background:var(--bg-sub)}
-table tbody tr:hover{filter:brightness(.97)}
-[data-theme=dark] table tbody tr:hover{filter:brightness(1.08)}
+table tbody tr:hover{background:color-mix(in srgb,var(--sa) 7%,var(--bg-card))}
 
-/* ─ Code ─────────────────────────────────────────────────── */
-pre{
-  background:#1E1E2E;color:#CDD6F4;padding:16px 20px;border-radius:8px;
-  overflow-x:auto;font-family:var(--mono);font-size:.84rem;
-  line-height:1.65;margin:14px 0;
-}
-code{
-  font-family:var(--mono);font-size:.855em;
-  background:var(--bg-sub);color:var(--muted);
-  padding:1px 5px;border-radius:4px;border:1px solid var(--border);
-}
+/* ─ Code ────────────────────────────────────────────────── */
+pre{background:#0D1426;color:#CBD5E1;padding:16px 18px;border-radius:12px;
+  overflow-x:auto;font-family:var(--mono);font-size:.84rem;line-height:1.6;
+  margin:16px 0;border:1px solid #1E293B}
+[data-theme=dark] pre{background:#070D1A}
+code{font-family:var(--mono);font-size:.86em;background:var(--bg-sub);
+  color:var(--text);padding:1.5px 6px;border-radius:6px;border:1px solid var(--border)}
 pre code{background:none;color:inherit;padding:0;border:none}
-code.img-badge{
-  display:inline-block;background:var(--bg-sub);color:var(--muted);
-  font-size:.71rem;padding:2px 9px;border-radius:20px;
-  border:1px solid var(--border);margin-bottom:6px;
-}
 
-/* ─ Blockquotes ──────────────────────────────────────────── */
-blockquote{
-  border-left-width:4px;border-left-style:solid;
-  padding:10px 16px;margin:12px 0;border-radius:0 6px 6px 0;
-  font-style:italic;font-size:.95rem;
-}
+/* ─ Blockquotes ─────────────────────────────────────────── */
+blockquote{border-left:4px solid var(--sa);
+  background:var(--sl);
+  background:color-mix(in srgb,var(--sa) 8%,var(--bg-card));
+  padding:12px 16px;margin:14px 0;border-radius:0 10px 10px 0;font-size:.95rem}
+[data-theme=dark] blockquote{background:rgba(148,163,184,.08)}
 
-/* ─ Math ─────────────────────────────────────────────────── */
-.math-display{
-  overflow-x:auto;padding:4px 0;text-align:center;margin:10px 0;
-}
+/* ─ Math ────────────────────────────────────────────────── */
+.math-display{overflow-x:auto;margin:14px 0;padding:12px 18px;text-align:center;
+  background:var(--bg-sub);border:1px solid var(--border);
+  border-left:3px solid var(--sa);border-radius:10px}
 
-/* ─ Images ───────────────────────────────────────────────── */
-.img-wrap{text-align:center;margin:16px 0}
-.img-wrap img{
-  display:block;margin:0 auto;max-width:100%;
-  border-radius:6px;height:auto;
-}
-.img-ctrl{
-  display:flex;align-items:center;justify-content:center;
-  gap:8px;margin-top:8px;font-size:.78rem;color:var(--muted);
-}
-.img-ctrl input[type=range]{width:110px;cursor:pointer}
-.img-ctrl .pct{min-width:34px;text-align:center;font-weight:600}
-.img-ctrl button{
-  background:none;border:1px solid var(--border);border-radius:4px;
-  padding:1px 8px;cursor:pointer;font-size:.72rem;color:var(--muted);
-}
-.img-ctrl button:hover{background:var(--bg-sub)}
+/* ─ Images ──────────────────────────────────────────────── */
+.img-fig{position:relative;margin:20px 0;text-align:center}
+.img-fig img{display:block;margin:0 auto;height:auto;max-width:100%;
+  border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow);
+  transition:width .15s ease}
+.img-bar{position:absolute;left:50%;bottom:10px;
+  transform:translateX(-50%) translateY(6px);
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;
+  background:rgba(8,12,22,.86);backdrop-filter:blur(8px);
+  padding:6px 10px;border-radius:12px;border:1px solid rgba(255,255,255,.12);
+  opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;
+  box-shadow:0 8px 24px rgba(0,0,0,.32);z-index:5}
+.img-fig:hover .img-bar{opacity:1;pointer-events:auto;
+  transform:translateX(-50%) translateY(0)}
+.img-name{font-family:var(--mono);font-size:.7rem;color:#CBD5E1;
+  background:rgba(255,255,255,.08);padding:2px 8px;border-radius:20px}
+.img-sizes{display:inline-flex;gap:3px}
+.img-sizes button{border:1px solid rgba(255,255,255,.18);background:transparent;
+  color:#CBD5E1;border-radius:7px;padding:2px 9px;cursor:pointer;font-size:.72rem;
+  font-weight:600;transition:all .12s}
+.img-sizes button:hover{background:rgba(255,255,255,.12)}
+.img-sizes button.on{background:var(--sa);border-color:var(--sa);color:#fff}
+.img-slider{width:84px;cursor:pointer;accent-color:var(--sa)}
 
-/* ─ Back to top ──────────────────────────────────────────── */
-#back-top{
-  position:fixed;bottom:28px;right:22px;
-  background:#334155;color:#fff;border:none;border-radius:50%;
-  width:40px;height:40px;font-size:1.1rem;cursor:pointer;
-  display:none;z-index:300;box-shadow:0 3px 10px rgba(0,0,0,.25);
-  align-items:center;justify-content:center;transition:background .15s;
-}
-#back-top:hover{background:#475569}
+/* ─ Back to top ─────────────────────────────────────────── */
+#back-top{position:fixed;bottom:30px;right:24px;width:44px;height:44px;
+  border:1px solid var(--border);border-radius:14px;background:var(--bg-card);
+  color:var(--text);box-shadow:var(--shadow-lg);font-size:1.1rem;cursor:pointer;
+  display:none;align-items:center;justify-content:center;z-index:300;
+  transition:transform .15s}
+#back-top:hover{transform:translateY(-2px)}
 #back-top.show{display:flex}
 
-/* ─ Responsive ───────────────────────────────────────────── */
-@media(max-width:768px){
-  #sidebar{transform:translateX(calc(-1 * var(--sw)))}
-  #sidebar.mobile-open{transform:translateX(0)}
+/* ─ Responsive ──────────────────────────────────────────── */
+@media(max-width:860px){
+  #sidebar{transform:translateX(-100%)}
+  #sidebar.mobile-open{transform:translateX(0);box-shadow:var(--shadow-lg)}
   #main-wrap{margin-left:0!important}
+  #content{padding:20px 16px 100px}
 }
-
-.sec-0 h2 { background: #64748B; }
-.sec-0 h3 { color: #64748B; border-bottom-color: #F8FAFC; }
-.sec-0 table thead { background: #64748B; }
-.sec-0 blockquote { border-left-color: #64748B; background: #F8FAFC; }
-.sec-0 .img-ctrl input[type=range] { accent-color: #64748B; }
-.sec-0 a { color: #64748B; }
-[data-theme=dark] .sec-0 h3 { color: #94A3B8; border-bottom-color: #1e293b; }
-[data-theme=dark] .sec-0 blockquote { background: rgba(30,41,59,.7); border-left-color: #94A3B8; }
-[data-theme=dark] .sec-0 a { color: #94A3B8; }
-
-.sec-1 h2 { background: #2563EB; }
-.sec-1 h3 { color: #2563EB; border-bottom-color: #EFF6FF; }
-.sec-1 table thead { background: #2563EB; }
-.sec-1 blockquote { border-left-color: #2563EB; background: #EFF6FF; }
-.sec-1 .img-ctrl input[type=range] { accent-color: #2563EB; }
-.sec-1 a { color: #2563EB; }
-[data-theme=dark] .sec-1 h3 { color: #60A5FA; border-bottom-color: #1e293b; }
-[data-theme=dark] .sec-1 blockquote { background: rgba(30,41,59,.7); border-left-color: #60A5FA; }
-[data-theme=dark] .sec-1 a { color: #60A5FA; }
-
-.sec-2 h2 { background: #059669; }
-.sec-2 h3 { color: #059669; border-bottom-color: #ECFDF5; }
-.sec-2 table thead { background: #059669; }
-.sec-2 blockquote { border-left-color: #059669; background: #ECFDF5; }
-.sec-2 .img-ctrl input[type=range] { accent-color: #059669; }
-.sec-2 a { color: #059669; }
-[data-theme=dark] .sec-2 h3 { color: #34D399; border-bottom-color: #1e293b; }
-[data-theme=dark] .sec-2 blockquote { background: rgba(30,41,59,.7); border-left-color: #34D399; }
-[data-theme=dark] .sec-2 a { color: #34D399; }
-
-.sec-3 h2 { background: #7C3AED; }
-.sec-3 h3 { color: #7C3AED; border-bottom-color: #F5F3FF; }
-.sec-3 table thead { background: #7C3AED; }
-.sec-3 blockquote { border-left-color: #7C3AED; background: #F5F3FF; }
-.sec-3 .img-ctrl input[type=range] { accent-color: #7C3AED; }
-.sec-3 a { color: #7C3AED; }
-[data-theme=dark] .sec-3 h3 { color: #A78BFA; border-bottom-color: #1e293b; }
-[data-theme=dark] .sec-3 blockquote { background: rgba(30,41,59,.7); border-left-color: #A78BFA; }
-[data-theme=dark] .sec-3 a { color: #A78BFA; }
-
-.sec-4 h2 { background: #16A34A; }
-.sec-4 h3 { color: #16A34A; border-bottom-color: #F0FDF4; }
-.sec-4 table thead { background: #16A34A; }
-.sec-4 blockquote { border-left-color: #16A34A; background: #F0FDF4; }
-.sec-4 .img-ctrl input[type=range] { accent-color: #16A34A; }
-.sec-4 a { color: #16A34A; }
-[data-theme=dark] .sec-4 h3 { color: #4ADE80; border-bottom-color: #1e293b; }
-[data-theme=dark] .sec-4 blockquote { background: rgba(30,41,59,.7); border-left-color: #4ADE80; }
-[data-theme=dark] .sec-4 a { color: #4ADE80; }
-
-.sec-5 h2 { background: #EA580C; }
-.sec-5 h3 { color: #EA580C; border-bottom-color: #FFF7ED; }
-.sec-5 table thead { background: #EA580C; }
-.sec-5 blockquote { border-left-color: #EA580C; background: #FFF7ED; }
-.sec-5 .img-ctrl input[type=range] { accent-color: #EA580C; }
-.sec-5 a { color: #EA580C; }
-[data-theme=dark] .sec-5 h3 { color: #FB923C; border-bottom-color: #1e293b; }
-[data-theme=dark] .sec-5 blockquote { background: rgba(30,41,59,.7); border-left-color: #FB923C; }
-[data-theme=dark] .sec-5 a { color: #FB923C; }
-
-.sec-6 h2 { background: #DB2777; }
-.sec-6 h3 { color: #DB2777; border-bottom-color: #FDF2F8; }
-.sec-6 table thead { background: #DB2777; }
-.sec-6 blockquote { border-left-color: #DB2777; background: #FDF2F8; }
-.sec-6 .img-ctrl input[type=range] { accent-color: #DB2777; }
-.sec-6 a { color: #DB2777; }
-[data-theme=dark] .sec-6 h3 { color: #F472B6; border-bottom-color: #1e293b; }
-[data-theme=dark] .sec-6 blockquote { background: rgba(30,41,59,.7); border-left-color: #F472B6; }
-[data-theme=dark] .sec-6 a { color: #F472B6; }
-
-.sec-7 h2 { background: #DC2626; }
-.sec-7 h3 { color: #DC2626; border-bottom-color: #FEF2F2; }
-.sec-7 table thead { background: #DC2626; }
-.sec-7 blockquote { border-left-color: #DC2626; background: #FEF2F2; }
-.sec-7 .img-ctrl input[type=range] { accent-color: #DC2626; }
-.sec-7 a { color: #DC2626; }
-[data-theme=dark] .sec-7 h3 { color: #F87171; border-bottom-color: #1e293b; }
-[data-theme=dark] .sec-7 blockquote { background: rgba(30,41,59,.7); border-left-color: #F87171; }
-[data-theme=dark] .sec-7 a { color: #F87171; }
-
-.sec-8 h2 { background: #9333EA; }
-.sec-8 h3 { color: #9333EA; border-bottom-color: #FAF5FF; }
-.sec-8 table thead { background: #9333EA; }
-.sec-8 blockquote { border-left-color: #9333EA; background: #FAF5FF; }
-.sec-8 .img-ctrl input[type=range] { accent-color: #9333EA; }
-.sec-8 a { color: #9333EA; }
-[data-theme=dark] .sec-8 h3 { color: #C084FC; border-bottom-color: #1e293b; }
-[data-theme=dark] .sec-8 blockquote { background: rgba(30,41,59,.7); border-left-color: #C084FC; }
-[data-theme=dark] .sec-8 a { color: #C084FC; }
-
-.sec-9 h2 { background: #4F46E5; }
-.sec-9 h3 { color: #4F46E5; border-bottom-color: #EEF2FF; }
-.sec-9 table thead { background: #4F46E5; }
-.sec-9 blockquote { border-left-color: #4F46E5; background: #EEF2FF; }
-.sec-9 .img-ctrl input[type=range] { accent-color: #4F46E5; }
-.sec-9 a { color: #4F46E5; }
-[data-theme=dark] .sec-9 h3 { color: #818CF8; border-bottom-color: #1e293b; }
-[data-theme=dark] .sec-9 blockquote { background: rgba(30,41,59,.7); border-left-color: #818CF8; }
-[data-theme=dark] .sec-9 a { color: #818CF8; }
-
-.sec-10 h2 { background: #0891B2; }
-.sec-10 h3 { color: #0891B2; border-bottom-color: #ECFEFF; }
-.sec-10 table thead { background: #0891B2; }
-.sec-10 blockquote { border-left-color: #0891B2; background: #ECFEFF; }
-.sec-10 .img-ctrl input[type=range] { accent-color: #0891B2; }
-.sec-10 a { color: #0891B2; }
-[data-theme=dark] .sec-10 h3 { color: #22D3EE; border-bottom-color: #1e293b; }
-[data-theme=dark] .sec-10 blockquote { background: rgba(30,41,59,.7); border-left-color: #22D3EE; }
-[data-theme=dark] .sec-10 a { color: #22D3EE; }
-
-.sec-11 h2 { background: #0D9488; }
-.sec-11 h3 { color: #0D9488; border-bottom-color: #F0FDFA; }
-.sec-11 table thead { background: #0D9488; }
-.sec-11 blockquote { border-left-color: #0D9488; background: #F0FDFA; }
-.sec-11 .img-ctrl input[type=range] { accent-color: #0D9488; }
-.sec-11 a { color: #0D9488; }
-[data-theme=dark] .sec-11 h3 { color: #2DD4BF; border-bottom-color: #1e293b; }
-[data-theme=dark] .sec-11 blockquote { background: rgba(30,41,59,.7); border-left-color: #2DD4BF; }
-[data-theme=dark] .sec-11 a { color: #2DD4BF; }
-
-.sec-12 h2 { background: #15803D; }
-.sec-12 h3 { color: #15803D; border-bottom-color: #F0FDF4; }
-.sec-12 table thead { background: #15803D; }
-.sec-12 blockquote { border-left-color: #15803D; background: #F0FDF4; }
-.sec-12 .img-ctrl input[type=range] { accent-color: #15803D; }
-.sec-12 a { color: #15803D; }
-[data-theme=dark] .sec-12 h3 { color: #4ADE80; border-bottom-color: #1e293b; }
-[data-theme=dark] .sec-12 blockquote { background: rgba(30,41,59,.7); border-left-color: #4ADE80; }
-[data-theme=dark] .sec-12 a { color: #4ADE80; }
-
-.sec-13 h2 { background: #475569; }
-.sec-13 h3 { color: #475569; border-bottom-color: #F8FAFC; }
-.sec-13 table thead { background: #475569; }
-.sec-13 blockquote { border-left-color: #475569; background: #F8FAFC; }
-.sec-13 .img-ctrl input[type=range] { accent-color: #475569; }
-.sec-13 a { color: #475569; }
-[data-theme=dark] .sec-13 h3 { color: #94A3B8; border-bottom-color: #1e293b; }
-[data-theme=dark] .sec-13 blockquote { background: rgba(30,41,59,.7); border-left-color: #94A3B8; }
-[data-theme=dark] .sec-13 a { color: #94A3B8; }
-
-.sec-14 h2 { background: #B45309; }
-.sec-14 h3 { color: #B45309; border-bottom-color: #FFFBEB; }
-.sec-14 table thead { background: #B45309; }
-.sec-14 blockquote { border-left-color: #B45309; background: #FFFBEB; }
-.sec-14 .img-ctrl input[type=range] { accent-color: #B45309; }
-.sec-14 a { color: #B45309; }
-[data-theme=dark] .sec-14 h3 { color: #FBBF24; border-bottom-color: #1e293b; }
-[data-theme=dark] .sec-14 blockquote { background: rgba(30,41,59,.7); border-left-color: #FBBF24; }
-[data-theme=dark] .sec-14 a { color: #FBBF24; }
-
-.sec-15 h2 { background: #64748B; }
-.sec-15 h3 { color: #64748B; border-bottom-color: #F8FAFC; }
-.sec-15 table thead { background: #64748B; }
-.sec-15 blockquote { border-left-color: #64748B; background: #F8FAFC; }
-.sec-15 .img-ctrl input[type=range] { accent-color: #64748B; }
-.sec-15 a { color: #64748B; }
-[data-theme=dark] .sec-15 h3 { color: #94A3B8; border-bottom-color: #1e293b; }
-[data-theme=dark] .sec-15 blockquote { background: rgba(30,41,59,.7); border-left-color: #94A3B8; }
-[data-theme=dark] .sec-15 a { color: #94A3B8; }
+.sec-0{--sa:#64748B;--sl:#F8FAFC;--sd:#94A3B8;}
+.sec-1{--sa:#2563EB;--sl:#EFF6FF;--sd:#60A5FA;}
+.sec-2{--sa:#059669;--sl:#ECFDF5;--sd:#34D399;}
+.sec-3{--sa:#7C3AED;--sl:#F5F3FF;--sd:#A78BFA;}
+.sec-4{--sa:#16A34A;--sl:#F0FDF4;--sd:#4ADE80;}
+.sec-5{--sa:#EA580C;--sl:#FFF7ED;--sd:#FB923C;}
+.sec-6{--sa:#DB2777;--sl:#FDF2F8;--sd:#F472B6;}
+.sec-7{--sa:#DC2626;--sl:#FEF2F2;--sd:#F87171;}
+.sec-8{--sa:#9333EA;--sl:#FAF5FF;--sd:#C084FC;}
+.sec-9{--sa:#4F46E5;--sl:#EEF2FF;--sd:#818CF8;}
+.sec-10{--sa:#0891B2;--sl:#ECFEFF;--sd:#22D3EE;}
+.sec-11{--sa:#0D9488;--sl:#F0FDFA;--sd:#2DD4BF;}
+.sec-12{--sa:#15803D;--sl:#F0FDF4;--sd:#4ADE80;}
+.sec-13{--sa:#475569;--sl:#F8FAFC;--sd:#94A3B8;}
+.sec-14{--sa:#B45309;--sl:#FFFBEB;--sd:#FBBF24;}
+.sec-15{--sa:#64748B;--sl:#F8FAFC;--sd:#94A3B8;}
 </style>
 </head>
 <body>
 
-<!-- Top bar -->
 <div id="topbar">
   <button id="tog-btn">☰</button>
   <span id="bar-title">ML / DL Interview Preparation Notes</span>
   <button id="dark-btn">🌙  Dark</button>
 </div>
+<div id="progress"></div>
 
-<!-- Sidebar -->
-<nav id="sidebar">
-  <div id="sb-inner"></div>
-</nav>
+<nav id="sidebar"><div id="sb-inner"></div></nav>
 
-<!-- Main content -->
 <div id="main-wrap">
   <main id="content">
-<div class="content-section sec-0 title-card">
-<h1 id="ml-dl-interview-preparation-notes">ML / DL Interview Preparation Notes</h1>
-<hr />
-</div>
-<div class="content-section sec-0">
-<h2 id="table-of-contents">Table of Contents</h2>
-
-<ol>
-<li><a href="#1-mathematical-foundations">Mathematical Foundations</a></li>
-<li><a href="#2-statistical-inference">Statistical Inference</a></li>
-<li><a href="#3-core-ml-concepts">Core ML Concepts</a></li>
-<li><a href="#4-feature-engineering--data">Feature Engineering &amp; Data</a></li>
-<li><a href="#5-classical-ml-models">Classical ML Models</a></li>
-<li><a href="#6-ensemble-methods">Ensemble Methods</a></li>
-<li><a href="#7-regularization--loss-functions">Regularization &amp; Loss Functions</a></li>
-<li><a href="#8-optimization">Optimization</a></li>
-<li><a href="#9-neural-network-fundamentals">Neural Network Fundamentals</a></li>
-<li><a href="#10-dimensionality-reduction">Dimensionality Reduction</a></li>
-<li><a href="#11-sequential-models">Sequential Models</a></li>
-<li><a href="#12-nlp--transformers">NLP &amp; Transformers</a></li>
-<li><a href="#13-advanced-topics">Advanced Topics</a></li>
-<li><a href="#14-amazon-applied-scientist-interview-topics">Amazon Applied Scientist Interview Topics</a></li>
-<li><a href="#references">References</a></li>
-</ol>
-<hr />
-</div>
 <div class="content-section sec-1">
 <h2 id="1-mathematical-foundations">1. Mathematical Foundations</h2>
 
@@ -432,31 +257,31 @@ blockquote{
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Type</th>
-<th style="text-align: left;">Description</th>
-<th style="text-align: left;">Examples</th>
+<th style="text-align:left">Type</th>
+<th style="text-align:left">Description</th>
+<th style="text-align:left">Examples</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Nominal</strong></td>
-<td style="text-align: left;">Categorical, no order</td>
-<td style="text-align: left;">Colors, gender, country</td>
+<td style="text-align:left"><strong>Nominal</strong></td>
+<td style="text-align:left">Categorical, no order</td>
+<td style="text-align:left">Colors, gender, country</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Ordinal</strong></td>
-<td style="text-align: left;">Categorical, with order</td>
-<td style="text-align: left;">Movie ratings, satisfaction (1-5)</td>
+<td style="text-align:left"><strong>Ordinal</strong></td>
+<td style="text-align:left">Categorical, with order</td>
+<td style="text-align:left">Movie ratings, satisfaction (1-5)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Interval</strong></td>
-<td style="text-align: left;">Numeric, no true zero; differences meaningful</td>
-<td style="text-align: left;">Temperature (°C), IQ scores</td>
+<td style="text-align:left"><strong>Interval</strong></td>
+<td style="text-align:left">Numeric, no true zero; differences meaningful</td>
+<td style="text-align:left">Temperature (°C), IQ scores</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Ratio</strong></td>
-<td style="text-align: left;">Interval + true zero; ratios meaningful</td>
-<td style="text-align: left;">Height, weight, income</td>
+<td style="text-align:left"><strong>Ratio</strong></td>
+<td style="text-align:left">Interval + true zero; ratios meaningful</td>
+<td style="text-align:left">Height, weight, income</td>
 </tr>
 </tbody>
 </table>
@@ -464,34 +289,36 @@ blockquote{
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Type</th>
-<th style="text-align: left;">Description</th>
-<th style="text-align: left;">Example</th>
+<th style="text-align:left">Type</th>
+<th style="text-align:left">Description</th>
+<th style="text-align:left">Example</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Dependent Variable</strong></td>
-<td style="text-align: left;">Outcome variable being measured; depends on the independent variable</td>
-<td style="text-align: left;">Exam score</td>
+<td style="text-align:left"><strong>Dependent Variable</strong></td>
+<td style="text-align:left">Outcome variable being measured; depends on the independent variable</td>
+<td style="text-align:left">Exam score</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Independent Variable</strong></td>
-<td style="text-align: left;">Predictor/experimental variable being manipulated or controlled</td>
-<td style="text-align: left;">Study hours</td>
+<td style="text-align:left"><strong>Independent Variable</strong></td>
+<td style="text-align:left">Predictor/experimental variable being manipulated or controlled</td>
+<td style="text-align:left">Study hours</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Dichotomous Variable</strong></td>
-<td style="text-align: left;">A nominal variable with exactly two categories</td>
-<td style="text-align: left;">Yes/No, Pass/Fail</td>
+<td style="text-align:left"><strong>Dichotomous Variable</strong></td>
+<td style="text-align:left">A nominal variable with exactly two categories</td>
+<td style="text-align:left">Yes/No, Pass/Fail</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h3 id="12-iid-independent-and-identically-distributed">1.2 IID — Independent and Identically Distributed</h3>
-<p>Random variables $X_1, X_2, \ldots, X_n$ are IID if:
-- All $X_i$ are <strong>mutually independent</strong> (outcome of one doesn't affect others)
-- All $X_i$ follow the <strong>same distribution</strong></p>
+<h3 id="12-iid--independent-and-identically-distributed">1.2 IID — Independent and Identically Distributed</h3>
+<p>Random variables $X_1, X_2, \ldots, X_n$ are IID if:</p>
+<ul>
+<li>All $X_i$ are <strong>mutually independent</strong> (outcome of one doesn't affect others)</li>
+<li>All $X_i$ follow the <strong>same distribution</strong></li>
+</ul>
 <p><em>Example</em>: Flipping a fair coin 100 times — each flip has the same probability (0.5) and is independent of all other flips.</p>
 <hr />
 <h3 id="13-probability-distributions">1.3 Probability Distributions</h3>
@@ -507,18 +334,20 @@ blockquote{
 <li><strong>Binomial distribution</strong>: Number of successes in a <strong>sequence</strong> of independent Bernoulli experiments</li>
 </ul>
 <hr />
-<h3 id="15-gaussian-normal-distribution">1.5 Gaussian / Normal Distribution</h3>
-<p>"Gaussian distribution" and "normal distribution" refer to the <strong>same concept</strong>.</p>
+<h3 id="15-gaussian--normal-distribution">1.5 Gaussian / Normal Distribution</h3>
+<p>&quot;Gaussian distribution&quot; and &quot;normal distribution&quot; refer to the <strong>same concept</strong>.</p>
 <p><strong>PDF:</strong></p>
 <div class="math-display">$$f(x \mid \mu, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)$$</div>
 <p><strong>Standard Normal</strong> ($\mu = 0$, $\sigma = 1$):</p>
 <div class="math-display">$$f(x) = \frac{1}{\sqrt{2\pi}} \exp\!\left(-\frac{x^2}{2}\right)$$</div>
-<p><strong>Key Characteristics:</strong>
-1. <strong>Symmetry</strong>: Symmetric around the mean
-2. <strong>Bell-shaped curve</strong>
-3. <strong>Mean = Median = Mode</strong> (all at center)
-4. <strong>68-95-99.7 Rule</strong>: 68% within 1σ, 95% within 2σ, 99.7% within 3σ
-5. <strong>Central Limit Theorem</strong>: Sum of many independent IID random variables tends toward normal distribution</p>
+<p><strong>Key Characteristics:</strong></p>
+<ol>
+<li><strong>Symmetry</strong>: Symmetric around the mean</li>
+<li><strong>Bell-shaped curve</strong></li>
+<li><strong>Mean = Median = Mode</strong> (all at center)</li>
+<li><strong>68-95-99.7 Rule</strong>: 68% within 1σ, 95% within 2σ, 99.7% within 3σ</li>
+<li><strong>Central Limit Theorem</strong>: Sum of many independent IID random variables tends toward normal distribution</li>
+</ol>
 <p><code>image88.png</code>
 <img src="images/image88.png" alt="Mode, Median, Mean on two Normal Distributions" width="280" /></p>
 <blockquote>
@@ -533,26 +362,26 @@ blockquote{
 <table>
 <thead>
 <tr>
-<th style="text-align: left;"></th>
-<th style="text-align: left;">Covariance</th>
-<th style="text-align: left;">Correlation</th>
+<th style="text-align:left"></th>
+<th style="text-align:left">Covariance</th>
+<th style="text-align:left">Correlation</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Range</strong></td>
-<td style="text-align: left;">$(-\infty, +\infty)$</td>
-<td style="text-align: left;">$[-1, +1]$</td>
+<td style="text-align:left"><strong>Range</strong></td>
+<td style="text-align:left">$(-\infty, +\infty)$</td>
+<td style="text-align:left">$[-1, +1]$</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Scale-dependent</strong></td>
-<td style="text-align: left;">Yes</td>
-<td style="text-align: left;">No</td>
+<td style="text-align:left"><strong>Scale-dependent</strong></td>
+<td style="text-align:left">Yes</td>
+<td style="text-align:left">No</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Interpretation</strong></td>
-<td style="text-align: left;">Direction of relationship</td>
-<td style="text-align: left;">Direction + strength of relationship</td>
+<td style="text-align:left"><strong>Interpretation</strong></td>
+<td style="text-align:left">Direction of relationship</td>
+<td style="text-align:left">Direction + strength of relationship</td>
 </tr>
 </tbody>
 </table>
@@ -562,25 +391,27 @@ blockquote{
 <p><code>image79.jpg</code>
 <img src="images/image79.jpg" alt="Covariance vs Correlation Scatter Plots" width="620" /></p>
 <hr />
-<h3 id="17-entropy-information-gain">1.7 Entropy &amp; Information Gain</h3>
+<h3 id="17-entropy--information-gain">1.7 Entropy &amp; Information Gain</h3>
 <p><strong>Entropy</strong> — measure of uncertainty in a probability distribution:</p>
 <div class="math-display">$$H(S) = -\sum_i p_i \log_2 p_i$$</div>
 <p><strong>Information Gain</strong> — reduction in entropy from splitting on attribute A:</p>
 <div class="math-display">$$IG(A) = H(S) - \sum_{v} \frac{|S_v|}{|S|} H(S_v)$$</div>
-<p>Where:
-- $S$ — set of all instances in the dataset
-- $N$ — number of distinct class values
-- $p_i$ — event probability
-- $H(S)$ — entropy of the whole dataset S
-- $|S_v|$ — number of instances with value v of attribute A
-- $|S|$ — total number of instances in dataset S
-- $v$ — set of distinct values of attribute A
-- $S_v$ — subset of S for which attribute A has value v
-- $H(A,S)$ — entropy of attribute A</p>
+<p>Where:</p>
+<ul>
+<li>$S$ — set of all instances in the dataset</li>
+<li>$N$ — number of distinct class values</li>
+<li>$p_i$ — event probability</li>
+<li>$H(S)$ — entropy of the whole dataset S</li>
+<li>$|S_v|$ — number of instances with value v of attribute A</li>
+<li>$|S|$ — total number of instances in dataset S</li>
+<li>$v$ — set of distinct values of attribute A</li>
+<li>$S_v$ — subset of S for which attribute A has value v</li>
+<li>$H(A,S)$ — entropy of attribute A</li>
+</ul>
 <p><em>Example</em>: From the total of 14 instances we have: 9 instances 'yes', 5 instances 'no'. The Entropy is:</p>
 <div class="math-display">$$H(S) = -\sum_{i=1}^{N} p_i \log_2 p_i = -\frac{9}{14}\log_2\frac{9}{14} - \frac{5}{14}\log_2\frac{5}{14} = 0.940$$</div>
 <hr />
-<h3 id="18-eigenvalues-eigenvectors">1.8 Eigenvalues &amp; Eigenvectors</h3>
+<h3 id="18-eigenvalues--eigenvectors">1.8 Eigenvalues &amp; Eigenvectors</h3>
 <p>In linear algebra, an <strong>eigenvector</strong> of a linear transformation is a non-zero vector that changes only in scale (not direction) when the transformation is applied:</p>
 <div class="math-display">$$A \mathbf{v} = \lambda \mathbf{v}$$</div>
 <ul>
@@ -605,33 +436,35 @@ blockquote{
 <p>A framework to make inferences about a population based on sample data.</p>
 <p><strong>Steps:</strong></p>
 <ol>
-<li><strong>Formulate Hypotheses</strong></li>
-<li>$H_0$ (Null): No effect, no difference, no relationship — the status quo</li>
 <li>
-<p>$H_1$ (Alternative): Opposite of null; the effect/difference you suspect exists</p>
+<p><strong>Formulate Hypotheses</strong></p>
+<ul>
+<li>$H_0$ (Null): No effect, no difference, no relationship — the status quo</li>
+<li>$H_1$ (Alternative): Opposite of null; the effect/difference you suspect exists</li>
+</ul>
 </li>
 <li>
 <p><strong>Choose Significance Level (α)</strong></p>
-</li>
+<ul>
 <li>Commonly 0.05 (5%) or 0.01 (1%)</li>
-<li>
-<p>Probability of rejecting $H_0$ when it is actually true (Type I error)</p>
+<li>Probability of rejecting $H_0$ when it is actually true (Type I error)</li>
+</ul>
 </li>
 <li>
 <p><strong>Select Statistical Test</strong> — depends on data type and hypothesis</p>
 </li>
 <li>
 <p><strong>Calculate Test Statistic and P-Value</strong></p>
-</li>
-<li>
-<p>P-value = probability of observing results as extreme as the data, assuming $H_0$ is true</p>
+<ul>
+<li>P-value = probability of observing results as extreme as the data, assuming $H_0$ is true</li>
+</ul>
 </li>
 <li>
 <p><strong>Decision Rule</strong></p>
-</li>
+<ul>
 <li>If $p \leq \alpha$: <strong>Reject</strong> $H_0$</li>
-<li>
-<p>If $p > \alpha$: <strong>Fail to reject</strong> $H_0$ (does NOT mean $H_0$ is true)</p>
+<li>If $p > \alpha$: <strong>Fail to reject</strong> $H_0$ (does NOT mean $H_0$ is true)</li>
+</ul>
 </li>
 <li>
 <p><strong>Draw Conclusions</strong></p>
@@ -641,118 +474,124 @@ blockquote{
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Error Type</th>
-<th style="text-align: left;">Definition</th>
+<th style="text-align:left">Error Type</th>
+<th style="text-align:left">Definition</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Type I Error</strong></td>
-<td style="text-align: left;">Rejecting $H_0$ when it is actually true (false positive)</td>
+<td style="text-align:left"><strong>Type I Error</strong></td>
+<td style="text-align:left">Rejecting $H_0$ when it is actually true (false positive)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Type II Error</strong></td>
-<td style="text-align: left;">Failing to reject $H_0$ when it is actually false (false negative)</td>
+<td style="text-align:left"><strong>Type II Error</strong></td>
+<td style="text-align:left">Failing to reject $H_0$ when it is actually false (false negative)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Power</strong></td>
-<td style="text-align: left;">Probability of correctly rejecting $H_0$ when it is false = $1 - P(\text{Type II})$</td>
+<td style="text-align:left"><strong>Power</strong></td>
+<td style="text-align:left">Probability of correctly rejecting $H_0$ when it is false = $1 - P(\text{Type II})$</td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h3 id="22-statistical-tests-chi-square-vs-t-test">2.2 Statistical Tests: Chi-Square vs T-Test</h3>
-<h4 id="chi-square-test">Chi-Square Test</h4>
+<h4>Chi-Square Test</h4>
 <ul>
 <li><strong>Purpose</strong>: Test for significant <strong>association between categorical variables</strong></li>
-<li><strong>Types</strong>:</li>
+<li><strong>Types</strong>:
+<ul>
 <li><em>Test of independence</em>: Are two categorical variables related?</li>
 <li><em>Goodness of fit</em>: Do observed data fit a theoretical distribution?</li>
+</ul>
+</li>
 <li><strong>Data Type</strong>: Categorical</li>
 <li><strong>Assumptions</strong>: Variables are categorical; observations are independent; expected frequency in each cell ≥ 5</li>
 <li><strong>Statistic</strong>:</li>
 </ul>
 <div class="math-display">$$\chi^2 = \sum \frac{(O - E)^2}{E}$$</div>
 <p>where $O$ = observed frequency, $E$ = expected frequency.</p>
-<h4 id="t-test">T-Test</h4>
+<h4>T-Test</h4>
 <ul>
 <li><strong>Purpose</strong>: Test for significant <strong>difference between means of two groups</strong></li>
-<li><strong>Types</strong>:</li>
+<li><strong>Types</strong>:
+<ul>
 <li><em>Independent t-test</em>: Two independent groups</li>
 <li><em>Paired t-test</em>: Two related groups (e.g., before/after)</li>
+</ul>
+</li>
 <li><strong>Data Type</strong>: Numerical (continuous)</li>
 <li><strong>Assumptions</strong>: Data approximately normally distributed; equal variances; independent observations</li>
 </ul>
-<h4 id="key-differences">Key Differences</h4>
+<h4>Key Differences</h4>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;"></th>
-<th style="text-align: left;">Chi-Square</th>
-<th style="text-align: left;">T-Test</th>
+<th style="text-align:left"></th>
+<th style="text-align:left">Chi-Square</th>
+<th style="text-align:left">T-Test</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Data Type</strong></td>
-<td style="text-align: left;">Categorical</td>
-<td style="text-align: left;">Numerical (continuous)</td>
+<td style="text-align:left"><strong>Data Type</strong></td>
+<td style="text-align:left">Categorical</td>
+<td style="text-align:left">Numerical (continuous)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Purpose</strong></td>
-<td style="text-align: left;">Association between variables</td>
-<td style="text-align: left;">Difference in means</td>
+<td style="text-align:left"><strong>Purpose</strong></td>
+<td style="text-align:left">Association between variables</td>
+<td style="text-align:left">Difference in means</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Assumptions</strong></td>
-<td style="text-align: left;">Categorical data, independence</td>
-<td style="text-align: left;">Normal distribution, independence</td>
+<td style="text-align:left"><strong>Assumptions</strong></td>
+<td style="text-align:left">Categorical data, independence</td>
+<td style="text-align:left">Normal distribution, independence</td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h3 id="23-p-value-calculation">2.3 P-Value Calculation</h3>
-<h4 id="z-test-known-population-std-dev">Z-Test (known population std dev)</h4>
+<h4>Z-Test (known population std dev)</h4>
 <div class="math-display">$$Z = \frac{\bar{x} - \mu}{\sigma / \sqrt{n}}$$</div>
 <ul>
 <li>Two-tailed: $p = 2 \times P(Z > |Z_{stat}|)$</li>
 <li>One-tailed: $p = P(Z > Z_{stat})$</li>
 </ul>
-<h4 id="independent-t-test">Independent T-Test</h4>
+<h4>Independent T-Test</h4>
 <div class="math-display">$$t = \frac{\bar{x}_1 - \bar{x}_2}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}$$</div>
 <p>Use t-distribution with appropriate degrees of freedom.</p>
-<h4 id="chi-square-test_1">Chi-Square Test</h4>
+<h4>Chi-Square Test</h4>
 <div class="math-display">$$\chi^2 = \sum \frac{(O - E)^2}{E}, \quad df = \text{categories} - 1$$</div>
-<h4 id="anova-f-test">ANOVA (F-Test)</h4>
+<h4>ANOVA (F-Test)</h4>
 <div class="math-display">$$F = \frac{\text{Between-group variability}}{\text{Within-group variability}}$$</div>
 <p><strong>General Steps:</strong> Calculate statistic → Identify distribution → Look up p-value → Compare to α → Report conclusion.</p>
 <hr />
 <h3 id="24-probability-vs-likelihood">2.4 Probability vs Likelihood</h3>
-<p><code>image49.png</code>
-<img src="images/image49.png" alt="Probability vs Likelihood" width="600" /></p>
+<p><code>image49.jpg</code>
+<img src="images/image49.jpg" alt="Probability vs Likelihood" width="600" /></p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;"></th>
-<th style="text-align: left;">Probability</th>
-<th style="text-align: left;">Likelihood</th>
+<th style="text-align:left"></th>
+<th style="text-align:left">Probability</th>
+<th style="text-align:left">Likelihood</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>What varies</strong></td>
-<td style="text-align: left;">Data values (x)</td>
-<td style="text-align: left;">Parameters (μ, σ)</td>
+<td style="text-align:left"><strong>What varies</strong></td>
+<td style="text-align:left">Data values (x)</td>
+<td style="text-align:left">Parameters (μ, σ)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>What is fixed</strong></td>
-<td style="text-align: left;">Distribution parameters</td>
-<td style="text-align: left;">Observed data</td>
+<td style="text-align:left"><strong>What is fixed</strong></td>
+<td style="text-align:left">Distribution parameters</td>
+<td style="text-align:left">Observed data</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Example</strong></td>
-<td style="text-align: left;">$P(\text{height} > 170 \mid \mu = 170, \sigma = 3.5)$</td>
-<td style="text-align: left;">$\mathcal{L}(\mu, \sigma \mid \text{height} > 170)$</td>
+<td style="text-align:left"><strong>Example</strong></td>
+<td style="text-align:left">$P(\text{height} > 170 \mid \mu = 170, \sigma = 3.5)$</td>
+<td style="text-align:left">$\mathcal{L}(\mu, \sigma \mid \text{height} > 170)$</td>
 </tr>
 </tbody>
 </table>
@@ -778,41 +617,43 @@ blockquote{
 <table>
 <thead>
 <tr>
-<th style="text-align: left;"></th>
-<th style="text-align: left;">MLE</th>
-<th style="text-align: left;">MAP</th>
+<th style="text-align:left"></th>
+<th style="text-align:left">MLE</th>
+<th style="text-align:left">MAP</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Type</strong></td>
-<td style="text-align: left;">Frequentist</td>
-<td style="text-align: left;">Bayesian</td>
+<td style="text-align:left"><strong>Type</strong></td>
+<td style="text-align:left">Frequentist</td>
+<td style="text-align:left">Bayesian</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Prior</strong></td>
-<td style="text-align: left;">None (uniform assumed)</td>
-<td style="text-align: left;">Incorporates prior belief $P(\theta)$</td>
+<td style="text-align:left"><strong>Prior</strong></td>
+<td style="text-align:left">None (uniform assumed)</td>
+<td style="text-align:left">Incorporates prior belief $P(\theta)$</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Formula</strong></td>
-<td style="text-align: left;">$\arg\max \sum \log P(x_i \mid \theta)$</td>
-<td style="text-align: left;">$\arg\max \sum \log P(x_i \mid \theta) + \log P(\theta)$</td>
+<td style="text-align:left"><strong>Formula</strong></td>
+<td style="text-align:left">$\arg\max \sum \log P(x_i \mid \theta)$</td>
+<td style="text-align:left">$\arg\max \sum \log P(x_i \mid \theta) + \log P(\theta)$</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Relation</strong></td>
-<td style="text-align: left;">Special case of MAP</td>
-<td style="text-align: left;">Reduces to MLE with uniform prior</td>
+<td style="text-align:left"><strong>Relation</strong></td>
+<td style="text-align:left">Special case of MAP</td>
+<td style="text-align:left">Reduces to MLE with uniform prior</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Relation Between MLE and MAP</strong></p>
 <hr />
 <p>What we could conclude then is that MLE is a special case of MAP, where the prior is uniform.</p>
-<div class="math-display">$$\theta_{MAP} = \arg\max_\theta \sum_i \log P(x_i \mid \theta) P(\theta)$$</div>
-<div class="math-display">$$= \arg\max_\theta \sum_i \log P(x_i \mid \theta) \cdot \text{const}$$</div>
-<div class="math-display">$$= \arg\max_\theta \sum_i \log P(x_i \mid \theta)$$</div>
-<div class="math-display">$$= \theta_{MLE}$$</div>
+<div class="math-display">$$\begin{aligned}
+\theta_{MAP} &= \arg\max_\theta \sum_i \log P(x_i \mid \theta) P(\theta) \\
+&= \arg\max_\theta \sum_i \log P(x_i \mid \theta) \cdot \text{const} \\
+&= \arg\max_\theta \sum_i \log P(x_i \mid \theta) \\
+&= \theta_{MLE}
+\end{aligned}$$</div>
 <hr />
 </div>
 <div class="content-section sec-3">
@@ -823,26 +664,26 @@ blockquote{
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Concept</th>
-<th style="text-align: left;">Definition</th>
+<th style="text-align:left">Concept</th>
+<th style="text-align:left">Definition</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Loss Function</strong> L</td>
-<td style="text-align: left;">Quantifies the error between true output $y_i$ and predicted output $h(x_i)$</td>
+<td style="text-align:left"><strong>Loss Function</strong> L</td>
+<td style="text-align:left">Quantifies the error between true output $y_i$ and predicted output $h(x_i)$</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>True Risk</strong> R(h)</td>
-<td style="text-align: left;">$R(h) = \mathbb{E}_{(x,y) \sim p}[L(y, h(x))]$ — uses the unknown true distribution $P$</td>
+<td style="text-align:left"><strong>True Risk</strong> R(h)</td>
+<td style="text-align:left">$R(h) = \mathbb{E}_{(x,y) \sim p}[L(y, h(x))]$ — uses the unknown true distribution $P$</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Empirical Risk</strong> $\hat{R}(h)$</td>
-<td style="text-align: left;">$\hat{R}(h) = \frac{1}{n} \sum_{i=1}^{n} L(y_i, h(x_i))$ — computed on training data</td>
+<td style="text-align:left"><strong>Empirical Risk</strong> $\hat{R}(h)$</td>
+<td style="text-align:left">$\hat{R}(h) = \frac{1}{n} \sum_{i=1}^{n} L(y_i, h(x_i))$ — computed on training data</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>ERM Objective</strong></td>
-<td style="text-align: left;">$h^* = \arg\min_{h \in \mathcal{H}} \hat{R}(h)$ — find the model with the lowest average training error</td>
+<td style="text-align:left"><strong>ERM Objective</strong></td>
+<td style="text-align:left">$h^* = \arg\min_{h \in \mathcal{H}} \hat{R}(h)$ — find the model with the lowest average training error</td>
 </tr>
 </tbody>
 </table>
@@ -858,45 +699,49 @@ blockquote{
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Scenario</th>
-<th style="text-align: left;">Bias</th>
-<th style="text-align: left;">Variance</th>
-<th style="text-align: left;">Effect</th>
+<th style="text-align:left">Scenario</th>
+<th style="text-align:left">Bias</th>
+<th style="text-align:left">Variance</th>
+<th style="text-align:left">Effect</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Underfitting</strong></td>
-<td style="text-align: left;">High</td>
-<td style="text-align: left;">Low</td>
-<td style="text-align: left;">Poor on train and test</td>
+<td style="text-align:left"><strong>Underfitting</strong></td>
+<td style="text-align:left">High</td>
+<td style="text-align:left">Low</td>
+<td style="text-align:left">Poor on train and test</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Overfitting</strong></td>
-<td style="text-align: left;">Low</td>
-<td style="text-align: left;">High</td>
-<td style="text-align: left;">Good on train, poor on test</td>
+<td style="text-align:left"><strong>Overfitting</strong></td>
+<td style="text-align:left">Low</td>
+<td style="text-align:left">High</td>
+<td style="text-align:left">Good on train, poor on test</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Ideal</strong></td>
-<td style="text-align: left;">Low</td>
-<td style="text-align: left;">Low</td>
-<td style="text-align: left;">Good generalization</td>
+<td style="text-align:left"><strong>Ideal</strong></td>
+<td style="text-align:left">Low</td>
+<td style="text-align:left">Low</td>
+<td style="text-align:left">Good generalization</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Reduce Bias (Underfitting):</strong>
-1. Increase model complexity
-2. Feature engineering
-3. Reduce regularization
-4. Increase training time</p>
-<p><strong>Reduce Variance (Overfitting):</strong>
-1. Regularization (L1/L2)
-2. Cross-validation
-3. Feature selection
-4. Ensemble methods
-5. Early stopping
-6. Data augmentation</p>
+<p><strong>Reduce Bias (Underfitting):</strong></p>
+<ol>
+<li>Increase model complexity</li>
+<li>Feature engineering</li>
+<li>Reduce regularization</li>
+<li>Increase training time</li>
+</ol>
+<p><strong>Reduce Variance (Overfitting):</strong></p>
+<ol>
+<li>Regularization (L1/L2)</li>
+<li>Cross-validation</li>
+<li>Feature selection</li>
+<li>Ensemble methods</li>
+<li>Early stopping</li>
+<li>Data augmentation</li>
+</ol>
 <hr />
 <h3 id="33-evaluation-metrics">3.3 Evaluation Metrics</h3>
 <p><code>image24.png</code>
@@ -912,9 +757,11 @@ blockquote{
 <li>$\beta > 1$: More weight on recall</li>
 <li>$\beta < 1$: More weight on precision</li>
 </ul>
-<p><strong>F1 is preferred when:</strong>
-- There is <strong>class imbalance</strong>
-- Both precision and recall are important</p>
+<p><strong>F1 is preferred when:</strong></p>
+<ul>
+<li>There is <strong>class imbalance</strong></li>
+<li>Both precision and recall are important</li>
+</ul>
 <hr />
 <h3 id="34-confusion-matrix">3.4 Confusion Matrix</h3>
 <p><code>image62.png</code>
@@ -922,21 +769,21 @@ blockquote{
 <table>
 <thead>
 <tr>
-<th style="text-align: left;"></th>
-<th style="text-align: left;">Predicted Positive</th>
-<th style="text-align: left;">Predicted Negative</th>
+<th style="text-align:left"></th>
+<th style="text-align:left">Predicted Positive</th>
+<th style="text-align:left">Predicted Negative</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Actual Positive</strong></td>
-<td style="text-align: left;">TP</td>
-<td style="text-align: left;">FN (Type II Error)</td>
+<td style="text-align:left"><strong>Actual Positive</strong></td>
+<td style="text-align:left">TP</td>
+<td style="text-align:left">FN (Type II Error)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Actual Negative</strong></td>
-<td style="text-align: left;">FP (Type I Error)</td>
-<td style="text-align: left;">TN</td>
+<td style="text-align:left"><strong>Actual Negative</strong></td>
+<td style="text-align:left">FP (Type I Error)</td>
+<td style="text-align:left">TN</td>
 </tr>
 </tbody>
 </table>
@@ -949,22 +796,22 @@ blockquote{
 <table>
 <thead>
 <tr>
-<th style="text-align: left;"></th>
-<th style="text-align: left;">When to Use</th>
+<th style="text-align:left"></th>
+<th style="text-align:left">When to Use</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Equal-sized labels</strong></td>
-<td style="text-align: left;">Use any method</td>
+<td style="text-align:left"><strong>Equal-sized labels</strong></td>
+<td style="text-align:left">Use any method</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Imbalanced labels — bias toward most populated</strong></td>
-<td style="text-align: left;">Use <strong>Micro</strong> averaging</td>
+<td style="text-align:left"><strong>Imbalanced labels — bias toward most populated</strong></td>
+<td style="text-align:left">Use <strong>Micro</strong> averaging</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Imbalanced labels — equal weight to all classes</strong></td>
-<td style="text-align: left;">Use <strong>Macro</strong> averaging</td>
+<td style="text-align:left"><strong>Imbalanced labels — equal weight to all classes</strong></td>
+<td style="text-align:left">Use <strong>Macro</strong> averaging</td>
 </tr>
 </tbody>
 </table>
@@ -981,7 +828,7 @@ blockquote{
 <li><strong>False Positive Rate</strong> = $1 - \text{Specificity}$ = $FP / N$</li>
 </ul>
 <hr />
-<h3 id="36-roc-curve-auc">3.6 ROC Curve &amp; AUC</h3>
+<h3 id="36-roc-curve--auc">3.6 ROC Curve &amp; AUC</h3>
 <p><strong>ROC</strong> plots <strong>True Positive Rate (TPR)</strong> vs <strong>False Positive Rate (FPR)</strong> across all classification thresholds.</p>
 <p><code>image64.png</code>
 <img src="images/image64.png" alt="ROC Curve" width="700" /></p>
@@ -991,7 +838,7 @@ blockquote{
 <li>AUC = 0.85: Good classifier (shown above)</li>
 </ul>
 <hr />
-<h3 id="37-r2-and-adjusted-r2">3.7 R² and Adjusted R²</h3>
+<h3 id="37-r²-and-adjusted-r²">3.7 R² and Adjusted R²</h3>
 <p><strong>R² (Coefficient of Determination):</strong></p>
 <div class="math-display">$$R^2 = 1 - \frac{SS_{\text{residual}}}{SS_{\text{total}}}$$</div>
 <ul>
@@ -1011,43 +858,47 @@ blockquote{
 <table>
 <thead>
 <tr>
-<th style="text-align: left;"></th>
-<th style="text-align: left;">R²</th>
-<th style="text-align: left;">Adjusted R²</th>
+<th style="text-align:left"></th>
+<th style="text-align:left">R²</th>
+<th style="text-align:left">Adjusted R²</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Penalization</strong></td>
-<td style="text-align: left;">None</td>
-<td style="text-align: left;">Penalizes unnecessary variables</td>
+<td style="text-align:left"><strong>Penalization</strong></td>
+<td style="text-align:left">None</td>
+<td style="text-align:left">Penalizes unnecessary variables</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Range</strong></td>
-<td style="text-align: left;">[0, 1]</td>
-<td style="text-align: left;">$(-\infty, 1]$</td>
+<td style="text-align:left"><strong>Range</strong></td>
+<td style="text-align:left">[0, 1]</td>
+<td style="text-align:left">$(-\infty, 1]$</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Use</strong></td>
-<td style="text-align: left;">Model fit assessment</td>
-<td style="text-align: left;">Model comparison across different #predictors</td>
+<td style="text-align:left"><strong>Use</strong></td>
+<td style="text-align:left">Model fit assessment</td>
+<td style="text-align:left">Model comparison across different #predictors</td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h3 id="38-cross-validation">3.8 Cross-Validation</h3>
-<p><strong>K-Fold Cross-Validation:</strong>
-- Split data into k folds; train k-1, test on remaining fold
-- Repeat k times, average results
-- During inference, uses all k models</p>
-<p><strong>Leave-One-Out (LOO):</strong>
-- k = n (number of data points)
-- One test point per fold
-- Suitable for small datasets</p>
+<p><strong>K-Fold Cross-Validation:</strong></p>
+<ul>
+<li>Split data into k folds; train k-1, test on remaining fold</li>
+<li>Repeat k times, average results</li>
+<li>During inference, uses all k models</li>
+</ul>
+<p><strong>Leave-One-Out (LOO):</strong></p>
+<ul>
+<li>k = n (number of data points)</li>
+<li>One test point per fold</li>
+<li>Suitable for small datasets</li>
+</ul>
 <hr />
 </div>
 <div class="content-section sec-4">
-<h2 id="4-feature-engineering-data">4. Feature Engineering &amp; Data</h2>
+<h2 id="4-feature-engineering--data">4. Feature Engineering &amp; Data</h2>
 
 <h3 id="41-feature-scaling">4.1 Feature Scaling</h3>
 <p><code>image25.png</code>
@@ -1060,35 +911,41 @@ blockquote{
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Method</th>
-<th style="text-align: left;">Use When</th>
+<th style="text-align:left">Method</th>
+<th style="text-align:left">Use When</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Normalization</strong></td>
-<td style="text-align: left;">Data does NOT follow Gaussian distribution; algorithms like KNN, Neural Networks</td>
+<td style="text-align:left"><strong>Normalization</strong></td>
+<td style="text-align:left">Data does NOT follow Gaussian distribution; algorithms like KNN, Neural Networks</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Standardization</strong></td>
-<td style="text-align: left;">Data follows Gaussian distribution; robust to outliers; SVM, Linear Regression</td>
+<td style="text-align:left"><strong>Standardization</strong></td>
+<td style="text-align:left">Data follows Gaussian distribution; robust to outliers; SVM, Linear Regression</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Why Feature Scaling Matters:</strong>
-- Required when features have very different ranges
-- Helps gradient descent converge faster
-- Distance-based algorithms are dominated by large-magnitude features without scaling
-- Prevents weight explosions during training</p>
+<p><strong>Why Feature Scaling Matters:</strong></p>
+<ul>
+<li>Required when features have very different ranges</li>
+<li>Helps gradient descent converge faster</li>
+<li>Distance-based algorithms are dominated by large-magnitude features without scaling</li>
+<li>Prevents weight explosions during training</li>
+</ul>
 <hr />
 <h3 id="42-curse-of-dimensionality">4.2 Curse of Dimensionality</h3>
-<p>As the number of features/dimensions increases with a fixed training set size:
-- Performance initially improves, then <strong>degrades</strong> beyond a certain dimensionality
-- With more features than observations → risk of massively overfitting
-- Distance-based methods lose meaning (all points become equidistant in high dimensions)</p>
-<p><strong>Rules of thumb:</strong>
-- At least <strong>5 training examples per dimension</strong>
-- Use <strong>PCA</strong> to reduce dimensionality before modeling</p>
+<p>As the number of features/dimensions increases with a fixed training set size:</p>
+<ul>
+<li>Performance initially improves, then <strong>degrades</strong> beyond a certain dimensionality</li>
+<li>With more features than observations → risk of massively overfitting</li>
+<li>Distance-based methods lose meaning (all points become equidistant in high dimensions)</li>
+</ul>
+<p><strong>Rules of thumb:</strong></p>
+<ul>
+<li>At least <strong>5 training examples per dimension</strong></li>
+<li>Use <strong>PCA</strong> to reduce dimensionality before modeling</li>
+</ul>
 <hr />
 </div>
 <div class="content-section sec-5">
@@ -1099,75 +956,77 @@ blockquote{
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Model</th>
-<th style="text-align: left;">Description</th>
+<th style="text-align:left">Model</th>
+<th style="text-align:left">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>k-Nearest Neighbors (k-NN)</strong></td>
-<td style="text-align: left;">Predicts based on k closest training examples; no functional form assumed</td>
+<td style="text-align:left"><strong>k-Nearest Neighbors (k-NN)</strong></td>
+<td style="text-align:left">Predicts based on k closest training examples; no functional form assumed</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Decision Trees</strong></td>
-<td style="text-align: left;">Recursively splits data; complexity grows with data size</td>
+<td style="text-align:left"><strong>Decision Trees</strong></td>
+<td style="text-align:left">Recursively splits data; complexity grows with data size</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Kernel Density Estimation (KDE)</strong></td>
-<td style="text-align: left;">Estimates PDF by averaging kernel functions centered at each data point</td>
+<td style="text-align:left"><strong>Kernel Density Estimation (KDE)</strong></td>
+<td style="text-align:left">Estimates PDF by averaging kernel functions centered at each data point</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Gaussian Processes (GP)</strong></td>
-<td style="text-align: left;">Defines distribution over functions; complexity grows with data</td>
+<td style="text-align:left"><strong>Gaussian Processes (GP)</strong></td>
+<td style="text-align:left">Defines distribution over functions; complexity grows with data</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Random Forests</strong></td>
-<td style="text-align: left;">Ensemble of decision trees; depth and count can vary</td>
+<td style="text-align:left"><strong>Random Forests</strong></td>
+<td style="text-align:left">Ensemble of decision trees; depth and count can vary</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>SVM with Non-linear Kernels</strong></td>
-<td style="text-align: left;">RBF kernel behaves nonparametrically</td>
+<td style="text-align:left"><strong>SVM with Non-linear Kernels</strong></td>
+<td style="text-align:left">RBF kernel behaves nonparametrically</td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h3 id="52-naive-bayes">5.2 Naive Bayes</h3>
-<p><strong>Why "Naive"?</strong> It assumes <strong>absolute independence of features</strong> — a condition virtually never met in real-world data.</p>
+<p><strong>Why &quot;Naive&quot;?</strong> It assumes <strong>absolute independence of features</strong> — a condition virtually never met in real-world data.</p>
 <p><strong>Bayes' Theorem:</strong></p>
 <p><code>image75.png</code>
 <img src="images/image75.png" alt="Bayes Theorem with labeled terms" width="560" /></p>
 <div class="math-display">$$P(c \mid x) = \frac{P(x \mid c) \cdot P(c)}{P(x)}$$</div>
-<p>where:
-- $P(c \mid x)$ = <strong>Posterior Probability</strong> (probability of class given data)
-- $P(x \mid c)$ = <strong>Likelihood</strong> (probability of data given class)
-- $P(c)$ = <strong>Class Prior Probability</strong>
-- $P(x)$ = <strong>Predictor Prior Probability</strong> (evidence — normalising constant)</p>
+<p>where:</p>
+<ul>
+<li>$P(c \mid x)$ = <strong>Posterior Probability</strong> (probability of class given data)</li>
+<li>$P(x \mid c)$ = <strong>Likelihood</strong> (probability of data given class)</li>
+<li>$P(c)$ = <strong>Class Prior Probability</strong></li>
+<li>$P(x)$ = <strong>Predictor Prior Probability</strong> (evidence — normalising constant)</li>
+</ul>
 <p>With the naive independence assumption:</p>
 <div class="math-display">$$P(c \mid X) = P(x_1 \mid c) \cdot P(x_2 \mid c) \cdots P(x_n \mid c) \cdot P(c)$$</div>
 <p><strong>Types:</strong></p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Naive Bayes Type</th>
-<th style="text-align: left;">Likelihood Model</th>
-<th style="text-align: left;">Use Case</th>
+<th style="text-align:left">Naive Bayes Type</th>
+<th style="text-align:left">Likelihood Model</th>
+<th style="text-align:left">Use Case</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Multinomial NB</strong></td>
-<td style="text-align: left;">Count of word/token occurrences</td>
-<td style="text-align: left;">Text classification (word counts)</td>
+<td style="text-align:left"><strong>Multinomial NB</strong></td>
+<td style="text-align:left">Count of word/token occurrences</td>
+<td style="text-align:left">Text classification (word counts)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Gaussian NB</strong></td>
-<td style="text-align: left;">Gaussian distribution: $P(x\|c) = \mathcal{N}(\mu_c, \sigma_c^2)$</td>
-<td style="text-align: left;">Continuous features</td>
+<td style="text-align:left"><strong>Gaussian NB</strong></td>
+<td style="text-align:left">Gaussian distribution: $P(x\|c) = \mathcal{N}(\mu_c, \sigma_c^2)$</td>
+<td style="text-align:left">Continuous features</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Bernoulli NB</strong></td>
-<td style="text-align: left;">Bernoulli (presence/absence of feature)</td>
-<td style="text-align: left;">Binary feature vectors</td>
+<td style="text-align:left"><strong>Bernoulli NB</strong></td>
+<td style="text-align:left">Bernoulli (presence/absence of feature)</td>
+<td style="text-align:left">Binary feature vectors</td>
 </tr>
 </tbody>
 </table>
@@ -1178,26 +1037,26 @@ blockquote{
 <table>
 <thead>
 <tr>
-<th style="text-align: left;"></th>
-<th style="text-align: left;">KNN</th>
-<th style="text-align: left;">K-Means</th>
+<th style="text-align:left"></th>
+<th style="text-align:left">KNN</th>
+<th style="text-align:left">K-Means</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Type</strong></td>
-<td style="text-align: left;">Supervised</td>
-<td style="text-align: left;">Unsupervised</td>
+<td style="text-align:left"><strong>Type</strong></td>
+<td style="text-align:left">Supervised</td>
+<td style="text-align:left">Unsupervised</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Task</strong></td>
-<td style="text-align: left;">Classification</td>
-<td style="text-align: left;">Clustering</td>
+<td style="text-align:left"><strong>Task</strong></td>
+<td style="text-align:left">Classification</td>
+<td style="text-align:left">Clustering</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>k</strong></td>
-<td style="text-align: left;">Number of neighbors</td>
-<td style="text-align: left;">Number of clusters</td>
+<td style="text-align:left"><strong>k</strong></td>
+<td style="text-align:left">Number of neighbors</td>
+<td style="text-align:left">Number of clusters</td>
 </tr>
 </tbody>
 </table>
@@ -1208,39 +1067,41 @@ blockquote{
 <img src="images/image40.png" alt="Decision Tree Example" width="700" /></p>
 <p><code>image55.png</code>
 <img src="images/image55.png" alt="Decision Tree with Gain Values" width="700" /></p>
-<p><strong>Overfitting in Decision Trees:</strong>
-- Trees can form a branch for each data point → no generalization
-- Fix: <strong>Pruning</strong> — remove parts of tree that don't improve classification power</p>
+<p><strong>Overfitting in Decision Trees:</strong></p>
+<ul>
+<li>Trees can form a branch for each data point → no generalization</li>
+<li>Fix: <strong>Pruning</strong> — remove parts of tree that don't improve classification power</li>
+</ul>
 <p><strong>Pruning:</strong> Reduces tree size by removing subtrees that add no predictive value.</p>
 <p><strong>Decision Tree vs Random Forest:</strong></p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;"></th>
-<th style="text-align: left;">Decision Tree</th>
-<th style="text-align: left;">Random Forest</th>
+<th style="text-align:left"></th>
+<th style="text-align:left">Decision Tree</th>
+<th style="text-align:left">Random Forest</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Interpretability</strong></td>
-<td style="text-align: left;">Simple, explainable</td>
-<td style="text-align: left;">Black box</td>
+<td style="text-align:left"><strong>Interpretability</strong></td>
+<td style="text-align:left">Simple, explainable</td>
+<td style="text-align:left">Black box</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Accuracy trend</strong></td>
-<td style="text-align: left;">Improves with more splits → prone to overfitting</td>
-<td style="text-align: left;">Improves with more trees until it plateaus</td>
+<td style="text-align:left"><strong>Accuracy trend</strong></td>
+<td style="text-align:left">Improves with more splits → prone to overfitting</td>
+<td style="text-align:left">Improves with more trees until it plateaus</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Feature selection</strong></td>
-<td style="text-align: left;">Considers all features at each split</td>
-<td style="text-align: left;">Considers random feature subset at each split</td>
+<td style="text-align:left"><strong>Feature selection</strong></td>
+<td style="text-align:left">Considers all features at each split</td>
+<td style="text-align:left">Considers random feature subset at each split</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Use when</strong></td>
-<td style="text-align: left;">Need simplicity/explainability; small dataset</td>
-<td style="text-align: left;">Need accuracy and robustness; large dataset</td>
+<td style="text-align:left"><strong>Use when</strong></td>
+<td style="text-align:left">Need simplicity/explainability; small dataset</td>
+<td style="text-align:left">Need accuracy and robustness; large dataset</td>
 </tr>
 </tbody>
 </table>
@@ -1282,39 +1143,41 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Kernel</th>
-<th style="text-align: left;">Formula</th>
-<th style="text-align: left;">Use Case</th>
+<th style="text-align:left">Kernel</th>
+<th style="text-align:left">Formula</th>
+<th style="text-align:left">Use Case</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Linear</strong></td>
-<td style="text-align: left;">$k(x,y) = x^T y$</td>
-<td style="text-align: left;">Linearly separable data</td>
+<td style="text-align:left"><strong>Linear</strong></td>
+<td style="text-align:left">$k(x,y) = x^T y$</td>
+<td style="text-align:left">Linearly separable data</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Polynomial</strong></td>
-<td style="text-align: left;">$k(x,y) = (x^T y)^p$</td>
-<td style="text-align: left;">Non-linear data</td>
+<td style="text-align:left"><strong>Polynomial</strong></td>
+<td style="text-align:left">$k(x,y) = (x^T y)^p$</td>
+<td style="text-align:left">Non-linear data</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>RBF / Gaussian</strong></td>
-<td style="text-align: left;">$k(x,y) = \exp\!\left(-\frac{\|x-y\|^2}{2\sigma^2}\right)$</td>
-<td style="text-align: left;">Non-linear, high-dimensional data</td>
+<td style="text-align:left"><strong>RBF / Gaussian</strong></td>
+<td style="text-align:left">$k(x,y) = \exp\!\left(-\frac{\|x-y\|^2}{2\sigma^2}\right)$</td>
+<td style="text-align:left">Non-linear, high-dimensional data</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Sigmoid</strong></td>
-<td style="text-align: left;">$k(x,y) = \tanh(\alpha x^T y + c)$</td>
-<td style="text-align: left;">Proxy for neural networks</td>
+<td style="text-align:left"><strong>Sigmoid</strong></td>
+<td style="text-align:left">$k(x,y) = \tanh(\alpha x^T y + c)$</td>
+<td style="text-align:left">Proxy for neural networks</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Why Gaussian RBF maps to infinite-dimensional space:</strong></p>
 <p>With $m$ distinct training points, the Gaussian RBF kernel makes the SVM operate in an $m$-dimensional space. As training data grows, this space grows without bound — effectively mapping inputs to infinite dimensions without explicitly computing those coordinates.</p>
-<p><strong>C Parameter (Regularization):</strong>
-- Small C → wider margin, more misclassifications allowed (softer boundary)
-- Large C → narrower margin, fewer misclassifications (harder boundary)</p>
+<p><strong>C Parameter (Regularization):</strong></p>
+<ul>
+<li>Small C → wider margin, more misclassifications allowed (softer boundary)</li>
+<li>Large C → narrower margin, fewer misclassifications (harder boundary)</li>
+</ul>
 <p><strong>Support Vector Regression (SVR):</strong> Regression counterpart — fits data within a margin of tolerance.</p>
 <hr />
 </div>
@@ -1323,28 +1186,30 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 
 <p>Ensemble learning combines multiple <strong>weak learners</strong> to produce a stronger model.</p>
 <h3 id="61-random-forest-vs-bagging">6.1 Random Forest vs Bagging</h3>
-<p><strong>Both use Bootstrap Sampling:</strong>
-- Each tree trains on a random sample of data <strong>with replacement</strong>
-- Some data points repeat; some are omitted</p>
+<p><strong>Both use Bootstrap Sampling:</strong></p>
+<ul>
+<li>Each tree trains on a random sample of data <strong>with replacement</strong></li>
+<li>Some data points repeat; some are omitted</li>
+</ul>
 <p><strong>Key Difference — Feature Selection:</strong></p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;"></th>
-<th style="text-align: left;">Random Forest</th>
-<th style="text-align: left;">Bagging</th>
+<th style="text-align:left"></th>
+<th style="text-align:left">Random Forest</th>
+<th style="text-align:left">Bagging</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>At each split</strong></td>
-<td style="text-align: left;">Randomly selects a <strong>subset of features</strong></td>
-<td style="text-align: left;">Considers <strong>all features</strong></td>
+<td style="text-align:left"><strong>At each split</strong></td>
+<td style="text-align:left">Randomly selects a <strong>subset of features</strong></td>
+<td style="text-align:left">Considers <strong>all features</strong></td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Correlation</strong></td>
-<td style="text-align: left;">Reduces inter-model correlation more effectively</td>
-<td style="text-align: left;">Higher correlation between models</td>
+<td style="text-align:left"><strong>Correlation</strong></td>
+<td style="text-align:left">Reduces inter-model correlation more effectively</td>
+<td style="text-align:left">Higher correlation between models</td>
 </tr>
 </tbody>
 </table>
@@ -1378,46 +1243,49 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 </tr>
 </tbody>
 </table>
-
-<p><strong>Bagging Details:</strong>
-1. Generate multiple bootstrap samples from training data
-2. Train a separate model on each sample (independently, in parallel)
-3. Combine predictions (average for regression, vote for classification)</p>
-<p><strong>Boosting Details:</strong>
-1. Initialize weights equally
-2. Train first weak learner
-3. Increase weights of misclassified instances
-4. Train next model on re-weighted data
-5. Repeat → combine all models with weighted voting</p>
+<p><strong>Bagging Details:</strong></p>
+<ol>
+<li>Generate multiple bootstrap samples from training data</li>
+<li>Train a separate model on each sample (independently, in parallel)</li>
+<li>Combine predictions (average for regression, vote for classification)</li>
+</ol>
+<p><strong>Boosting Details:</strong></p>
+<ol>
+<li>Initialize weights equally</li>
+<li>Train first weak learner</li>
+<li>Increase weights of misclassified instances</li>
+<li>Train next model on re-weighted data</li>
+<li>Repeat → combine all models with weighted voting</li>
+</ol>
 <blockquote>
 <p><strong>Summary</strong>: Bagging mainly focuses on getting an ensemble model with less variance than its components; boosting mainly tries to produce strong models less biased than their components.</p>
 </blockquote>
 <hr />
 <h3 id="63-boosting-variants">6.3 Boosting Variants</h3>
-<p>Three main types: <strong>Gradient Boosting</strong>, <strong>AdaBoost</strong>, <strong>XGBoost</strong> ("eXtreme Gradient Boosting").</p>
+<p>Three main types: <strong>Gradient Boosting</strong>, <strong>AdaBoost</strong>, <strong>XGBoost</strong> (&quot;eXtreme Gradient Boosting&quot;).</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;"></th>
-<th style="text-align: left;">AdaBoost</th>
-<th style="text-align: left;">Gradient Boosting</th>
+<th style="text-align:left"></th>
+<th style="text-align:left">AdaBoost</th>
+<th style="text-align:left">Gradient Boosting</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Weight update</strong></td>
-<td style="text-align: left;">Increases weights of misclassified samples each iteration</td>
-<td style="text-align: left;">Updates by computing negative gradient of loss function</td>
+<td style="text-align:left"><strong>Weight update</strong></td>
+<td style="text-align:left">Increases weights of misclassified samples each iteration</td>
+<td style="text-align:left">Updates by computing negative gradient of loss function</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Base learners</strong></td>
-<td style="text-align: left;">Decision stumps (single split)</td>
-<td style="text-align: left;">Wide range: trees, linear models, etc.</td>
+<td style="text-align:left"><strong>Base learners</strong></td>
+<td style="text-align:left">Decision stumps (single split)</td>
+<td style="text-align:left">Wide range: trees, linear models, etc.</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Noise sensitivity</strong></td>
-<td style="text-align: left;">More susceptible — assigns high weights to misclassified points</td>
-<td style="text-align: left;">More robust — gradient updates are less sensitive to outliers</td>
+<td style="text-align:left"><strong>Noise sensitivity</strong></td>
+<td style="text-align:left">More susceptible — assigns high weights to misclassified points</td>
+<td style="text-align:left">More robust — gradient updates are less sensitive to outliers</td>
 </tr>
 </tbody>
 </table>
@@ -1426,102 +1294,104 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <table>
 <thead>
 <tr>
-<th style="text-align: left;"></th>
-<th style="text-align: left;">XGBoost</th>
-<th style="text-align: left;">Random Forest</th>
+<th style="text-align:left"></th>
+<th style="text-align:left">XGBoost</th>
+<th style="text-align:left">Random Forest</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Algorithm</strong></td>
-<td style="text-align: left;">Sequential gradient boosting</td>
-<td style="text-align: left;">Parallel bagging of decision trees</td>
+<td style="text-align:left"><strong>Algorithm</strong></td>
+<td style="text-align:left">Sequential gradient boosting</td>
+<td style="text-align:left">Parallel bagging of decision trees</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Accuracy</strong></td>
-<td style="text-align: left;">Generally higher on structured/tabular data</td>
-<td style="text-align: left;">Solid baseline, competitive</td>
+<td style="text-align:left"><strong>Accuracy</strong></td>
+<td style="text-align:left">Generally higher on structured/tabular data</td>
+<td style="text-align:left">Solid baseline, competitive</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Speed</strong></td>
-<td style="text-align: left;">Optimized with parallelization + hardware acceleration</td>
-<td style="text-align: left;">Slower prediction with many trees</td>
+<td style="text-align:left"><strong>Speed</strong></td>
+<td style="text-align:left">Optimized with parallelization + hardware acceleration</td>
+<td style="text-align:left">Slower prediction with many trees</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Tuning</strong></td>
-<td style="text-align: left;">Requires careful tuning</td>
-<td style="text-align: left;">Minimal tuning needed</td>
+<td style="text-align:left"><strong>Tuning</strong></td>
+<td style="text-align:left">Requires careful tuning</td>
+<td style="text-align:left">Minimal tuning needed</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Regularization</strong></td>
-<td style="text-align: left;">Built-in L1 (Lasso) and L2 (Ridge)</td>
-<td style="text-align: left;">None built-in</td>
+<td style="text-align:left"><strong>Regularization</strong></td>
+<td style="text-align:left">Built-in L1 (Lasso) and L2 (Ridge)</td>
+<td style="text-align:left">None built-in</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Overfitting</strong></td>
-<td style="text-align: left;">Can overfit on small datasets if not regularized</td>
-<td style="text-align: left;">More robust via averaging</td>
+<td style="text-align:left"><strong>Overfitting</strong></td>
+<td style="text-align:left">Can overfit on small datasets if not regularized</td>
+<td style="text-align:left">More robust via averaging</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Interpretability</strong></td>
-<td style="text-align: left;">Feature importance available</td>
-<td style="text-align: left;">Feature importance available, but less interpretable overall</td>
+<td style="text-align:left"><strong>Interpretability</strong></td>
+<td style="text-align:left">Feature importance available</td>
+<td style="text-align:left">Feature importance available, but less interpretable overall</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Use cases</strong></td>
-<td style="text-align: left;">Competitive ML, large structured datasets</td>
-<td style="text-align: left;">Quick robust baseline, many problem types</td>
+<td style="text-align:left"><strong>Use cases</strong></td>
+<td style="text-align:left">Competitive ML, large structured datasets</td>
+<td style="text-align:left">Quick robust baseline, many problem types</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Summary:</strong>
-- <strong>Random Forest</strong>: Quick, robust, out-of-the-box. Good when you need a reliable model with minimal tuning.
-- <strong>XGBoost</strong>: Superior performance on complex datasets, but requires more careful tuning.</p>
+<p><strong>Summary:</strong></p>
+<ul>
+<li><strong>Random Forest</strong>: Quick, robust, out-of-the-box. Good when you need a reliable model with minimal tuning.</li>
+<li><strong>XGBoost</strong>: Superior performance on complex datasets, but requires more careful tuning.</li>
+</ul>
 <hr />
 </div>
 <div class="content-section sec-7">
-<h2 id="7-regularization-loss-functions">7. Regularization &amp; Loss Functions</h2>
+<h2 id="7-regularization--loss-functions">7. Regularization &amp; Loss Functions</h2>
 
 <h3 id="71-l1-vs-l2-regularization">7.1 L1 vs L2 Regularization</h3>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">L1 Regularization</th>
-<th style="text-align: left;">L2 Regularization</th>
+<th style="text-align:left">L1 Regularization</th>
+<th style="text-align:left">L2 Regularization</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;">Penalizes the sum of absolute value of weights.</td>
-<td style="text-align: left;">Penalizes the sum of square weights.</td>
+<td style="text-align:left">Penalizes the sum of absolute value of weights.</td>
+<td style="text-align:left">Penalizes the sum of square weights.</td>
 </tr>
 <tr>
-<td style="text-align: left;">It has a sparse solution.</td>
-<td style="text-align: left;">It has a non-sparse solution.</td>
+<td style="text-align:left">It has a sparse solution.</td>
+<td style="text-align:left">It has a non-sparse solution.</td>
 </tr>
 <tr>
-<td style="text-align: left;">It gives multiple solutions.</td>
-<td style="text-align: left;">It has only one solution.</td>
+<td style="text-align:left">It gives multiple solutions.</td>
+<td style="text-align:left">It has only one solution.</td>
 </tr>
 <tr>
-<td style="text-align: left;">Constructed in feature selection.</td>
-<td style="text-align: left;">No feature selection.</td>
+<td style="text-align:left">Constructed in feature selection.</td>
+<td style="text-align:left">No feature selection.</td>
 </tr>
 <tr>
-<td style="text-align: left;">Robust to outliers.</td>
-<td style="text-align: left;">Not robust to outliers.</td>
+<td style="text-align:left">Robust to outliers.</td>
+<td style="text-align:left">Not robust to outliers.</td>
 </tr>
 <tr>
-<td style="text-align: left;">It generates simple and interpretable models.</td>
-<td style="text-align: left;">It gives more accurate predictions when the output variable is the function of whole input variables.</td>
+<td style="text-align:left">It generates simple and interpretable models.</td>
+<td style="text-align:left">It gives more accurate predictions when the output variable is the function of whole input variables.</td>
 </tr>
 <tr>
-<td style="text-align: left;">Unable to learn complex data patterns.</td>
-<td style="text-align: left;">Able to learn complex data patterns.</td>
+<td style="text-align:left">Unable to learn complex data patterns.</td>
+<td style="text-align:left">Able to learn complex data patterns.</td>
 </tr>
 <tr>
-<td style="text-align: left;">Computationally inefficient over non-sparse conditions.</td>
-<td style="text-align: left;">Computationally efficient because of having analytical solutions.</td>
+<td style="text-align:left">Computationally inefficient over non-sparse conditions.</td>
+<td style="text-align:left">Computationally efficient because of having analytical solutions.</td>
 </tr>
 </tbody>
 </table>
@@ -1538,41 +1408,41 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Loss Function</th>
-<th style="text-align: left;">Description</th>
-<th style="text-align: left;">Formula</th>
+<th style="text-align:left">Loss Function</th>
+<th style="text-align:left">Description</th>
+<th style="text-align:left">Formula</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Mean Bias Error (MBE)</strong></td>
-<td style="text-align: left;">Captures average bias; rarely used for training</td>
-<td style="text-align: left;">$\frac{1}{N}\sum_{i=1}^N (y_i - f(x_i))$</td>
+<td style="text-align:left"><strong>Mean Bias Error (MBE)</strong></td>
+<td style="text-align:left">Captures average bias; rarely used for training</td>
+<td style="text-align:left">$\frac{1}{N}\sum_{i=1}^N (y_i - f(x_i))$</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Mean Absolute Error (MAE)</strong></td>
-<td style="text-align: left;">Measures absolute bias; also called L1 Loss</td>
-<td style="text-align: left;">$\frac{1}{N}\sum_{i=1}^N \|y_i - f(x_i)\|$</td>
+<td style="text-align:left"><strong>Mean Absolute Error (MAE)</strong></td>
+<td style="text-align:left">Measures absolute bias; also called L1 Loss</td>
+<td style="text-align:left">$\frac{1}{N}\sum_{i=1}^N \|y_i - f(x_i)\|$</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Mean Squared Error (MSE)</strong></td>
-<td style="text-align: left;">Average squared distance; also called L2 Loss</td>
-<td style="text-align: left;">$\frac{1}{N}\sum_{i=1}^N (y_i - f(x_i))^2$</td>
+<td style="text-align:left"><strong>Mean Squared Error (MSE)</strong></td>
+<td style="text-align:left">Average squared distance; also called L2 Loss</td>
+<td style="text-align:left">$\frac{1}{N}\sum_{i=1}^N (y_i - f(x_i))^2$</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Root MSE (RMSE)</strong></td>
-<td style="text-align: left;">Square root of MSE; same units as dependent variable</td>
-<td style="text-align: left;">$\sqrt{\frac{1}{N}\sum_{i=1}^N (y_i - f(x_i))^2}$</td>
+<td style="text-align:left"><strong>Root MSE (RMSE)</strong></td>
+<td style="text-align:left">Square root of MSE; same units as dependent variable</td>
+<td style="text-align:left">$\sqrt{\frac{1}{N}\sum_{i=1}^N (y_i - f(x_i))^2}$</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Huber Loss</strong></td>
-<td style="text-align: left;">Combines MSE and MAE; less sensitive to outliers</td>
-<td style="text-align: left;">$\frac{1}{2}(y - f(x))^2$ if $\|y-f(x)\| \leq \delta$, else $\delta\|y-f(x)\| - \frac{\delta^2}{2}$</td>
+<td style="text-align:left"><strong>Huber Loss</strong></td>
+<td style="text-align:left">Combines MSE and MAE; less sensitive to outliers</td>
+<td style="text-align:left">$\frac{1}{2}(y - f(x))^2$ if $\|y-f(x)\| \leq \delta$, else $\delta\|y-f(x)\| - \frac{\delta^2}{2}$</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Log-Cosh Loss</strong></td>
-<td style="text-align: left;">Like Huber but smooth everywhere; computationally expensive</td>
-<td style="text-align: left;">$\frac{1}{N}\sum \log(\cosh(f(x_i) - y_i))$</td>
+<td style="text-align:left"><strong>Log-Cosh Loss</strong></td>
+<td style="text-align:left">Like Huber but smooth everywhere; computationally expensive</td>
+<td style="text-align:left">$\frac{1}{N}\sum \log(\cosh(f(x_i) - y_i))$</td>
 </tr>
 </tbody>
 </table>
@@ -1580,31 +1450,31 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Loss Function</th>
-<th style="text-align: left;">Description</th>
-<th style="text-align: left;">Formula</th>
+<th style="text-align:left">Loss Function</th>
+<th style="text-align:left">Description</th>
+<th style="text-align:left">Formula</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Binary Cross-Entropy (BCE)</strong></td>
-<td style="text-align: left;">Loss function for binary classification</td>
-<td style="text-align: left;">$-\frac{1}{N}\sum_{i=1}^N \left[y_i\log(p_i) + (1-y_i)\log(1-p_i)\right]$</td>
+<td style="text-align:left"><strong>Binary Cross-Entropy (BCE)</strong></td>
+<td style="text-align:left">Loss function for binary classification</td>
+<td style="text-align:left">$-\frac{1}{N}\sum_{i=1}^N \left[y_i\log(p_i) + (1-y_i)\log(1-p_i)\right]$</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Hinge Loss</strong></td>
-<td style="text-align: left;">Penalizes wrong and less confident predictions; used in SVMs</td>
-<td style="text-align: left;">$\max(0, 1 - f(x) \cdot y)$</td>
+<td style="text-align:left"><strong>Hinge Loss</strong></td>
+<td style="text-align:left">Penalizes wrong and less confident predictions; used in SVMs</td>
+<td style="text-align:left">$\max(0, 1 - f(x) \cdot y)$</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Cross-Entropy</strong> (multi-class)</td>
-<td style="text-align: left;">Extension of BCE; $N$ samples, $M$ classes</td>
-<td style="text-align: left;">$-\sum_{i=1}^N\sum_{j=1}^M y_{ij}\log(f(x_i)_j)$</td>
+<td style="text-align:left"><strong>Cross-Entropy</strong> (multi-class)</td>
+<td style="text-align:left">Extension of BCE; $N$ samples, $M$ classes</td>
+<td style="text-align:left">$-\sum_{i=1}^N\sum_{j=1}^M y_{ij}\log(f(x_i)_j)$</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>KL Divergence</strong></td>
-<td style="text-align: left;">Minimises divergence between predicted and true distribution</td>
-<td style="text-align: left;">$\sum_x f(x)\log\frac{f(x)}{y(x)}$</td>
+<td style="text-align:left"><strong>KL Divergence</strong></td>
+<td style="text-align:left">Minimises divergence between predicted and true distribution</td>
+<td style="text-align:left">$\sum_x f(x)\log\frac{f(x)}{y(x)}$</td>
 </tr>
 </tbody>
 </table>
@@ -1624,14 +1494,18 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 </ul>
 <hr />
 <h3 id="73-convex-vs-non-convex-problems">7.3 Convex vs Non-Convex Problems</h3>
-<p><strong>Convex Problems</strong> (guaranteed global minimum):
-1. Linear Regression
-2. Logistic Regression
-3. Support Vector Machines (SVM)
-4. Ridge and Lasso Regression</p>
-<p><strong>Non-Convex Problems</strong> (risk of local minima):
-- Neural Networks
-- Clustering (e.g., K-Means)</p>
+<p><strong>Convex Problems</strong> (guaranteed global minimum):</p>
+<ol>
+<li>Linear Regression</li>
+<li>Logistic Regression</li>
+<li>Support Vector Machines (SVM)</li>
+<li>Ridge and Lasso Regression</li>
+</ol>
+<p><strong>Non-Convex Problems</strong> (risk of local minima):</p>
+<ul>
+<li>Neural Networks</li>
+<li>Clustering (e.g., K-Means)</li>
+</ul>
 <hr />
 </div>
 <div class="content-section sec-8">
@@ -1643,34 +1517,34 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Variant</th>
-<th style="text-align: left;">Data Used Per Update</th>
-<th style="text-align: left;">Convergence</th>
-<th style="text-align: left;">Notes</th>
+<th style="text-align:left">Variant</th>
+<th style="text-align:left">Data Used Per Update</th>
+<th style="text-align:left">Convergence</th>
+<th style="text-align:left">Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Batch GD</strong></td>
-<td style="text-align: left;">Entire dataset</td>
-<td style="text-align: left;">Smooth, slow</td>
-<td style="text-align: left;">Deterministic; cost reduces smoothly; very high computation cost</td>
+<td style="text-align:left"><strong>Batch GD</strong></td>
+<td style="text-align:left">Entire dataset</td>
+<td style="text-align:left">Smooth, slow</td>
+<td style="text-align:left">Deterministic; cost reduces smoothly; very high computation cost</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Stochastic GD (SGD)</strong></td>
-<td style="text-align: left;">Single sample</td>
-<td style="text-align: left;">Fast but noisy</td>
-<td style="text-align: left;">Lots of variation in cost function; computation time is more</td>
+<td style="text-align:left"><strong>Stochastic GD (SGD)</strong></td>
+<td style="text-align:left">Single sample</td>
+<td style="text-align:left">Fast but noisy</td>
+<td style="text-align:left">Lots of variation in cost function; computation time is more</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Mini-Batch GD</strong></td>
-<td style="text-align: left;">Small batch</td>
-<td style="text-align: left;">Balanced</td>
-<td style="text-align: left;">Smoother than SGD; lower compute cost than Batch GD</td>
+<td style="text-align:left"><strong>Mini-Batch GD</strong></td>
+<td style="text-align:left">Small batch</td>
+<td style="text-align:left">Balanced</td>
+<td style="text-align:left">Smoother than SGD; lower compute cost than Batch GD</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Cost Function – "One Half Mean Squared Error":</strong></p>
+<p><strong>Cost Function – &quot;One Half Mean Squared Error&quot;:</strong></p>
 <div class="math-display">$$J(\theta_0, \theta_1) = \frac{1}{2m} \sum_{i=1}^{m} \left(h_\theta(x^{(i)}) - y^{(i)}\right)^2$$</div>
 <p><strong>Objective:</strong></p>
 <div class="math-display">$$\min_{\theta_0,\ \theta_1} J(\theta_0, \theta_1)$$</div>
@@ -1686,199 +1560,201 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Batch Gradient Descent</th>
-<th style="text-align: left;">Stochastic Gradient Descent</th>
+<th style="text-align:left">Batch Gradient Descent</th>
+<th style="text-align:left">Stochastic Gradient Descent</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;">Computes gradient using the whole training sample</td>
-<td style="text-align: left;">Computes gradient using a single training sample</td>
+<td style="text-align:left">Computes gradient using the whole training sample</td>
+<td style="text-align:left">Computes gradient using a single training sample</td>
 </tr>
 <tr>
-<td style="text-align: left;">Slow to converge; expensive computation</td>
-<td style="text-align: left;">Faster convergence with lower computation overhead</td>
+<td style="text-align:left">Slow to converge; expensive computation</td>
+<td style="text-align:left">Faster convergence with lower computation overhead</td>
 </tr>
 <tr>
-<td style="text-align: left;">Not applicable to large/huge samples</td>
-<td style="text-align: left;">Can be applied to large samples</td>
+<td style="text-align:left">Not applicable to large/huge samples</td>
+<td style="text-align:left">Can be applied to large samples</td>
 </tr>
 <tr>
-<td style="text-align: left;">Deterministic in nature</td>
-<td style="text-align: left;">Stochastic in nature</td>
+<td style="text-align:left">Deterministic in nature</td>
+<td style="text-align:left">Stochastic in nature</td>
 </tr>
 <tr>
-<td style="text-align: left;">Produces an optimal solution</td>
-<td style="text-align: left;">Produces a good but not necessarily optimal solution</td>
+<td style="text-align:left">Produces an optimal solution</td>
+<td style="text-align:left">Produces a good but not necessarily optimal solution</td>
 </tr>
 <tr>
-<td style="text-align: left;">No need to shuffle training data</td>
-<td style="text-align: left;">Requires shuffling of training data</td>
+<td style="text-align:left">No need to shuffle training data</td>
+<td style="text-align:left">Requires shuffling of training data</td>
 </tr>
 <tr>
-<td style="text-align: left;">Can't escape local minima</td>
-<td style="text-align: left;">Can escape local minima</td>
+<td style="text-align:left">Can't escape local minima</td>
+<td style="text-align:left">Can escape local minima</td>
 </tr>
 <tr>
-<td style="text-align: left;">Slow convergence</td>
-<td style="text-align: left;">Much faster convergence</td>
+<td style="text-align:left">Slow convergence</td>
+<td style="text-align:left">Much faster convergence</td>
 </tr>
 <tr>
-<td style="text-align: left;">Weights updated after the entire dataset</td>
-<td style="text-align: left;">Weights updated after each data point</td>
+<td style="text-align:left">Weights updated after the entire dataset</td>
+<td style="text-align:left">Weights updated after each data point</td>
 </tr>
 <tr>
-<td style="text-align: left;">Fixed learning rate</td>
-<td style="text-align: left;">Adjustable learning rate</td>
+<td style="text-align:left">Fixed learning rate</td>
+<td style="text-align:left">Adjustable learning rate</td>
 </tr>
 <tr>
-<td style="text-align: left;">Converges to global minimum (convex) / may get stuck in local minimum (non-convex)</td>
-<td style="text-align: left;">May converge to local or global minimum</td>
+<td style="text-align:left">Converges to global minimum (convex) / may get stuck in local minimum (non-convex)</td>
+<td style="text-align:left">May converge to local or global minimum</td>
 </tr>
 <tr>
-<td style="text-align: left;">Suffers from overfitting if model is too complex</td>
-<td style="text-align: left;">Helps in reducing overfitting</td>
+<td style="text-align:left">Suffers from overfitting if model is too complex</td>
+<td style="text-align:left">Helps in reducing overfitting</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h3 id="82-optimizers-full-comparison">8.2 Optimizers — Full Comparison</h3>
+<h3 id="82-optimizers--full-comparison">8.2 Optimizers — Full Comparison</h3>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Optimizer</th>
-<th style="text-align: left;">Description</th>
-<th style="text-align: left;">Learning Rate</th>
-<th style="text-align: left;">Memory</th>
-<th style="text-align: left;">Convergence</th>
-<th style="text-align: left;">Pros</th>
-<th style="text-align: left;">Cons</th>
+<th style="text-align:left">Optimizer</th>
+<th style="text-align:left">Description</th>
+<th style="text-align:left">Learning Rate</th>
+<th style="text-align:left">Memory</th>
+<th style="text-align:left">Convergence</th>
+<th style="text-align:left">Pros</th>
+<th style="text-align:left">Cons</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Gradient Descent</strong></td>
-<td style="text-align: left;">Basic, uses full dataset</td>
-<td style="text-align: left;">Fixed</td>
-<td style="text-align: left;">Low</td>
-<td style="text-align: left;">Slow</td>
-<td style="text-align: left;">Simple</td>
-<td style="text-align: left;">Slow for large data</td>
+<td style="text-align:left"><strong>Gradient Descent</strong></td>
+<td style="text-align:left">Basic, uses full dataset</td>
+<td style="text-align:left">Fixed</td>
+<td style="text-align:left">Low</td>
+<td style="text-align:left">Slow</td>
+<td style="text-align:left">Simple</td>
+<td style="text-align:left">Slow for large data</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>SGD</strong></td>
-<td style="text-align: left;">Single sample per update</td>
-<td style="text-align: left;">Fixed</td>
-<td style="text-align: left;">Low</td>
-<td style="text-align: left;">Fast</td>
-<td style="text-align: left;">Fast, online learning</td>
-<td style="text-align: left;">High variance, noisy</td>
+<td style="text-align:left"><strong>SGD</strong></td>
+<td style="text-align:left">Single sample per update</td>
+<td style="text-align:left">Fixed</td>
+<td style="text-align:left">Low</td>
+<td style="text-align:left">Fast</td>
+<td style="text-align:left">Fast, online learning</td>
+<td style="text-align:left">High variance, noisy</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Mini-batch GD</strong></td>
-<td style="text-align: left;">Small batch per update</td>
-<td style="text-align: left;">Fixed</td>
-<td style="text-align: left;">Low</td>
-<td style="text-align: left;">Moderate</td>
-<td style="text-align: left;">Reduces variance</td>
-<td style="text-align: left;">Batch size tuning needed</td>
+<td style="text-align:left"><strong>Mini-batch GD</strong></td>
+<td style="text-align:left">Small batch per update</td>
+<td style="text-align:left">Fixed</td>
+<td style="text-align:left">Low</td>
+<td style="text-align:left">Moderate</td>
+<td style="text-align:left">Reduces variance</td>
+<td style="text-align:left">Batch size tuning needed</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Momentum</strong></td>
-<td style="text-align: left;">Adds fraction of previous update</td>
-<td style="text-align: left;">Fixed</td>
-<td style="text-align: left;">Moderate</td>
-<td style="text-align: left;">Fast</td>
-<td style="text-align: left;">Reduces oscillations</td>
-<td style="text-align: left;">Momentum param tuning</td>
+<td style="text-align:left"><strong>Momentum</strong></td>
+<td style="text-align:left">Adds fraction of previous update</td>
+<td style="text-align:left">Fixed</td>
+<td style="text-align:left">Moderate</td>
+<td style="text-align:left">Fast</td>
+<td style="text-align:left">Reduces oscillations</td>
+<td style="text-align:left">Momentum param tuning</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>NAG</strong></td>
-<td style="text-align: left;">Looks ahead before updating</td>
-<td style="text-align: left;">Fixed</td>
-<td style="text-align: left;">Moderate</td>
-<td style="text-align: left;">Fast</td>
-<td style="text-align: left;">Corrects momentum overshoot</td>
-<td style="text-align: left;">Careful tuning needed</td>
+<td style="text-align:left"><strong>NAG</strong></td>
+<td style="text-align:left">Looks ahead before updating</td>
+<td style="text-align:left">Fixed</td>
+<td style="text-align:left">Moderate</td>
+<td style="text-align:left">Fast</td>
+<td style="text-align:left">Corrects momentum overshoot</td>
+<td style="text-align:left">Careful tuning needed</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Adagrad</strong></td>
-<td style="text-align: left;">Per-parameter adaptive LR from past gradients</td>
-<td style="text-align: left;">Decreasing</td>
-<td style="text-align: left;">High</td>
-<td style="text-align: left;">Moderate</td>
-<td style="text-align: left;">Auto LR adjust; good for sparse data</td>
-<td style="text-align: left;">LR shrinks too small</td>
+<td style="text-align:left"><strong>Adagrad</strong></td>
+<td style="text-align:left">Per-parameter adaptive LR from past gradients</td>
+<td style="text-align:left">Decreasing</td>
+<td style="text-align:left">High</td>
+<td style="text-align:left">Moderate</td>
+<td style="text-align:left">Auto LR adjust; good for sparse data</td>
+<td style="text-align:left">LR shrinks too small</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Adadelta</strong></td>
-<td style="text-align: left;">Limits Adagrad's gradient accumulation</td>
-<td style="text-align: left;">Adaptive</td>
-<td style="text-align: left;">Moderate</td>
-<td style="text-align: left;">Moderate</td>
-<td style="text-align: left;">Fixes Adagrad's LR decay</td>
-<td style="text-align: left;">More complex</td>
+<td style="text-align:left"><strong>Adadelta</strong></td>
+<td style="text-align:left">Limits Adagrad's gradient accumulation</td>
+<td style="text-align:left">Adaptive</td>
+<td style="text-align:left">Moderate</td>
+<td style="text-align:left">Moderate</td>
+<td style="text-align:left">Fixes Adagrad's LR decay</td>
+<td style="text-align:left">More complex</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>RMSprop</strong></td>
-<td style="text-align: left;">Moving average of squared gradients</td>
-<td style="text-align: left;">Adaptive</td>
-<td style="text-align: left;">Moderate</td>
-<td style="text-align: left;">Fast</td>
-<td style="text-align: left;">Good for non-stationary data</td>
-<td style="text-align: left;">Decay param tuning</td>
+<td style="text-align:left"><strong>RMSprop</strong></td>
+<td style="text-align:left">Moving average of squared gradients</td>
+<td style="text-align:left">Adaptive</td>
+<td style="text-align:left">Moderate</td>
+<td style="text-align:left">Fast</td>
+<td style="text-align:left">Good for non-stationary data</td>
+<td style="text-align:left">Decay param tuning</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Adam</strong></td>
-<td style="text-align: left;">RMSprop + Momentum combined</td>
-<td style="text-align: left;">Adaptive</td>
-<td style="text-align: left;">High</td>
-<td style="text-align: left;">Fast</td>
-<td style="text-align: left;">Best default choice; adaptive LR</td>
-<td style="text-align: left;">Multiple params to tune</td>
+<td style="text-align:left"><strong>Adam</strong></td>
+<td style="text-align:left">RMSprop + Momentum combined</td>
+<td style="text-align:left">Adaptive</td>
+<td style="text-align:left">High</td>
+<td style="text-align:left">Fast</td>
+<td style="text-align:left">Best default choice; adaptive LR</td>
+<td style="text-align:left">Multiple params to tune</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Nadam</strong></td>
-<td style="text-align: left;">Adam + NAG</td>
-<td style="text-align: left;">Adaptive</td>
-<td style="text-align: left;">High</td>
-<td style="text-align: left;">Fast</td>
-<td style="text-align: left;">Adam benefits + NAG correction</td>
-<td style="text-align: left;">Multiple params</td>
+<td style="text-align:left"><strong>Nadam</strong></td>
+<td style="text-align:left">Adam + NAG</td>
+<td style="text-align:left">Adaptive</td>
+<td style="text-align:left">High</td>
+<td style="text-align:left">Fast</td>
+<td style="text-align:left">Adam benefits + NAG correction</td>
+<td style="text-align:left">Multiple params</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>AdaMax</strong></td>
-<td style="text-align: left;">Adam with infinity norm</td>
-<td style="text-align: left;">Adaptive</td>
-<td style="text-align: left;">High</td>
-<td style="text-align: left;">Fast</td>
-<td style="text-align: left;">Stable; good alternative to Adam</td>
-<td style="text-align: left;">Still needs tuning</td>
+<td style="text-align:left"><strong>AdaMax</strong></td>
+<td style="text-align:left">Adam with infinity norm</td>
+<td style="text-align:left">Adaptive</td>
+<td style="text-align:left">High</td>
+<td style="text-align:left">Fast</td>
+<td style="text-align:left">Stable; good alternative to Adam</td>
+<td style="text-align:left">Still needs tuning</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>SGD + Warm Restarts</strong></td>
-<td style="text-align: left;">Periodic LR resets</td>
-<td style="text-align: left;">Cyclical</td>
-<td style="text-align: left;">Low</td>
-<td style="text-align: left;">Fast</td>
-<td style="text-align: left;">Escapes local minima</td>
-<td style="text-align: left;">Restart schedule tuning</td>
+<td style="text-align:left"><strong>SGD + Warm Restarts</strong></td>
+<td style="text-align:left">Periodic LR resets</td>
+<td style="text-align:left">Cyclical</td>
+<td style="text-align:left">Low</td>
+<td style="text-align:left">Fast</td>
+<td style="text-align:left">Escapes local minima</td>
+<td style="text-align:left">Restart schedule tuning</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Lookahead</strong></td>
-<td style="text-align: left;">"Looks ahead" at future updates</td>
-<td style="text-align: left;">Adaptive</td>
-<td style="text-align: left;">High</td>
-<td style="text-align: left;">Fast</td>
-<td style="text-align: left;">Enhances any base optimizer</td>
-<td style="text-align: left;">Added complexity</td>
+<td style="text-align:left"><strong>Lookahead</strong></td>
+<td style="text-align:left">&quot;Looks ahead&quot; at future updates</td>
+<td style="text-align:left">Adaptive</td>
+<td style="text-align:left">High</td>
+<td style="text-align:left">Fast</td>
+<td style="text-align:left">Enhances any base optimizer</td>
+<td style="text-align:left">Added complexity</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Summary by category:</strong>
-- <strong>Basic</strong>: GD, SGD, Mini-Batch — simple but need extensive tuning
-- <strong>Momentum-based</strong>: Momentum, NAG, Lookahead — faster convergence
-- <strong>Adaptive LR</strong>: Adagrad, Adadelta, RMSprop, Adam, Nadam, AdaMax — best for most deep learning tasks</p>
+<p><strong>Summary by category:</strong></p>
+<ul>
+<li><strong>Basic</strong>: GD, SGD, Mini-Batch — simple but need extensive tuning</li>
+<li><strong>Momentum-based</strong>: Momentum, NAG, Lookahead — faster convergence</li>
+<li><strong>Adaptive LR</strong>: Adagrad, Adadelta, RMSprop, Adam, Nadam, AdaMax — best for most deep learning tasks</li>
+</ul>
 <hr />
 <h3 id="83-hyperparameter-optimization">8.3 Hyperparameter Optimization</h3>
 <p><strong>Methods (increasing efficiency):</strong></p>
@@ -1898,7 +1774,7 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <li>Unlike Grid/Random Search which are memoryless</li>
 </ul>
 <blockquote>
-<p>"Bayesian Optimization is like Manual Search — the performance of past hyperparameter choices affects the future decision."</p>
+<p>&quot;Bayesian Optimization is like Manual Search — the performance of past hyperparameter choices affects the future decision.&quot;</p>
 </blockquote>
 <hr />
 <h3 id="84-early-stopping">8.4 Early Stopping</h3>
@@ -1909,13 +1785,17 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <h2 id="9-neural-network-fundamentals">9. Neural Network Fundamentals</h2>
 
 <h3 id="91-non-linearity">9.1 Non-Linearity</h3>
-<p><strong>Linearity</strong> requires:
-1. Homogeneity of degree 1: $f(ax) = af(x)$
-2. Additivity: $f(x + y) = f(x) + f(y)$</p>
-<p><strong>Why non-linearity is necessary:</strong>
-- Without non-linear activation functions, a deep network collapses into a single linear transformation regardless of depth
-- Allows learning complex, non-linear decision boundaries
-- Enables approximating any function (Universal Approximation Theorem)</p>
+<p><strong>Linearity</strong> requires:</p>
+<ol>
+<li>Homogeneity of degree 1: $f(ax) = af(x)$</li>
+<li>Additivity: $f(x + y) = f(x) + f(y)$</li>
+</ol>
+<p><strong>Why non-linearity is necessary:</strong></p>
+<ul>
+<li>Without non-linear activation functions, a deep network collapses into a single linear transformation regardless of depth</li>
+<li>Allows learning complex, non-linear decision boundaries</li>
+<li>Enables approximating any function (Universal Approximation Theorem)</li>
+</ul>
 <p>Common non-linear functions: polynomial feature maps, ReLU, Sigmoid, Tanh.</p>
 <hr />
 <h3 id="92-activation-functions">9.2 Activation Functions</h3>
@@ -1923,34 +1803,34 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Property</th>
-<th style="text-align: left;">Why It Matters</th>
+<th style="text-align:left">Property</th>
+<th style="text-align:left">Why It Matters</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Non-linearity</strong></td>
-<td style="text-align: left;">Enables modeling non-linear relationships</td>
+<td style="text-align:left"><strong>Non-linearity</strong></td>
+<td style="text-align:left">Enables modeling non-linear relationships</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Differentiable (continuous)</strong></td>
-<td style="text-align: left;">Required for gradient-based optimization</td>
+<td style="text-align:left"><strong>Differentiable (continuous)</strong></td>
+<td style="text-align:left">Required for gradient-based optimization</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Bounded range</strong></td>
-<td style="text-align: left;">Finite range → more stable gradient updates</td>
+<td style="text-align:left"><strong>Bounded range</strong></td>
+<td style="text-align:left">Finite range → more stable gradient updates</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Monotonic</strong></td>
-<td style="text-align: left;">Guarantees convex error surface for single-layer models</td>
+<td style="text-align:left"><strong>Monotonic</strong></td>
+<td style="text-align:left">Guarantees convex error surface for single-layer models</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Approximates identity near origin</strong></td>
-<td style="text-align: left;">Allows efficient training with small random initial weights</td>
+<td style="text-align:left"><strong>Approximates identity near origin</strong></td>
+<td style="text-align:left">Allows efficient training with small random initial weights</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Output symmetric at zero</strong></td>
-<td style="text-align: left;">Prevents gradients from consistently biasing in one direction</td>
+<td style="text-align:left"><strong>Output symmetric at zero</strong></td>
+<td style="text-align:left">Prevents gradients from consistently biasing in one direction</td>
 </tr>
 </tbody>
 </table>
@@ -1963,36 +1843,36 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Function</th>
-<th style="text-align: left;">Formula</th>
-<th style="text-align: left;">Properties</th>
+<th style="text-align:left">Function</th>
+<th style="text-align:left">Formula</th>
+<th style="text-align:left">Properties</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Sigmoid</strong></td>
-<td style="text-align: left;">$\sigma(x) = \frac{1}{1 + e^{-x}}$</td>
-<td style="text-align: left;">Range (0,1); suffers from saturation/vanishing gradients</td>
+<td style="text-align:left"><strong>Sigmoid</strong></td>
+<td style="text-align:left">$\sigma(x) = \frac{1}{1 + e^{-x}}$</td>
+<td style="text-align:left">Range (0,1); suffers from saturation/vanishing gradients</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Tanh</strong></td>
-<td style="text-align: left;">$\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}$</td>
-<td style="text-align: left;">Range (-1,1); zero-centered; still saturates</td>
+<td style="text-align:left"><strong>Tanh</strong></td>
+<td style="text-align:left">$\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}$</td>
+<td style="text-align:left">Range (-1,1); zero-centered; still saturates</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>ReLU</strong></td>
-<td style="text-align: left;">$f(x) = \max(0, x)$</td>
-<td style="text-align: left;">Fast; no saturation for positive values; dying ReLU problem</td>
+<td style="text-align:left"><strong>ReLU</strong></td>
+<td style="text-align:left">$f(x) = \max(0, x)$</td>
+<td style="text-align:left">Fast; no saturation for positive values; dying ReLU problem</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Leaky ReLU</strong></td>
-<td style="text-align: left;">$f(x) = \max(\alpha x, x)$</td>
-<td style="text-align: left;">Fixes dying ReLU</td>
+<td style="text-align:left"><strong>Leaky ReLU</strong></td>
+<td style="text-align:left">$f(x) = \max(\alpha x, x)$</td>
+<td style="text-align:left">Fixes dying ReLU</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>ELU</strong></td>
-<td style="text-align: left;">$f(x) = x$ if $x > 0$, else $\alpha(e^x - 1)$</td>
-<td style="text-align: left;">Smooth; negative values push mean toward zero</td>
+<td style="text-align:left"><strong>ELU</strong></td>
+<td style="text-align:left">$f(x) = x$ if $x > 0$, else $\alpha(e^x - 1)$</td>
+<td style="text-align:left">Smooth; negative values push mean toward zero</td>
 </tr>
 </tbody>
 </table>
@@ -2000,90 +1880,104 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <img src="images/image20.png" alt="Sigmoid Graph" width="420" /></p>
 <hr />
 <h3 id="93-gradient-saturation">9.3 Gradient Saturation</h3>
-<p>When using sigmoid or tanh:
-- After training for many epochs, neuron linear parts output very large or small values
-- The input to the activation function is far from center → <strong>gradient ≈ 0</strong>
-- Weights update extremely slowly → <strong>learning stalls</strong></p>
+<p>When using sigmoid or tanh:</p>
+<ul>
+<li>After training for many epochs, neuron linear parts output very large or small values</li>
+<li>The input to the activation function is far from center → <strong>gradient ≈ 0</strong></li>
+<li>Weights update extremely slowly → <strong>learning stalls</strong></li>
+</ul>
 <p><strong>ReLU fix:</strong> No saturation for positive inputs → gradient is constant (1) for $x > 0$, enabling faster convergence with SGD.</p>
 <blockquote>
-<p>"The biggest advantage of ReLU is non-saturation of its gradient, which greatly accelerates the convergence of stochastic gradient descent compared to sigmoid/tanh."</p>
+<p>&quot;The biggest advantage of ReLU is non-saturation of its gradient, which greatly accelerates the convergence of stochastic gradient descent compared to sigmoid/tanh.&quot;</p>
 </blockquote>
 <hr />
 <h3 id="94-multi-layer-perceptron-mlp">9.4 Multi-Layer Perceptron (MLP)</h3>
-<p>MLP is a <strong>fully connected feed-forward network</strong>. It is NOT:
-- CNN (partially connected)
-- RNN (has feedback loops)</p>
+<p>MLP is a <strong>fully connected feed-forward network</strong>. It is NOT:</p>
+<ul>
+<li>CNN (partially connected)</li>
+<li>RNN (has feedback loops)</li>
+</ul>
 <p><strong>Feed-Forward Architecture:</strong> Signal travels strictly input → hidden → output. No cycles.</p>
-<p><strong>Types of Feed-Forward Networks:</strong>
-- Fully connected MLPs
-- Fully Convolutional NNs
-- CNNs + fully connected layers</p>
-<p><strong>Recurrent Networks (not feed-forward):</strong>
-- Vanilla RNN — suffers from vanishing/exploding gradients
-- LSTM
-- GRU
-- RCNN</p>
-<p><strong>Memory-Augmented Networks:</strong>
-- Neural Turing Machines (NTM)
-- Differentiable Neural Computers (DNC)</p>
+<p><strong>Types of Feed-Forward Networks:</strong></p>
+<ul>
+<li>Fully connected MLPs</li>
+<li>Fully Convolutional NNs</li>
+<li>CNNs + fully connected layers</li>
+</ul>
+<p><strong>Recurrent Networks (not feed-forward):</strong></p>
+<ul>
+<li>Vanilla RNN — suffers from vanishing/exploding gradients</li>
+<li>LSTM</li>
+<li>GRU</li>
+<li>RCNN</li>
+</ul>
+<p><strong>Memory-Augmented Networks:</strong></p>
+<ul>
+<li>Neural Turing Machines (NTM)</li>
+<li>Differentiable Neural Computers (DNC)</li>
+</ul>
 <hr />
 <h3 id="95-feed-forward-vs-backpropagation">9.5 Feed-Forward vs Backpropagation</h3>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;"></th>
-<th style="text-align: left;">Feed-Forward</th>
-<th style="text-align: left;">Backpropagation</th>
+<th style="text-align:left"></th>
+<th style="text-align:left">Feed-Forward</th>
+<th style="text-align:left">Backpropagation</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Purpose</strong></td>
-<td style="text-align: left;">Compute output from input</td>
-<td style="text-align: left;">Adjust weights by propagating error</td>
+<td style="text-align:left"><strong>Purpose</strong></td>
+<td style="text-align:left">Compute output from input</td>
+<td style="text-align:left">Adjust weights by propagating error</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Input</strong></td>
-<td style="text-align: left;">Input vector</td>
-<td style="text-align: left;">Output vector + target output</td>
+<td style="text-align:left"><strong>Input</strong></td>
+<td style="text-align:left">Input vector</td>
+<td style="text-align:left">Output vector + target output</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Output</strong></td>
-<td style="text-align: left;">Output vector</td>
-<td style="text-align: left;">Adjusted weight vector</td>
+<td style="text-align:left"><strong>Output</strong></td>
+<td style="text-align:left">Output vector</td>
+<td style="text-align:left">Adjusted weight vector</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>When used</strong></td>
-<td style="text-align: left;">Both training and inference</td>
-<td style="text-align: left;">Only during training</td>
+<td style="text-align:left"><strong>When used</strong></td>
+<td style="text-align:left">Both training and inference</td>
+<td style="text-align:left">Only during training</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h3 id="96-vanishing-exploding-gradients">9.6 Vanishing &amp; Exploding Gradients</h3>
-<p><strong>Vanishing Gradients:</strong>
-- Gradients of early layers are products of later-layer gradients
-- If later gradients &lt; 1, their product vanishes → early layers learn very slowly
-- RNNs particularly susceptible on long sequences
-- LSTM was invented to solve this</p>
-<p><strong>Exploding Gradients:</strong>
-- Gradients grow exponentially → model produces NaN weights</p>
+<h3 id="96-vanishing--exploding-gradients">9.6 Vanishing &amp; Exploding Gradients</h3>
+<p><strong>Vanishing Gradients:</strong></p>
+<ul>
+<li>Gradients of early layers are products of later-layer gradients</li>
+<li>If later gradients &lt; 1, their product vanishes → early layers learn very slowly</li>
+<li>RNNs particularly susceptible on long sequences</li>
+<li>LSTM was invented to solve this</li>
+</ul>
+<p><strong>Exploding Gradients:</strong></p>
+<ul>
+<li>Gradients grow exponentially → model produces NaN weights</li>
+</ul>
 <p><strong>Fixes:</strong></p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Problem</th>
-<th style="text-align: left;">Solution</th>
+<th style="text-align:left">Problem</th>
+<th style="text-align:left">Solution</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;">Vanishing</td>
-<td style="text-align: left;">Weight regularization, use LSTM, use ReLU activations</td>
+<td style="text-align:left">Vanishing</td>
+<td style="text-align:left">Weight regularization, use LSTM, use ReLU activations</td>
 </tr>
 <tr>
-<td style="text-align: left;">Exploding</td>
-<td style="text-align: left;">Gradient Clipping (cap gradients at a threshold)</td>
+<td style="text-align:left">Exploding</td>
+<td style="text-align:left">Gradient Clipping (cap gradients at a threshold)</td>
 </tr>
 </tbody>
 </table>
@@ -2092,21 +1986,21 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Initialization</th>
-<th style="text-align: left;">Best For</th>
-<th style="text-align: left;">Why</th>
+<th style="text-align:left">Initialization</th>
+<th style="text-align:left">Best For</th>
+<th style="text-align:left">Why</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Xavier (Glorot)</strong></td>
-<td style="text-align: left;">Sigmoid, Tanh</td>
-<td style="text-align: left;">Keeps variance stable across sigmoid-like layers</td>
+<td style="text-align:left"><strong>Xavier (Glorot)</strong></td>
+<td style="text-align:left">Sigmoid, Tanh</td>
+<td style="text-align:left">Keeps variance stable across sigmoid-like layers</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>He</strong></td>
-<td style="text-align: left;">ReLU</td>
-<td style="text-align: left;">Accounts for ReLU zeroing half of inputs</td>
+<td style="text-align:left"><strong>He</strong></td>
+<td style="text-align:left">ReLU</td>
+<td style="text-align:left">Accounts for ReLU zeroing half of inputs</td>
 </tr>
 </tbody>
 </table>
@@ -2118,17 +2012,19 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <p><strong>Placement in network:</strong></p>
 <pre><code>CONV/FC → BatchNorm → ReLU (or other activation) → Dropout → CONV/FC
 </code></pre>
-<p><strong>Benefits:</strong>
-1. Faster training
-2. Acts as regularizer (reduces need for dropout)
-3. Improves accuracy
-4. Reduces sensitivity to weight initialization</p>
+<p><strong>Benefits:</strong></p>
+<ol>
+<li>Faster training</li>
+<li>Acts as regularizer (reduces need for dropout)</li>
+<li>Improves accuracy</li>
+<li>Reduces sensitivity to weight initialization</li>
+</ol>
 <p><strong>Batch Norm</strong> normalizes across the <strong>mini-batch</strong> for each feature.</p>
 <hr />
 <h3 id="99-dropout">9.9 Dropout</h3>
 <p>Approximates training a large number of neural networks with different architectures in parallel.</p>
 <ul>
-<li>Randomly "drops" (sets to zero) neurons during training with probability p</li>
+<li>Randomly &quot;drops&quot; (sets to zero) neurons during training with probability p</li>
 <li><strong>Reduces overfitting</strong> by preventing co-adaptation of neurons</li>
 <li>Applied <strong>after the activation layer</strong></li>
 </ul>
@@ -2140,11 +2036,13 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <h3 id="101-pca-vs-svd">10.1 PCA vs SVD</h3>
 <p><strong>SVD Decomposition:</strong></p>
 <div class="math-display">$$M_{(m \times n)} = U_{(m \times m)} \cdot \Sigma_{(m \times n)} \cdot V^*_{(n \times n)}$$</div>
-<p>Where:
-- $M$ = the original matrix being decomposed
-- $U$ = left singular matrix; columns are the <strong>left singular vectors</strong> (eigenvectors of $MM^T$)
-- $\Sigma$ = diagonal matrix of <strong>singular values</strong> (square roots of eigenvalues of $M^TM$)
-- $V^*$ = right singular matrix; columns are the <strong>right singular vectors</strong> (eigenvectors of $M^TM$)</p>
+<p>Where:</p>
+<ul>
+<li>$M$ = the original matrix being decomposed</li>
+<li>$U$ = left singular matrix; columns are the <strong>left singular vectors</strong> (eigenvectors of $MM^T$)</li>
+<li>$\Sigma$ = diagonal matrix of <strong>singular values</strong> (square roots of eigenvalues of $M^TM$)</li>
+<li>$V^*$ = right singular matrix; columns are the <strong>right singular vectors</strong> (eigenvectors of $M^TM$)</li>
+</ul>
 <p><code>image9.png</code>
 <img src="images/image9.png" alt="SVD Diagram" width="700" /></p>
 <p><strong>SVD Derivation:</strong></p>
@@ -2155,31 +2053,31 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <table>
 <thead>
 <tr>
-<th style="text-align: left;"></th>
-<th style="text-align: left;">PCA</th>
-<th style="text-align: left;">SVD</th>
+<th style="text-align:left"></th>
+<th style="text-align:left">PCA</th>
+<th style="text-align:left">SVD</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>What it is</strong></td>
-<td style="text-align: left;">Finds axes of maximum variance</td>
-<td style="text-align: left;">General matrix factorization</td>
+<td style="text-align:left"><strong>What it is</strong></td>
+<td style="text-align:left">Finds axes of maximum variance</td>
+<td style="text-align:left">General matrix factorization</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Data</strong></td>
-<td style="text-align: left;">Centered data matrices</td>
-<td style="text-align: left;">Any matrix (rectangular, sparse)</td>
+<td style="text-align:left"><strong>Data</strong></td>
+<td style="text-align:left">Centered data matrices</td>
+<td style="text-align:left">Any matrix (rectangular, sparse)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Connection</strong></td>
-<td style="text-align: left;">PCA = SVD applied to mean-centered covariance matrix</td>
-<td style="text-align: left;">More general than PCA</td>
+<td style="text-align:left"><strong>Connection</strong></td>
+<td style="text-align:left">PCA = SVD applied to mean-centered covariance matrix</td>
+<td style="text-align:left">More general than PCA</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Goal</strong></td>
-<td style="text-align: left;">Dimensionality reduction (maximize variance)</td>
-<td style="text-align: left;">Decomposition for various purposes</td>
+<td style="text-align:left"><strong>Goal</strong></td>
+<td style="text-align:left">Dimensionality reduction (maximize variance)</td>
+<td style="text-align:left">Decomposition for various purposes</td>
 </tr>
 </tbody>
 </table>
@@ -2195,127 +2093,143 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <img src="images/image84.png" alt="LSTM vs GRU Detail" width="700" /></p>
 <p><code>image31.gif</code>
 <img src="images/image31.gif" alt="RNN Unit Diagram" width="700" /></p>
-<h4 id="recurrent-neural-networks-rnn">Recurrent Neural Networks (RNN)</h4>
+<h4>Recurrent Neural Networks (RNN)</h4>
 <p><strong>Architecture:</strong> Simple cell with tanh, hidden state fed back as input.</p>
-<p><strong>Pros:</strong>
-- Simple architecture, easy to implement
-- Works well for short sequences</p>
-<p><strong>Cons:</strong>
-- <strong>Vanishing gradient problem</strong> — can't learn long-term dependencies
-- Limited memory for distant past
-- Training instability</p>
-<h4 id="long-short-term-memory-lstm">Long Short-Term Memory (LSTM)</h4>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Simple architecture, easy to implement</li>
+<li>Works well for short sequences</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li><strong>Vanishing gradient problem</strong> — can't learn long-term dependencies</li>
+<li>Limited memory for distant past</li>
+<li>Training instability</li>
+</ul>
+<h4>Long Short-Term Memory (LSTM)</h4>
 <p><strong>Three Gates:</strong></p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Gate</th>
-<th style="text-align: left;">Purpose</th>
+<th style="text-align:left">Gate</th>
+<th style="text-align:left">Purpose</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Forget Gate</strong></td>
-<td style="text-align: left;">Decides what portion of previous cell state to discard</td>
+<td style="text-align:left"><strong>Forget Gate</strong></td>
+<td style="text-align:left">Decides what portion of previous cell state to discard</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Input Gate</strong></td>
-<td style="text-align: left;">Decides what new information to store in cell state</td>
+<td style="text-align:left"><strong>Input Gate</strong></td>
+<td style="text-align:left">Decides what new information to store in cell state</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Output Gate</strong></td>
-<td style="text-align: left;">Decides what part of cell state to output as hidden state</td>
+<td style="text-align:left"><strong>Output Gate</strong></td>
+<td style="text-align:left">Decides what part of cell state to output as hidden state</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Pros:</strong>
-- Designed for long-term dependencies
-- Mitigates vanishing gradient
-- Versatile across sequential tasks</p>
-<p><strong>Cons:</strong>
-- Complex architecture; more parameters
-- Computationally intensive
-- Longer training times</p>
-<h4 id="gated-recurrent-unit-gru">Gated Recurrent Unit (GRU)</h4>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Designed for long-term dependencies</li>
+<li>Mitigates vanishing gradient</li>
+<li>Versatile across sequential tasks</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Complex architecture; more parameters</li>
+<li>Computationally intensive</li>
+<li>Longer training times</li>
+</ul>
+<h4>Gated Recurrent Unit (GRU)</h4>
 <p><strong>Two Gates:</strong></p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Gate</th>
-<th style="text-align: left;">Purpose</th>
+<th style="text-align:left">Gate</th>
+<th style="text-align:left">Purpose</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Reset Gate</strong></td>
-<td style="text-align: left;">Controls how much of previous hidden state to forget</td>
+<td style="text-align:left"><strong>Reset Gate</strong></td>
+<td style="text-align:left">Controls how much of previous hidden state to forget</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Update Gate</strong></td>
-<td style="text-align: left;">Balances previous hidden state and new candidate state</td>
+<td style="text-align:left"><strong>Update Gate</strong></td>
+<td style="text-align:left">Balances previous hidden state and new candidate state</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Pros:</strong>
-- Simpler than LSTM — fewer gates, fewer parameters
-- Faster training
-- Handles long-term dependencies well
-- Often matches LSTM performance</p>
-<p><strong>Cons:</strong>
-- May not capture all aspects of long-range dependencies as well as LSTM in some cases</p>
-<h4 id="summary-comparison">Summary Comparison</h4>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Simpler than LSTM — fewer gates, fewer parameters</li>
+<li>Faster training</li>
+<li>Handles long-term dependencies well</li>
+<li>Often matches LSTM performance</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>May not capture all aspects of long-range dependencies as well as LSTM in some cases</li>
+</ul>
+<h4>Summary Comparison</h4>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;"></th>
-<th style="text-align: left;">RNN</th>
-<th style="text-align: left;">LSTM</th>
-<th style="text-align: left;">GRU</th>
+<th style="text-align:left"></th>
+<th style="text-align:left">RNN</th>
+<th style="text-align:left">LSTM</th>
+<th style="text-align:left">GRU</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Memory</strong></td>
-<td style="text-align: left;">No explicit</td>
-<td style="text-align: left;">Cell state + gates</td>
-<td style="text-align: left;">Hidden state + 2 gates</td>
+<td style="text-align:left"><strong>Memory</strong></td>
+<td style="text-align:left">No explicit</td>
+<td style="text-align:left">Cell state + gates</td>
+<td style="text-align:left">Hidden state + 2 gates</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Long-term deps</strong></td>
-<td style="text-align: left;">Poor</td>
-<td style="text-align: left;">Excellent</td>
-<td style="text-align: left;">Good</td>
+<td style="text-align:left"><strong>Long-term deps</strong></td>
+<td style="text-align:left">Poor</td>
+<td style="text-align:left">Excellent</td>
+<td style="text-align:left">Good</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Complexity</strong></td>
-<td style="text-align: left;">Low</td>
-<td style="text-align: left;">High</td>
-<td style="text-align: left;">Medium</td>
+<td style="text-align:left"><strong>Complexity</strong></td>
+<td style="text-align:left">Low</td>
+<td style="text-align:left">High</td>
+<td style="text-align:left">Medium</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Training speed</strong></td>
-<td style="text-align: left;">Fast</td>
-<td style="text-align: left;">Slow</td>
-<td style="text-align: left;">Medium</td>
+<td style="text-align:left"><strong>Training speed</strong></td>
+<td style="text-align:left">Fast</td>
+<td style="text-align:left">Slow</td>
+<td style="text-align:left">Medium</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Best use</strong></td>
-<td style="text-align: left;">Short sequences</td>
-<td style="text-align: left;">Long sequences, complex tasks</td>
-<td style="text-align: left;">Balanced; efficiency matters</td>
+<td style="text-align:left"><strong>Best use</strong></td>
+<td style="text-align:left">Short sequences</td>
+<td style="text-align:left">Long sequences, complex tasks</td>
+<td style="text-align:left">Balanced; efficiency matters</td>
 </tr>
 </tbody>
 </table>
 <blockquote>
 <p><strong>GRU vs LSTM</strong>: GRU controls flow of information without a separate memory unit — it exposes the full hidden state without memory cell control. GRU trains faster and performs better on less training data; LSTM should be preferred when longer sequences need to be remembered.</p>
+</blockquote>
+<blockquote>
 <p><strong>Pixel RNN</strong>: RNNs can be applied to image processing by treating pixels as sequential data.</p>
 </blockquote>
 <hr />
 <h3 id="112-restricted-boltzmann-machines-rbm">11.2 Restricted Boltzmann Machines (RBM)</h3>
-<p>A variant of Boltzmann machines where neurons form a <strong>bipartite graph</strong>:
-- Two groups: <strong>visible units</strong> and <strong>hidden units</strong>
-- Connections only between groups (not within)
-- Enables efficient training via <strong>contrastive divergence</strong> (gradient-based)</p>
+<p>A variant of Boltzmann machines where neurons form a <strong>bipartite graph</strong>:</p>
+<ul>
+<li>Two groups: <strong>visible units</strong> and <strong>hidden units</strong></li>
+<li>Connections only between groups (not within)</li>
+<li>Enables efficient training via <strong>contrastive divergence</strong> (gradient-based)</li>
+</ul>
 <hr />
 <h3 id="113-diagonal-bilstm">11.3 Diagonal BiLSTM</h3>
 <p><code>image29.png</code>
@@ -2324,106 +2238,114 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <hr />
 </div>
 <div class="content-section sec-12">
-<h2 id="12-nlp-transformers">12. NLP &amp; Transformers</h2>
+<h2 id="12-nlp--transformers">12. NLP &amp; Transformers</h2>
 
 <h3 id="121-word2vec">12.1 Word2Vec</h3>
 <p><strong>Loss Functions:</strong></p>
 <ol>
-<li><strong>Skip-gram with Negative Sampling (SGNS)</strong> — most common</li>
+<li>
+<p><strong>Skip-gram with Negative Sampling (SGNS)</strong> — most common</p>
+<ul>
 <li>Objective: Distinguish target word from noise words given a context word</li>
 <li>Maximizes probability of observed word-context pairs</li>
-<li>
-<p>Minimizes probability of randomly sampled noise words</p>
+<li>Minimizes probability of randomly sampled noise words</li>
+</ul>
 </li>
 <li>
 <p><strong>CBOW with Negative Sampling</strong></p>
-</li>
+<ul>
 <li>Context words predict the target word</li>
-<li>
-<p>Inverted roles compared to Skip-gram</p>
+<li>Inverted roles compared to Skip-gram</li>
+</ul>
 </li>
 <li>
 <p><strong>Hierarchical Softmax</strong></p>
-</li>
+<ul>
 <li>Binary tree over vocabulary</li>
 <li>Each word = path from root to leaf</li>
 <li>Maximizes probability of the correct path</li>
 <li>Reduces computational complexity vs full softmax</li>
+</ul>
+</li>
 </ol>
 <p><strong>CBOW vs Skip-gram:</strong></p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;"></th>
-<th style="text-align: left;">CBOW</th>
-<th style="text-align: left;">Skip-gram</th>
+<th style="text-align:left"></th>
+<th style="text-align:left">CBOW</th>
+<th style="text-align:left">Skip-gram</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Task</strong></td>
-<td style="text-align: left;">Predicts target word from surrounding context words</td>
-<td style="text-align: left;">Predicts context words from a single target word</td>
+<td style="text-align:left"><strong>Task</strong></td>
+<td style="text-align:left">Predicts target word from surrounding context words</td>
+<td style="text-align:left">Predicts context words from a single target word</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Speed</strong></td>
-<td style="text-align: left;">Faster to train</td>
-<td style="text-align: left;">Slower</td>
+<td style="text-align:left"><strong>Speed</strong></td>
+<td style="text-align:left">Faster to train</td>
+<td style="text-align:left">Slower</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Rare words</strong></td>
-<td style="text-align: left;">Better for frequent words</td>
-<td style="text-align: left;">Better for rare words and phrases</td>
+<td style="text-align:left"><strong>Rare words</strong></td>
+<td style="text-align:left">Better for frequent words</td>
+<td style="text-align:left">Better for rare words and phrases</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>When to use</strong></td>
-<td style="text-align: left;">Large datasets, common words</td>
-<td style="text-align: left;">Rare words, small datasets</td>
+<td style="text-align:left"><strong>When to use</strong></td>
+<td style="text-align:left">Large datasets, common words</td>
+<td style="text-align:left">Rare words, small datasets</td>
 </tr>
 </tbody>
 </table>
 <p><strong>GloVe vs FastText:</strong></p>
-<p><strong>GloVe (Global Vectors for Word Representation):</strong>
-- Treats words as atomic units (whole-word embeddings only)
-- Captures <strong>global co-occurrence statistics</strong> across the entire corpus — how often words appear together globally
-- Contrast with Word2Vec which captures co-occurrence one window at a time</p>
-<p><strong>FastText:</strong>
-- Extension of Word2Vec — treats words as <strong>bags of character n-grams</strong>
-- Can generate embeddings for <strong>out-of-vocabulary (OOV) words</strong> by summing subword n-gram embeddings
-- Better for morphologically rich languages and rare words</p>
+<p><strong>GloVe (Global Vectors for Word Representation):</strong></p>
+<ul>
+<li>Treats words as atomic units (whole-word embeddings only)</li>
+<li>Captures <strong>global co-occurrence statistics</strong> across the entire corpus — how often words appear together globally</li>
+<li>Contrast with Word2Vec which captures co-occurrence one window at a time</li>
+</ul>
+<p><strong>FastText:</strong></p>
+<ul>
+<li>Extension of Word2Vec — treats words as <strong>bags of character n-grams</strong></li>
+<li>Can generate embeddings for <strong>out-of-vocabulary (OOV) words</strong> by summing subword n-gram embeddings</li>
+<li>Better for morphologically rich languages and rare words</li>
+</ul>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;"></th>
-<th style="text-align: left;">Word2Vec</th>
-<th style="text-align: left;">GloVe</th>
-<th style="text-align: left;">FastText</th>
+<th style="text-align:left"></th>
+<th style="text-align:left">Word2Vec</th>
+<th style="text-align:left">GloVe</th>
+<th style="text-align:left">FastText</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Word unit</strong></td>
-<td style="text-align: left;">Whole word</td>
-<td style="text-align: left;">Whole word</td>
-<td style="text-align: left;">Character n-grams</td>
+<td style="text-align:left"><strong>Word unit</strong></td>
+<td style="text-align:left">Whole word</td>
+<td style="text-align:left">Whole word</td>
+<td style="text-align:left">Character n-grams</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Co-occurrence</strong></td>
-<td style="text-align: left;">One window at a time</td>
-<td style="text-align: left;">Global corpus statistics</td>
-<td style="text-align: left;">One window at a time</td>
+<td style="text-align:left"><strong>Co-occurrence</strong></td>
+<td style="text-align:left">One window at a time</td>
+<td style="text-align:left">Global corpus statistics</td>
+<td style="text-align:left">One window at a time</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>OOV handling</strong></td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">No</td>
-<td style="text-align: left;">Yes (subword n-grams)</td>
+<td style="text-align:left"><strong>OOV handling</strong></td>
+<td style="text-align:left">No</td>
+<td style="text-align:left">No</td>
+<td style="text-align:left">Yes (subword n-grams)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Best for</strong></td>
-<td style="text-align: left;">General use</td>
-<td style="text-align: left;">Large corpora, global statistics</td>
-<td style="text-align: left;">Rare/OOV words, morphological languages</td>
+<td style="text-align:left"><strong>Best for</strong></td>
+<td style="text-align:left">General use</td>
+<td style="text-align:left">Large corpora, global statistics</td>
+<td style="text-align:left">Rare/OOV words, morphological languages</td>
 </tr>
 </tbody>
 </table>
@@ -2445,22 +2367,22 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Matrix</th>
-<th style="text-align: left;">Role</th>
+<th style="text-align:left">Matrix</th>
+<th style="text-align:left">Role</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Query (Q)</strong></td>
-<td style="text-align: left;">What the current token is "looking for" — used to compute similarity with keys</td>
+<td style="text-align:left"><strong>Query (Q)</strong></td>
+<td style="text-align:left">What the current token is &quot;looking for&quot; — used to compute similarity with keys</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Key (K)</strong></td>
-<td style="text-align: left;">What each token "offers" — used to compute attention scores with queries</td>
+<td style="text-align:left"><strong>Key (K)</strong></td>
+<td style="text-align:left">What each token &quot;offers&quot; — used to compute attention scores with queries</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Value (V)</strong></td>
-<td style="text-align: left;">The actual content to aggregate — weighted by attention scores</td>
+<td style="text-align:left"><strong>Value (V)</strong></td>
+<td style="text-align:left">The actual content to aggregate — weighted by attention scores</td>
 </tr>
 </tbody>
 </table>
@@ -2471,12 +2393,14 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 </ul>
 <hr />
 <h3 id="124-multi-head-attention">12.4 Multi-Head Attention</h3>
-<p><strong>Process:</strong>
-1. Split input into 8 (or more) heads
-2. Each head computes its own Q, K, V projections independently
-3. Each head runs scaled dot-product attention → output $Z_i$
-4. Concatenate all $Z_i$ matrices
-5. Multiply by learned weight matrix $W^O$ → final output</p>
+<p><strong>Process:</strong></p>
+<ol>
+<li>Split input into 8 (or more) heads</li>
+<li>Each head computes its own Q, K, V projections independently</li>
+<li>Each head runs scaled dot-product attention → output $Z_i$</li>
+<li>Concatenate all $Z_i$ matrices</li>
+<li>Multiply by learned weight matrix $W^O$ → final output</li>
+</ol>
 <p>This allows the model to <strong>simultaneously attend to information from different representation subspaces</strong> at different positions.</p>
 <hr />
 <h3 id="125-transformer-architecture">12.5 Transformer Architecture</h3>
@@ -2505,26 +2429,26 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <table>
 <thead>
 <tr>
-<th style="text-align: left;"></th>
-<th style="text-align: left;">Self Attention</th>
-<th style="text-align: left;">Cross Attention</th>
+<th style="text-align:left"></th>
+<th style="text-align:left">Self Attention</th>
+<th style="text-align:left">Cross Attention</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Q comes from</strong></td>
-<td style="text-align: left;">The same input (encoder input)</td>
-<td style="text-align: left;">Decoder output</td>
+<td style="text-align:left"><strong>Q comes from</strong></td>
+<td style="text-align:left">The same input (encoder input)</td>
+<td style="text-align:left">Decoder output</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>K, V come from</strong></td>
-<td style="text-align: left;">The same input</td>
-<td style="text-align: left;">Encoder output</td>
+<td style="text-align:left"><strong>K, V come from</strong></td>
+<td style="text-align:left">The same input</td>
+<td style="text-align:left">Encoder output</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Purpose</strong></td>
-<td style="text-align: left;">Model relationships within a sequence</td>
-<td style="text-align: left;">Model relationships between encoder and decoder sequences</td>
+<td style="text-align:left"><strong>Purpose</strong></td>
+<td style="text-align:left">Model relationships within a sequence</td>
+<td style="text-align:left">Model relationships between encoder and decoder sequences</td>
 </tr>
 </tbody>
 </table>
@@ -2533,48 +2457,48 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <table>
 <thead>
 <tr>
-<th style="text-align: left;"></th>
-<th style="text-align: left;">BERT</th>
-<th style="text-align: left;">GPT</th>
-<th style="text-align: left;">BART</th>
+<th style="text-align:left"></th>
+<th style="text-align:left">BERT</th>
+<th style="text-align:left">GPT</th>
+<th style="text-align:left">BART</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Architecture</strong></td>
-<td style="text-align: left;">Encoder-only</td>
-<td style="text-align: left;">Decoder-only</td>
-<td style="text-align: left;">Encoder-Decoder</td>
+<td style="text-align:left"><strong>Architecture</strong></td>
+<td style="text-align:left">Encoder-only</td>
+<td style="text-align:left">Decoder-only</td>
+<td style="text-align:left">Encoder-Decoder</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Direction</strong></td>
-<td style="text-align: left;">Bidirectional</td>
-<td style="text-align: left;">Unidirectional (left-to-right)</td>
-<td style="text-align: left;">Both</td>
+<td style="text-align:left"><strong>Direction</strong></td>
+<td style="text-align:left">Bidirectional</td>
+<td style="text-align:left">Unidirectional (left-to-right)</td>
+<td style="text-align:left">Both</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Pre-training</strong></td>
-<td style="text-align: left;">Masked LM (MLM) + Next Sentence Prediction</td>
-<td style="text-align: left;">Autoregressive (casual) language modeling</td>
-<td style="text-align: left;">Span Corruption — masking entire spans of words</td>
+<td style="text-align:left"><strong>Pre-training</strong></td>
+<td style="text-align:left">Masked LM (MLM) + Next Sentence Prediction</td>
+<td style="text-align:left">Autoregressive (casual) language modeling</td>
+<td style="text-align:left">Span Corruption — masking entire spans of words</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Fine-tuning</strong></td>
-<td style="text-align: left;">Task-specific layer added on top</td>
-<td style="text-align: left;">Few-shot prompting; one-shot adaptation</td>
-<td style="text-align: left;">Versatile for various NLP tasks</td>
+<td style="text-align:left"><strong>Fine-tuning</strong></td>
+<td style="text-align:left">Task-specific layer added on top</td>
+<td style="text-align:left">Few-shot prompting; one-shot adaptation</td>
+<td style="text-align:left">Versatile for various NLP tasks</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Best for</strong></td>
-<td style="text-align: left;">Classification, NER, Q&amp;A, Word Classification</td>
-<td style="text-align: left;">Text generation, Text completion, creative writing</td>
-<td style="text-align: left;">Translation, Summarisation, Question &amp; Answer</td>
+<td style="text-align:left"><strong>Best for</strong></td>
+<td style="text-align:left">Classification, NER, Q&amp;A, Word Classification</td>
+<td style="text-align:left">Text generation, Text completion, creative writing</td>
+<td style="text-align:left">Translation, Summarisation, Question &amp; Answer</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Original org</strong></td>
-<td style="text-align: left;">Google AI</td>
-<td style="text-align: left;">OpenAI</td>
-<td style="text-align: left;">Facebook AI</td>
+<td style="text-align:left"><strong>Original org</strong></td>
+<td style="text-align:left">Google AI</td>
+<td style="text-align:left">OpenAI</td>
+<td style="text-align:left">Facebook AI</td>
 </tr>
 </tbody>
 </table>
@@ -2582,20 +2506,24 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <h3 id="128-kl-divergence">12.8 KL Divergence</h3>
 <p>Measures how one probability distribution <strong>diverges</strong> from a reference distribution:</p>
 <div class="math-display">$$D_{KL}(p \| q) = \sum_{x \in X} p(x) \ln\!\frac{p(x)}{q(x)}$$</div>
-<p><strong>Applications:</strong>
-- Measuring difference between two distributions
-- In RLHF: comparing initial LM output vs fine-tuned LM output to prevent over-divergence
-- VAE: KL term regularizes latent space toward standard normal</p>
+<p><strong>Applications:</strong></p>
+<ul>
+<li>Measuring difference between two distributions</li>
+<li>In RLHF: comparing initial LM output vs fine-tuned LM output to prevent over-divergence</li>
+<li>VAE: KL term regularizes latent space toward standard normal</li>
+</ul>
 <hr />
-<h3 id="129-llama-pre-training-rlhf">12.9 LLaMA Pre-training &amp; RLHF</h3>
+<h3 id="129-llama-pre-training--rlhf">12.9 LLaMA Pre-training &amp; RLHF</h3>
 <p><strong>Pre-training Loss:</strong> Standard <strong>cross-entropy loss</strong> over next-token prediction:</p>
 <div class="math-display">$$\mathcal{L} = -\sum_{i=1}^{N} y_i \log \hat{y}_i$$</div>
 <p>where $y_i$ is one-hot (correct token = 1, others = 0) and $\hat{y}_i$ is predicted probability distribution.</p>
-<p><strong>Training Process:</strong>
-1. Model predicts next token given previous tokens
-2. Cross-entropy loss is computed
-3. Gradients propagated; weights updated via Adam/SGD variants
-4. This enables learning statistical properties of language → fine-tunable for downstream tasks</p>
+<p><strong>Training Process:</strong></p>
+<ol>
+<li>Model predicts next token given previous tokens</li>
+<li>Cross-entropy loss is computed</li>
+<li>Gradients propagated; weights updated via Adam/SGD variants</li>
+<li>This enables learning statistical properties of language → fine-tunable for downstream tasks</li>
+</ol>
 <p><strong>RLHF Pipeline (LLaMA 2):</strong></p>
 <p><code>image51.jpg</code>
 <img src="images/image51.jpg" alt="RLHF Pipeline" width="700" /></p>
@@ -2613,43 +2541,47 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <h3 id="131-expectation-maximization-em">13.1 Expectation Maximization (EM)</h3>
 <p>An iterative algorithm to find parameters of latent variable models (e.g., Gaussian Mixture Models).</p>
 <p><strong>Key Idea:</strong> Given the number of Gaussians, find their parameters (mean and variance).</p>
-<p><strong>EM vs K-Means:</strong>
-- K-Means: <strong>hard</strong> assignment (each point belongs to exactly one cluster)
-- EM: <strong>soft</strong> assignment (each point has a <em>probability</em> of belonging to each cluster)</p>
+<p><strong>EM vs K-Means:</strong></p>
+<ul>
+<li>K-Means: <strong>hard</strong> assignment (each point belongs to exactly one cluster)</li>
+<li>EM: <strong>soft</strong> assignment (each point has a <em>probability</em> of belonging to each cluster)</li>
+</ul>
 <p><code>image54.png</code>
 <img src="images/image54.png" alt="EM Algorithm Visualization" width="700" /></p>
 <p><code>image30.png</code>
 <img src="images/image30.png" alt="EM 1D Example" width="200" /></p>
-<p><strong>Steps:</strong>
-1. <strong>Initialize</strong>: Random mean and variance for each Gaussian
-2. <strong>E-step</strong> (Expectation): Compute probability of each point belonging to each Gaussian
-3. <strong>M-step</strong> (Maximization): Update means and variances using weighted probabilities
-4. Repeat until convergence</p>
+<p><strong>Steps:</strong></p>
+<ol>
+<li><strong>Initialize</strong>: Random mean and variance for each Gaussian</li>
+<li><strong>E-step</strong> (Expectation): Compute probability of each point belonging to each Gaussian</li>
+<li><strong>M-step</strong> (Maximization): Update means and variances using weighted probabilities</li>
+<li>Repeat until convergence</li>
+</ol>
 <hr />
 <h3 id="132-mle-vs-em">13.2 MLE vs EM</h3>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;"></th>
-<th style="text-align: left;">MLE</th>
-<th style="text-align: left;">EM</th>
+<th style="text-align:left"></th>
+<th style="text-align:left">MLE</th>
+<th style="text-align:left">EM</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Approach</strong></td>
-<td style="text-align: left;">Accumulates all data first, then finds best-fit model</td>
-<td style="text-align: left;">Takes initial parameter guess, then iterates using observed + inferred data</td>
+<td style="text-align:left"><strong>Approach</strong></td>
+<td style="text-align:left">Accumulates all data first, then finds best-fit model</td>
+<td style="text-align:left">Takes initial parameter guess, then iterates using observed + inferred data</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Use case</strong></td>
-<td style="text-align: left;">Fitting one distribution to observed data</td>
-<td style="text-align: left;">Fitting mixture of distributions when class labels are unknown</td>
+<td style="text-align:left"><strong>Use case</strong></td>
+<td style="text-align:left">Fitting one distribution to observed data</td>
+<td style="text-align:left">Fitting mixture of distributions when class labels are unknown</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Example</strong></td>
-<td style="text-align: left;">Find μ, σ of a single Gaussian</td>
-<td style="text-align: left;">Fit K Gaussians without knowing which cluster each point belongs to</td>
+<td style="text-align:left"><strong>Example</strong></td>
+<td style="text-align:left">Find μ, σ of a single Gaussian</td>
+<td style="text-align:left">Fit K Gaussians without knowing which cluster each point belongs to</td>
 </tr>
 </tbody>
 </table>
@@ -2658,10 +2590,12 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <p>Transferring knowledge from a large <strong>teacher</strong> model to a smaller <strong>student</strong> model.</p>
 <p><code>image18.jpg</code>
 <img src="images/image18.jpg" alt="Knowledge Distillation Diagram" width="560" /></p>
-<p><strong>Process:</strong>
-- Teacher produces <strong>soft probability outputs</strong> (richer signal than hard labels)
-- Student learns from: class loss + KD loss (from teacher's soft outputs) + certainty loss
-- Result: Compact model that approximates the teacher's performance</p>
+<p><strong>Process:</strong></p>
+<ul>
+<li>Teacher produces <strong>soft probability outputs</strong> (richer signal than hard labels)</li>
+<li>Student learns from: class loss + KD loss (from teacher's soft outputs) + certainty loss</li>
+<li>Result: Compact model that approximates the teacher's performance</li>
+</ul>
 <hr />
 <h3 id="134-model-drift">13.4 Model Drift</h3>
 <p><strong>Definition:</strong> Changes in a model's predictions over time due to changes in inputs, outputs, or ground truths.</p>
@@ -2669,31 +2603,31 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Type</th>
-<th style="text-align: left;">Definition</th>
-<th style="text-align: left;">Resolution</th>
+<th style="text-align:left">Type</th>
+<th style="text-align:left">Definition</th>
+<th style="text-align:left">Resolution</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Prediction Drift</strong></td>
-<td style="text-align: left;">Model predictions change over time</td>
-<td style="text-align: left;">Retrain or replace model</td>
+<td style="text-align:left"><strong>Prediction Drift</strong></td>
+<td style="text-align:left">Model predictions change over time</td>
+<td style="text-align:left">Retrain or replace model</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Concept Drift</strong></td>
-<td style="text-align: left;">Statistical properties of target variable shift</td>
-<td style="text-align: left;">Reweight data, refit model</td>
+<td style="text-align:left"><strong>Concept Drift</strong></td>
+<td style="text-align:left">Statistical properties of target variable shift</td>
+<td style="text-align:left">Reweight data, refit model</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Data Drift</strong></td>
-<td style="text-align: left;">Statistical properties of input data change</td>
-<td style="text-align: left;">Update model; monitor inputs</td>
+<td style="text-align:left"><strong>Data Drift</strong></td>
+<td style="text-align:left">Statistical properties of input data change</td>
+<td style="text-align:left">Update model; monitor inputs</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Upstream Drift</strong></td>
-<td style="text-align: left;">Changes in the data pipeline (missing values, feature cardinality)</td>
-<td style="text-align: left;">Monitor data quality</td>
+<td style="text-align:left"><strong>Upstream Drift</strong></td>
+<td style="text-align:left">Changes in the data pipeline (missing values, feature cardinality)</td>
+<td style="text-align:left">Monitor data quality</td>
 </tr>
 </tbody>
 </table>
@@ -2707,54 +2641,56 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <table>
 <thead>
 <tr>
-<th style="text-align: left;"></th>
-<th style="text-align: left;">Exploration</th>
-<th style="text-align: left;">Exploitation</th>
+<th style="text-align:left"></th>
+<th style="text-align:left">Exploration</th>
+<th style="text-align:left">Exploitation</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Action</strong></td>
-<td style="text-align: left;">Try new/uncertain options to gain information</td>
-<td style="text-align: left;">Use known best option to maximize reward</td>
+<td style="text-align:left"><strong>Action</strong></td>
+<td style="text-align:left">Try new/uncertain options to gain information</td>
+<td style="text-align:left">Use known best option to maximize reward</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Risk</strong></td>
-<td style="text-align: left;">May be suboptimal short-term</td>
-<td style="text-align: left;">May miss better long-term options</td>
+<td style="text-align:left"><strong>Risk</strong></td>
+<td style="text-align:left">May be suboptimal short-term</td>
+<td style="text-align:left">May miss better long-term options</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Strategies:</strong>
-- <strong>ε-greedy</strong>: Decides what fraction ε of decisions to spend exploring (trying new options) and fraction (1-ε) exploiting the best known option
-- <strong>UCB (Upper Confidence Bound)</strong>: Selects the action with the highest upper confidence bound $\mu + \beta\sigma$, where $\beta$ is a trade-off parameter. High $\beta$ favors exploration; $\beta \to 0$ approaches pure exploitation
-- <strong>Thompson Sampling</strong>: Draw one sample from each action's posterior distribution of expected reward. Rank actions based on sampled reward values and select the highest</p>
+<p><strong>Strategies:</strong></p>
+<ul>
+<li><strong>ε-greedy</strong>: Decides what fraction ε of decisions to spend exploring (trying new options) and fraction (1-ε) exploiting the best known option</li>
+<li><strong>UCB (Upper Confidence Bound)</strong>: Selects the action with the highest upper confidence bound $\mu + \beta\sigma$, where $\beta$ is a trade-off parameter. High $\beta$ favors exploration; $\beta \to 0$ approaches pure exploitation</li>
+<li><strong>Thompson Sampling</strong>: Draw one sample from each action's posterior distribution of expected reward. Rank actions based on sampled reward values and select the highest</li>
+</ul>
 <hr />
 <h3 id="137-valence-shifters">13.7 Valence Shifters</h3>
 <p>Modifiers in sentiment analysis that alter the polarity or intensity of sentiment-bearing words:</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Type</th>
-<th style="text-align: left;">Effect</th>
-<th style="text-align: left;">Examples</th>
+<th style="text-align:left">Type</th>
+<th style="text-align:left">Effect</th>
+<th style="text-align:left">Examples</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Negations</strong></td>
-<td style="text-align: left;">Flip sentiment polarity</td>
-<td style="text-align: left;">"not good", "never bad"</td>
+<td style="text-align:left"><strong>Negations</strong></td>
+<td style="text-align:left">Flip sentiment polarity</td>
+<td style="text-align:left">&quot;not good&quot;, &quot;never bad&quot;</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Intensifiers</strong></td>
-<td style="text-align: left;">Amplify sentiment strength</td>
-<td style="text-align: left;">"very good", "extremely poor"</td>
+<td style="text-align:left"><strong>Intensifiers</strong></td>
+<td style="text-align:left">Amplify sentiment strength</td>
+<td style="text-align:left">&quot;very good&quot;, &quot;extremely poor&quot;</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Diminishers</strong></td>
-<td style="text-align: left;">Weaken sentiment strength</td>
-<td style="text-align: left;">"somewhat good", "barely bad"</td>
+<td style="text-align:left"><strong>Diminishers</strong></td>
+<td style="text-align:left">Weaken sentiment strength</td>
+<td style="text-align:left">&quot;somewhat good&quot;, &quot;barely bad&quot;</td>
 </tr>
 </tbody>
 </table>
@@ -2764,159 +2700,207 @@ Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 <h2 id="14-amazon-applied-scientist-interview-topics">14. Amazon Applied Scientist Interview Topics</h2>
 
 <p>Expect to be asked about data-driven modeling, train/test protocols, error analysis, and statistical significance.</p>
-<p><strong>Supervised Learning</strong>
-- Linear regression, Logistic regression
-- Random Forest, Gradient Boosted Trees (GBT)
-- K-Nearest Neighbors (KNN), Naive Bayes
-- Kernel methods, Bayesian linear regression, Gaussian Processes (GP)
-- SGD, regularization (L1/L2)</p>
-<p><strong>Deep Neural Networks</strong>
-- Feedforward NNs, CNNs, Backpropagation
-- RNNs, LSTMs, GRUs</p>
-<p><strong>Unsupervised Learning</strong>
-- Clustering algorithms
-- Expectation Maximization (EM), Gaussian Mixture Models (GMMs)
-- Evaluation metrics for unsupervised tasks</p>
-<p><strong>Probabilistic Graphical Models (PGM)</strong>
-- Latent Dirichlet Allocation (LDA)
-- Belief Propagation
-- Gibbs Sampling
-- Variational Inference</p>
-<p><strong>Dimensionality Reduction</strong>
-- PCA, SVD
-- Spectral Clustering
-- Matrix Factorization</p>
-<p><strong>Sequential Models</strong>
-- Conditional Random Fields (CRFs)
-- Hidden Markov Models (HMMs)
-- NER (Named Entity Recognition), POS tagging</p>
-<p><strong>Reinforcement Learning</strong>
-- Explore-exploit tradeoff
-- Multi-armed bandits: ε-greedy, UCB, Thompson Sampling
-- Q-learning
-- Deep Q-Networks (DQNs)</p>
+<p><strong>Supervised Learning</strong></p>
+<ul>
+<li>Linear regression, Logistic regression</li>
+<li>Random Forest, Gradient Boosted Trees (GBT)</li>
+<li>K-Nearest Neighbors (KNN), Naive Bayes</li>
+<li>Kernel methods, Bayesian linear regression, Gaussian Processes (GP)</li>
+<li>SGD, regularization (L1/L2)</li>
+</ul>
+<p><strong>Deep Neural Networks</strong></p>
+<ul>
+<li>Feedforward NNs, CNNs, Backpropagation</li>
+<li>RNNs, LSTMs, GRUs</li>
+</ul>
+<p><strong>Unsupervised Learning</strong></p>
+<ul>
+<li>Clustering algorithms</li>
+<li>Expectation Maximization (EM), Gaussian Mixture Models (GMMs)</li>
+<li>Evaluation metrics for unsupervised tasks</li>
+</ul>
+<p><strong>Probabilistic Graphical Models (PGM)</strong></p>
+<ul>
+<li>Latent Dirichlet Allocation (LDA)</li>
+<li>Belief Propagation</li>
+<li>Gibbs Sampling</li>
+<li>Variational Inference</li>
+</ul>
+<p><strong>Dimensionality Reduction</strong></p>
+<ul>
+<li>PCA, SVD</li>
+<li>Spectral Clustering</li>
+<li>Matrix Factorization</li>
+</ul>
+<p><strong>Sequential Models</strong></p>
+<ul>
+<li>Conditional Random Fields (CRFs)</li>
+<li>Hidden Markov Models (HMMs)</li>
+<li>NER (Named Entity Recognition), POS tagging</li>
+</ul>
+<p><strong>Reinforcement Learning</strong></p>
+<ul>
+<li>Explore-exploit tradeoff</li>
+<li>Multi-armed bandits: ε-greedy, UCB, Thompson Sampling</li>
+<li>Q-learning</li>
+<li>Deep Q-Networks (DQNs)</li>
+</ul>
 <hr />
 </div>
 <div class="content-section sec-15">
 <h2 id="references">References</h2>
 
-<p><strong>Evaluation Metrics</strong>
-- <a href="https://machinelearningmastery.com/tour-of-evaluation-metrics-for-imbalanced-classification/">Tour of Evaluation Metrics for Imbalanced Classification — Machine Learning Mastery</a>
-- <a href="https://www.youtube.com/watch?v=4jRBRDbJemM">ROC and AUC, Clearly Explained! — StatQuest (YouTube)</a></p>
-<p><strong>Loss Functions</strong>
-- <a href="https://vinija.ai/concepts/loss/">Loss Functions Overview — vinija.ai</a></p>
-<p><strong>Optimization</strong>
-- <a href="https://ruder.io/optimizing-gradient-descent/">An Overview of Gradient Descent Optimization Algorithms — Sebastian Ruder</a></p>
-<p><strong>Backpropagation</strong>
-- <a href="https://medium.com/@14prakash/back-propagation-is-very-simple-who-made-it-complicated-97b794c97e5c">Back Propagation is Very Simple — Medium (@14prakash)</a></p>
-<p><strong>Activation Functions</strong>
-- <a href="https://towardsdatascience.com/activation-functions-neural-networks-1cbd9f8d91d6">Activation Functions in Neural Networks — Towards Data Science</a></p>
-<p><strong>Feature Scaling</strong>
-- <a href="https://www.analyticsvidhya.com/blog/2020/04/feature-scaling-machine-learning-normalization-standardization/">Feature Scaling in Machine Learning — Analytics Vidhya</a></p>
-<p><strong>Ensemble Methods</strong>
-- <a href="https://www.geeksforgeeks.org/implementing-the-adaboost-algorithm-from-scratch/">Implementing AdaBoost from Scratch — GeeksForGeeks</a></p>
-<p><strong>Dimensionality Reduction</strong>
-- <a href="https://www.knowledgehut.com/blog/data-science/linear-discriminant-analysis-for-machine-learning">Linear Discriminant Analysis for Machine Learning — KnowledgeHut</a></p>
-<p><strong>Reinforcement Learning</strong>
-- <a href="http://jmlr.org/papers/volume3/auer02a/auer02a.pdf">Upper Confidence Bound — JMLR Vol. 3 (Auer et al.)</a></p>
-<p><strong>Transformers</strong>
-- <a href="https://jalammar.github.io/illustrated-transformer/">The Illustrated Transformer — Jay Alammar</a></p>
-<p><strong>BERT / XLNet</strong>
-- <a href="http://jalammar.github.io/illustrated-bert/">The Illustrated BERT — Jay Alammar</a>
-- <a href="https://jonathan-hui.medium.com/nlp-bert-transformer-7f0ac397f524">NLP: BERT &amp; Transformer — Jonathan Hui</a>
-- <a href="https://towardsdatascience.com/what-is-two-stream-self-attention-in-xlnet-ebfe013a0cf3">Two-Stream Self-Attention in XLNet — Towards Data Science</a></p>
-<p><strong>SVM</strong>
-- <a href="https://www.ccs.neu.edu/home/vip/teach/MLcourse/6_SVM_kernels/lecture_notes/svm/svm.pdf">SVM with Kernels Lecture Notes — Northeastern University</a></p>
-<p><strong>RNNs / LSTMs</strong>
-- <a href="https://towardsdatascience.com/the-fall-of-rnn-lstm-2d1594c74ce0">The Fall of RNN / LSTM — Towards Data Science</a>
-- <a href="https://www.quora.com/What-are-the-disadvantages-of-a-recurrent-neural-network">Disadvantages of RNN — Quora</a>
-- <a href="https://datascience.stackexchange.com/questions/27392/so-whats-the-catch-with-lstm">What's the catch with LSTM — Data Science Stack Exchange</a></p>
-<p><strong>Hypothesis Testing</strong>
-- <a href="https://stattrek.com/hypothesis-test/hypothesis-testing.aspx">Hypothesis Testing — Stattrek</a></p>
-<p><strong>Interview Preparation</strong>
-- <a href="https://www.simplilearn.com/tutorials/deep-learning-tutorial/deep-learning-interview-questions">Deep Learning Interview Questions — Simplilearn</a>
-- <a href="https://www.javatpoint.com/deep-learning-interview-questions">Deep Learning Interview Questions — JavaTPoint</a>
-- <a href="https://www.springboard.com/blog/machine-learning-interview-questions/">Machine Learning Interview Questions — Springboard</a></p>
-<p><strong>Coding Practice (GeeksForGeeks)</strong>
-- <a href="https://www.geeksforgeeks.org/find-number-of-islands/">Find Number of Islands</a>
-- <a href="https://www.geeksforgeeks.org/longest-increasing-subsequence-dp-3/">Longest Increasing Subsequence</a>
-- <a href="https://www.geeksforgeeks.org/sort-array-wave-form-2/">Sort Array in Wave Form</a>
-- <a href="https://www.geeksforgeeks.org/tree-traversals-inorder-preorder-and-postorder/">Tree Traversals (Inorder, Preorder, Postorder)</a>
-- <a href="https://www.geeksforgeeks.org/longest-common-subsequence-dp-4/">Longest Common Subsequence</a>
-- <a href="https://www.geeksforgeeks.org/partition-problem-dp-18/">Partition Problem</a>
-- <a href="https://www.geeksforgeeks.org/largest-sum-contiguous-subarray/">Largest Sum Contiguous Subarray (Kadane's Algorithm)</a>
-- <a href="https://www.geeksforgeeks.org/find-the-first-repeated-character-in-a-string/">Find First Repeated Character in a String</a></p>
-<p><strong>General ML Resources</strong>
-- <a href="https://aman.ai/">Aman's AI Notes</a>
-- <a href="https://vinija.ai/">Vinija AI Concepts</a>
-- <a href="https://vinija.ai/concepts/">Vinija AI Concepts Library</a></p>
+<p><strong>Evaluation Metrics</strong></p>
+<ul>
+<li><a href="https://machinelearningmastery.com/tour-of-evaluation-metrics-for-imbalanced-classification/">Tour of Evaluation Metrics for Imbalanced Classification — Machine Learning Mastery</a></li>
+<li><a href="https://www.youtube.com/watch?v=4jRBRDbJemM">ROC and AUC, Clearly Explained! — StatQuest (YouTube)</a></li>
+</ul>
+<p><strong>Loss Functions</strong></p>
+<ul>
+<li><a href="https://vinija.ai/concepts/loss/">Loss Functions Overview — vinija.ai</a></li>
+</ul>
+<p><strong>Optimization</strong></p>
+<ul>
+<li><a href="https://ruder.io/optimizing-gradient-descent/">An Overview of Gradient Descent Optimization Algorithms — Sebastian Ruder</a></li>
+</ul>
+<p><strong>Backpropagation</strong></p>
+<ul>
+<li><a href="https://medium.com/@14prakash/back-propagation-is-very-simple-who-made-it-complicated-97b794c97e5c">Back Propagation is Very Simple — Medium (@14prakash)</a></li>
+</ul>
+<p><strong>Activation Functions</strong></p>
+<ul>
+<li><a href="https://towardsdatascience.com/activation-functions-neural-networks-1cbd9f8d91d6">Activation Functions in Neural Networks — Towards Data Science</a></li>
+</ul>
+<p><strong>Feature Scaling</strong></p>
+<ul>
+<li><a href="https://www.analyticsvidhya.com/blog/2020/04/feature-scaling-machine-learning-normalization-standardization/">Feature Scaling in Machine Learning — Analytics Vidhya</a></li>
+</ul>
+<p><strong>Ensemble Methods</strong></p>
+<ul>
+<li><a href="https://www.geeksforgeeks.org/implementing-the-adaboost-algorithm-from-scratch/">Implementing AdaBoost from Scratch — GeeksForGeeks</a></li>
+</ul>
+<p><strong>Dimensionality Reduction</strong></p>
+<ul>
+<li><a href="https://www.knowledgehut.com/blog/data-science/linear-discriminant-analysis-for-machine-learning">Linear Discriminant Analysis for Machine Learning — KnowledgeHut</a></li>
+</ul>
+<p><strong>Reinforcement Learning</strong></p>
+<ul>
+<li><a href="http://jmlr.org/papers/volume3/auer02a/auer02a.pdf">Upper Confidence Bound — JMLR Vol. 3 (Auer et al.)</a></li>
+</ul>
+<p><strong>Transformers</strong></p>
+<ul>
+<li><a href="https://jalammar.github.io/illustrated-transformer/">The Illustrated Transformer — Jay Alammar</a></li>
+</ul>
+<p><strong>BERT / XLNet</strong></p>
+<ul>
+<li><a href="http://jalammar.github.io/illustrated-bert/">The Illustrated BERT — Jay Alammar</a></li>
+<li><a href="https://jonathan-hui.medium.com/nlp-bert-transformer-7f0ac397f524">NLP: BERT &amp; Transformer — Jonathan Hui</a></li>
+<li><a href="https://towardsdatascience.com/what-is-two-stream-self-attention-in-xlnet-ebfe013a0cf3">Two-Stream Self-Attention in XLNet — Towards Data Science</a></li>
+</ul>
+<p><strong>SVM</strong></p>
+<ul>
+<li><a href="https://www.ccs.neu.edu/home/vip/teach/MLcourse/6_SVM_kernels/lecture_notes/svm/svm.pdf">SVM with Kernels Lecture Notes — Northeastern University</a></li>
+</ul>
+<p><strong>RNNs / LSTMs</strong></p>
+<ul>
+<li><a href="https://towardsdatascience.com/the-fall-of-rnn-lstm-2d1594c74ce0">The Fall of RNN / LSTM — Towards Data Science</a></li>
+<li><a href="https://www.quora.com/What-are-the-disadvantages-of-a-recurrent-neural-network">Disadvantages of RNN — Quora</a></li>
+<li><a href="https://datascience.stackexchange.com/questions/27392/so-whats-the-catch-with-lstm">What's the catch with LSTM — Data Science Stack Exchange</a></li>
+</ul>
+<p><strong>Hypothesis Testing</strong></p>
+<ul>
+<li><a href="https://stattrek.com/hypothesis-test/hypothesis-testing.aspx">Hypothesis Testing — Stattrek</a></li>
+</ul>
+<p><strong>Interview Preparation</strong></p>
+<ul>
+<li><a href="https://www.simplilearn.com/tutorials/deep-learning-tutorial/deep-learning-interview-questions">Deep Learning Interview Questions — Simplilearn</a></li>
+<li><a href="https://www.javatpoint.com/deep-learning-interview-questions">Deep Learning Interview Questions — JavaTPoint</a></li>
+<li><a href="https://www.springboard.com/blog/machine-learning-interview-questions/">Machine Learning Interview Questions — Springboard</a></li>
+</ul>
+<p><strong>Coding Practice (GeeksForGeeks)</strong></p>
+<ul>
+<li><a href="https://www.geeksforgeeks.org/find-number-of-islands/">Find Number of Islands</a></li>
+<li><a href="https://www.geeksforgeeks.org/longest-increasing-subsequence-dp-3/">Longest Increasing Subsequence</a></li>
+<li><a href="https://www.geeksforgeeks.org/sort-array-wave-form-2/">Sort Array in Wave Form</a></li>
+<li><a href="https://www.geeksforgeeks.org/tree-traversals-inorder-preorder-and-postorder/">Tree Traversals (Inorder, Preorder, Postorder)</a></li>
+<li><a href="https://www.geeksforgeeks.org/longest-common-subsequence-dp-4/">Longest Common Subsequence</a></li>
+<li><a href="https://www.geeksforgeeks.org/partition-problem-dp-18/">Partition Problem</a></li>
+<li><a href="https://www.geeksforgeeks.org/largest-sum-contiguous-subarray/">Largest Sum Contiguous Subarray (Kadane's Algorithm)</a></li>
+<li><a href="https://www.geeksforgeeks.org/find-the-first-repeated-character-in-a-string/">Find First Repeated Character in a String</a></li>
+</ul>
+<p><strong>General ML Resources</strong></p>
+<ul>
+<li><a href="https://aman.ai/">Aman's AI Notes</a></li>
+<li><a href="https://vinija.ai/">Vinija AI Concepts</a></li>
+<li><a href="https://vinija.ai/concepts/">Vinija AI Concepts Library</a></li>
+</ul>
 <hr />
-<p><em>Notes compiled from ML/DL interview preparation materials. Topics cover Statistics, Classical ML, Deep Learning, NLP/Transformers, and Advanced Methods.</em></p></div>
+<p><em>Notes compiled from ML/DL interview preparation materials. Topics cover Statistics, Classical ML, Deep Learning, NLP/Transformers, and Advanced Methods.</em></p>
+</div>
 
   </main>
 </div>
 
-<!-- Back to top -->
 <button id="back-top" title="Back to top">↑</button>
 
 <script>
 
 const SEC = {"0":{"accent":"#64748B","light":"#F8FAFC","dark":"#94A3B8"},"1":{"accent":"#2563EB","light":"#EFF6FF","dark":"#60A5FA"},"2":{"accent":"#059669","light":"#ECFDF5","dark":"#34D399"},"3":{"accent":"#7C3AED","light":"#F5F3FF","dark":"#A78BFA"},"4":{"accent":"#16A34A","light":"#F0FDF4","dark":"#4ADE80"},"5":{"accent":"#EA580C","light":"#FFF7ED","dark":"#FB923C"},"6":{"accent":"#DB2777","light":"#FDF2F8","dark":"#F472B6"},"7":{"accent":"#DC2626","light":"#FEF2F2","dark":"#F87171"},"8":{"accent":"#9333EA","light":"#FAF5FF","dark":"#C084FC"},"9":{"accent":"#4F46E5","light":"#EEF2FF","dark":"#818CF8"},"10":{"accent":"#0891B2","light":"#ECFEFF","dark":"#22D3EE"},"11":{"accent":"#0D9488","light":"#F0FDFA","dark":"#2DD4BF"},"12":{"accent":"#15803D","light":"#F0FDF4","dark":"#4ADE80"},"13":{"accent":"#475569","light":"#F8FAFC","dark":"#94A3B8"},"14":{"accent":"#B45309","light":"#FFFBEB","dark":"#FBBF24"},"15":{"accent":"#64748B","light":"#F8FAFC","dark":"#94A3B8"}};
 
-/* ── Dark mode ──────────────────────────────────────────────────────────── */
+/* ── Dark mode ───────────────────────────────────────────── */
 const darkBtn = document.getElementById('dark-btn');
 const saved   = localStorage.getItem('theme') || 'light';
 if (saved === 'dark') document.documentElement.setAttribute('data-theme','dark');
-darkBtn.textContent = saved === 'dark' ? '☀️  Light' : '🌙  Dark';
-
+darkBtn.textContent = saved === 'dark' ? '☀  Light' : '🌙  Dark';
 darkBtn.addEventListener('click', () => {
   const dark = document.documentElement.getAttribute('data-theme') === 'dark';
   document.documentElement.setAttribute('data-theme', dark ? 'light' : 'dark');
-  darkBtn.textContent = dark ? '🌙  Dark' : '☀️  Light';
+  darkBtn.textContent = dark ? '🌙  Dark' : '☀  Light';
   localStorage.setItem('theme', dark ? 'light' : 'dark');
 });
 
-/* ── Sidebar toggle ─────────────────────────────────────────────────────── */
+/* ── Sidebar toggle ──────────────────────────────────────── */
 const sidebar  = document.getElementById('sidebar');
 const mainWrap = document.getElementById('main-wrap');
 const togBtn   = document.getElementById('tog-btn');
-
 togBtn.addEventListener('click', () => {
-  sidebar.classList.toggle('hidden');
-  mainWrap.classList.toggle('wide');
+  if (window.matchMedia('(max-width:860px)').matches) {
+    sidebar.classList.toggle('mobile-open');
+  } else {
+    sidebar.classList.toggle('hidden');
+    mainWrap.classList.toggle('wide');
+  }
 });
 
-/* ── Build sidebar ──────────────────────────────────────────────────────── */
+/* ── Build sidebar ───────────────────────────────────────── */
 function buildSidebar() {
   const inner = document.getElementById('sb-inner');
   inner.innerHTML = '';
-
   document.querySelectorAll('.content-section').forEach(sec => {
     const cls   = sec.className.match(/sec-(\d+)/);
     const secN  = cls ? +cls[1] : 0;
     const color = (SEC[secN] || SEC[0]).accent;
-
     const h2 = sec.querySelector('h2');
     if (!h2) return;
 
-    const h3s = sec.querySelectorAll('h3');
+    const numM = h2.textContent.match(/^(\d+)\./);
+    const chip = numM ? numM[1] : '';
+    const h3s  = sec.querySelectorAll('h3');
 
     const secDiv = document.createElement('div');
     secDiv.className = 'sb-sec';
+    secDiv.style.setProperty('--ac', color);
 
-    /* H2 button */
     const btn = document.createElement('button');
     btn.className = 'sb-h2-btn';
     btn.dataset.id = h2.id || '';
     btn.innerHTML = `
-      <span class="sb-dot" style="background:${color}"></span>
+      <span class="sb-dot" style="background:${color}">${chip}</span>
       <span class="sb-label">${h2.textContent}</span>
       ${h3s.length ? '<span class="sb-chev">▶</span>' : ''}`;
 
-    /* Subsections */
     const subs = document.createElement('div');
     subs.className = 'sb-subs';
-
     h3s.forEach(h3 => {
       const a = document.createElement('a');
       a.className   = 'sb-h3-link';
@@ -2925,7 +2909,6 @@ function buildSidebar() {
       subs.appendChild(a);
     });
 
-    /* Chevron toggles subs */
     const chev = btn.querySelector('.sb-chev');
     if (chev) {
       chev.addEventListener('click', e => {
@@ -2934,8 +2917,6 @@ function buildSidebar() {
         btn.classList.toggle('open');
       });
     }
-
-    /* Button click → scroll to h2 + expand */
     btn.addEventListener('click', e => {
       if (e.target === chev) return;
       subs.classList.add('open');
@@ -2950,11 +2931,18 @@ function buildSidebar() {
   });
 }
 
-/* ── Scroll spy ─────────────────────────────────────────────────────────── */
+/* ── Section-number chip in each h2 ──────────────────────── */
+function decorateHeadings() {
+  document.querySelectorAll('.content-section h2').forEach(h2 => {
+    const m = h2.textContent.match(/^(\d+)\.\s*(.+)$/);
+    if (m) h2.innerHTML = `<span class="sec-num">${m[1]}</span>${m[2]}`;
+  });
+}
+
+/* ── Scroll spy ──────────────────────────────────────────── */
 function initScrollSpy() {
   const heads = Array.from(document.querySelectorAll('h2[id],h3[id]'));
   let raf = false;
-
   function update() {
     const cut = window.scrollY + window.innerHeight * 0.22;
     let active = null;
@@ -2963,10 +2951,8 @@ function initScrollSpy() {
       else break;
     }
     if (!active) return;
-
     document.querySelectorAll('.sb-h2-btn.active,.sb-h3-link.active')
       .forEach(el => el.classList.remove('active'));
-
     const id = active.id;
     if (active.tagName === 'H2') {
       document.querySelector(`.sb-h2-btn[data-id="${id}"]`)?.classList.add('active');
@@ -2982,75 +2968,113 @@ function initScrollSpy() {
       }
     }
   }
-
   window.addEventListener('scroll', () => {
     if (!raf) { raf = true; requestAnimationFrame(() => { update(); raf = false; }); }
   });
   update();
 }
 
-/* ── Image resize ───────────────────────────────────────────────────────── */
+/* ── Images: hover filename + size control + persistence ─── */
 function initImages() {
-  document.querySelectorAll('img').forEach(img => {
+  /* Bump this when the default sizes change → clears stale saved sizes so the
+     new defaults take effect (manual resizes made afterwards still persist). */
+  const IMG_DEFAULTS_VERSION = '2';
+  if (localStorage.getItem('imgDefaultsVersion') !== IMG_DEFAULTS_VERSION) {
+    Object.keys(localStorage)
+      .filter(k => k.indexOf('imgsize:') === 0)
+      .forEach(k => localStorage.removeItem(k));
+    localStorage.setItem('imgDefaultsVersion', IMG_DEFAULTS_VERSION);
+  }
+
+  /* Map each image to its subsection (nearest preceding h3). */
+  const subOf = new Map();
+  let curH3 = '';
+  document.querySelectorAll('#content h3, #content img').forEach(el => {
+    if (el.tagName === 'H3') curH3 = el.textContent.trim();
+    else subOf.set(el, curH3);
+  });
+
+  document.querySelectorAll('#content img').forEach(img => {
+    const src  = img.getAttribute('src') || '';
+    const name = src.split('/').pop();
     const origW = parseInt(img.getAttribute('width')) || 700;
     img.removeAttribute('width');
     img.removeAttribute('height');
-    Object.assign(img.style, {
-      display:'block', margin:'0 auto', maxWidth: origW + 'px', width:'70%',
-      borderRadius:'6px', height:'auto'
-    });
+    img.title = name;
+    img.style.maxWidth = origW + 'px';
 
-    const wrap = document.createElement('div');
-    wrap.className = 'img-wrap';
-    img.parentNode.insertBefore(wrap, img);
-    wrap.appendChild(img);
+    /* drop the filename badge that precedes the image */
+    let prev = img.previousSibling;
+    while (prev && prev.nodeType === 3 && !prev.textContent.trim())
+      prev = prev.previousSibling;
+    if (prev && prev.nodeType === 1 && prev.tagName === 'CODE'
+        && /^image\d+\.(png|jpe?g|gif)$/i.test(prev.textContent.trim()))
+      prev.remove();
 
-    const ctrl    = document.createElement('div');
-    ctrl.className = 'img-ctrl';
+    const fig = document.createElement('div');
+    fig.className = 'img-fig';
+    img.parentNode.insertBefore(fig, img);
+    fig.appendChild(img);
 
-    const lbl = document.createElement('span');
-    lbl.textContent = 'Size:';
+    /* Default size: Full (100%) for all images, except §11.3 → S (30%). */
+    const defW   = /^11\.3\b/.test(subOf.get(img) || '') ? 30 : 100;
+    const KEY    = 'imgsize:' + name;
+    const savedW = parseInt(localStorage.getItem(KEY));
+    const initW  = (savedW >= 15 && savedW <= 100) ? savedW : defW;
+    img.style.width = initW + '%';
 
-    const slider = document.createElement('input');
-    slider.type = 'range'; slider.min = '10'; slider.max = '100'; slider.value = '70';
+    const bar = document.createElement('div');
+    bar.className = 'img-bar';
+    bar.innerHTML =
+      `<span class="img-name">${name}</span>` +
+      `<span class="img-sizes">` +
+        `<button data-w="30">S</button>` +
+        `<button data-w="50">M</button>` +
+        `<button data-w="75">L</button>` +
+        `<button data-w="100">Full</button>` +
+      `</span>` +
+      `<input type="range" class="img-slider" min="15" max="100" value="${initW}">`;
+    fig.appendChild(bar);
 
-    const pct = document.createElement('span');
-    pct.className = 'pct'; pct.textContent = '70%';
-
-    const rst = document.createElement('button');
-    rst.textContent = '↺ Reset';
-
-    slider.addEventListener('input', () => {
-      img.style.width = slider.value + '%'; pct.textContent = slider.value + '%';
-    });
-    rst.addEventListener('click', () => {
-      slider.value = '70'; img.style.width = '70%'; pct.textContent = '70%';
-    });
-
-    ctrl.append(lbl, slider, pct, rst);
-    wrap.appendChild(ctrl);
+    const slider = bar.querySelector('.img-slider');
+    const chips  = bar.querySelectorAll('.img-sizes button');
+    function setW(w) {
+      w = Math.max(15, Math.min(100, Math.round(w)));
+      img.style.width = w + '%';
+      slider.value = w;
+      localStorage.setItem(KEY, w);
+      chips.forEach(b => b.classList.toggle('on', +b.dataset.w === w));
+    }
+    chips.forEach(b => b.addEventListener('click', () => setW(+b.dataset.w)));
+    slider.addEventListener('input', () => setW(+slider.value));
+    chips.forEach(b => b.classList.toggle('on', +b.dataset.w === initW));
   });
 }
 
-/* ── Image filename badges ──────────────────────────────────────────────── */
-function badgeImageLabels() {
-  document.querySelectorAll('code').forEach(c => {
-    if (/^image\d+\.(png|jpg|gif)$/i.test(c.textContent.trim()))
-      c.classList.add('img-badge');
-  });
+/* ── Reading progress ────────────────────────────────────── */
+function initProgress() {
+  const bar = document.getElementById('progress');
+  function upd() {
+    const h = document.documentElement;
+    const max = h.scrollHeight - h.clientHeight;
+    bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+  }
+  window.addEventListener('scroll', upd);
+  upd();
 }
 
-/* ── Back to top ────────────────────────────────────────────────────────── */
+/* ── Back to top ─────────────────────────────────────────── */
 const bt = document.getElementById('back-top');
 window.addEventListener('scroll', () => bt.classList.toggle('show', window.scrollY > 350));
 bt.addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));
 
-/* ── Init ────────────────────────────────────────────────────────────────── */
+/* ── Init ────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   buildSidebar();
+  decorateHeadings();
   initScrollSpy();
   initImages();
-  badgeImageLabels();
+  initProgress();
 });
 
 </script>

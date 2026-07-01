@@ -244,7 +244,7 @@ blockquote{border-left:4px solid var(--sa);
 <div id="topbar">
   <button id="tog-btn">☰</button>
   <span id="bar-title">ML / DL Interview Preparation Notes</span>
-  <span id="bar-version">v1.1</span>
+  <span id="bar-version">v1.2</span>
   <a id="cross-link" href="CV_Notes.html">Computer Vision ↗</a>
   <button id="dark-btn">🌙  Dark</button>
 </div>
@@ -2049,30 +2049,56 @@ P(y=5) &= P(T>4)
 </blockquote>
 <hr />
 <h3 id="94-multi-layer-perceptron-mlp">9.4 Multi-Layer Perceptron (MLP)</h3>
-<p>MLP is a <strong>fully connected feed-forward network</strong>. It is NOT:</p>
-<ul>
-<li>CNN (partially connected)</li>
-<li>RNN (has feedback loops)</li>
-</ul>
-<p><strong>Feed-Forward Architecture:</strong> Signal travels strictly input → hidden → output. No cycles.</p>
-<p><strong>Types of Feed-Forward Networks:</strong></p>
-<ul>
-<li>Fully connected MLPs</li>
-<li>Fully Convolutional NNs</li>
-<li>CNNs + fully connected layers</li>
-</ul>
-<p><strong>Recurrent Networks (not feed-forward):</strong></p>
-<ul>
-<li>Vanilla RNN — suffers from vanishing/exploding gradients</li>
-<li>LSTM</li>
-<li>GRU</li>
-<li>RCNN</li>
-</ul>
-<p><strong>Memory-Augmented Networks:</strong></p>
-<ul>
-<li>Neural Turing Machines (NTM)</li>
-<li>Differentiable Neural Computers (DNC)</li>
-</ul>
+<p><strong>NN → FFNN → MLP</strong> is a hierarchy from broadest to most specific — each narrows the one before it:</p>
+<pre><code>Neural Network (NN)              — any network (NN itself allows loops, e.g. RNNs)
+   └─ Feed-Forward NN (FFNN)     — data flows one way only, no loops/cycles
+        └─ Multilayer Perceptron (MLP) — fully connected + non-linear activations + 3+ layers
+</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:left"></th>
+<th style="text-align:left"><strong>NN</strong></th>
+<th style="text-align:left"><strong>FFNN</strong></th>
+<th style="text-align:left"><strong>MLP</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>Scope</strong></td>
+<td style="text-align:left">Broadest — everything</td>
+<td style="text-align:left">Subset of NN</td>
+<td style="text-align:left">Subset of FFNN</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Loops allowed?</strong></td>
+<td style="text-align:left">Yes (e.g. RNNs)</td>
+<td style="text-align:left">No</td>
+<td style="text-align:left">No</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Connectivity</strong></td>
+<td style="text-align:left">Any</td>
+<td style="text-align:left">Any (as long as forward-only)</td>
+<td style="text-align:left">Strictly fully connected</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Example</strong></td>
+<td style="text-align:left">Transformer, RNN</td>
+<td style="text-align:left">CNN, MLP</td>
+<td style="text-align:left">Vanilla 3-layer classifier</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Analogy</strong></td>
+<td style="text-align:left">&quot;Vehicle&quot;</td>
+<td style="text-align:left">&quot;Land vehicle&quot;</td>
+<td style="text-align:left">&quot;Sedan&quot;</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Types of Feed-Forward Networks:</strong> Fully connected MLPs; Fully Convolutional NNs; CNNs + fully connected layers.</p>
+<p><strong>Recurrent Networks (NOT feed-forward — have loops):</strong> Vanilla RNN (suffers from vanishing/exploding gradients), LSTM, GRU, RCNN.</p>
+<p><strong>Memory-Augmented Networks:</strong> Neural Turing Machines (NTM), Differentiable Neural Computers (DNC).</p>
 <hr />
 <h3 id="95-feed-forward-vs-backpropagation">9.5 Feed-Forward vs Backpropagation</h3>
 <table>

@@ -1152,26 +1152,27 @@ When using sigmoid or tanh:
 
 ### 9.4 Multi-Layer Perceptron (MLP)
 
-MLP is a **fully connected feed-forward network**. It is NOT:
-- CNN (partially connected)
-- RNN (has feedback loops)
+**NN → FFNN → MLP** is a hierarchy from broadest to most specific — each narrows the one before it:
 
-**Feed-Forward Architecture:** Signal travels strictly input → hidden → output. No cycles.
+```
+Neural Network (NN)              — any network (NN itself allows loops, e.g. RNNs)
+   └─ Feed-Forward NN (FFNN)     — data flows one way only, no loops/cycles
+        └─ Multilayer Perceptron (MLP) — fully connected + non-linear activations + 3+ layers
+```
 
-**Types of Feed-Forward Networks:**
-- Fully connected MLPs
-- Fully Convolutional NNs
-- CNNs + fully connected layers
+| | **NN** | **FFNN** | **MLP** |
+|:---|:---|:---|:---|
+| **Scope** | Broadest — everything | Subset of NN | Subset of FFNN |
+| **Loops allowed?** | Yes (e.g. RNNs) | No | No |
+| **Connectivity** | Any | Any (as long as forward-only) | Strictly fully connected |
+| **Example** | Transformer, RNN | CNN, MLP | Vanilla 3-layer classifier |
+| **Analogy** | "Vehicle" | "Land vehicle" | "Sedan" |
 
-**Recurrent Networks (not feed-forward):**
-- Vanilla RNN — suffers from vanishing/exploding gradients
-- LSTM
-- GRU
-- RCNN
+**Types of Feed-Forward Networks:** Fully connected MLPs; Fully Convolutional NNs; CNNs + fully connected layers.
 
-**Memory-Augmented Networks:**
-- Neural Turing Machines (NTM)
-- Differentiable Neural Computers (DNC)
+**Recurrent Networks (NOT feed-forward — have loops):** Vanilla RNN (suffers from vanishing/exploding gradients), LSTM, GRU, RCNN.
+
+**Memory-Augmented Networks:** Neural Turing Machines (NTM), Differentiable Neural Computers (DNC).
 
 ---
 

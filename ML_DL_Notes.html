@@ -244,7 +244,7 @@ blockquote{border-left:4px solid var(--sa);
 <div id="topbar">
   <button id="tog-btn">☰</button>
   <span id="bar-title">ML / DL Interview Preparation Notes</span>
-  <span id="bar-version">v1.0</span>
+  <span id="bar-version">v1.1</span>
   <a id="cross-link" href="CV_Notes.html">Computer Vision ↗</a>
   <button id="dark-btn">🌙  Dark</button>
 </div>
@@ -1251,6 +1251,8 @@ P(y=5) &= P(T>4)
 </tr>
 </tbody>
 </table>
+<p><code>image81.png</code>
+<img src="ML%20DL/images/image81.png" alt="SVM decision boundaries by kernel (linear, poly, RBF, sigmoid) across separable, circular, moon, and spiral datasets" width="700" /></p>
 <p><strong>Why Gaussian RBF maps to infinite-dimensional space:</strong></p>
 <p>The Gaussian RBF kernel corresponds to a fixed, <strong>infinite-dimensional</strong> feature space, regardless of the amount of training data. With $m$ training points, the SVM solution lies in an (at most) $m$-dimensional <strong>subspace</strong> of that space — the span of the mapped training points (equivalently, the rank of the $m \times m$ Gram matrix). The kernel trick lets the SVM work implicitly in this infinite-dimensional space without ever computing the coordinates.</p>
 <p><strong>C Parameter (Regularization):</strong></p>
@@ -1994,8 +1996,6 @@ P(y=5) &= P(T>4)
 <p><strong>Activation Functions Reference:</strong></p>
 <p><code>image16.png</code>
 <img src="ML%20DL/images/image16.png" alt="Activation Functions Table with Graphs" width="700" /></p>
-<p><code>image81.png</code>
-<img src="ML%20DL/images/image81.png" alt="Activation Functions on Datasets" width="700" /></p>
 <p><strong>Common Activation Functions:</strong></p>
 <table>
 <thead>

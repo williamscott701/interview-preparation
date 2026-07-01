@@ -773,6 +773,9 @@ $$h_\theta(x) = \begin{cases} 1 & \text{if } \theta^T x \geq 0 \\ 0 & \text{othe
 | **RBF / Gaussian** | $k(x,y) = \exp\!\left(-\frac{\|x-y\|^2}{2\sigma^2}\right)$ | Non-linear, high-dimensional data |
 | **Sigmoid** | $k(x,y) = \tanh(\alpha x^T y + c)$ | Proxy for neural networks |
 
+`image81.png`
+<img src="images/image81.png" alt="SVM decision boundaries by kernel (linear, poly, RBF, sigmoid) across separable, circular, moon, and spiral datasets" width="700" />
+
 **Why Gaussian RBF maps to infinite-dimensional space:**
 
 The Gaussian RBF kernel corresponds to a fixed, **infinite-dimensional** feature space, regardless of the amount of training data. With $m$ training points, the SVM solution lies in an (at most) $m$-dimensional **subspace** of that space — the span of the mapped training points (equivalently, the rank of the $m \times m$ Gram matrix). The kernel trick lets the SVM work implicitly in this infinite-dimensional space without ever computing the coordinates.
@@ -1118,9 +1121,6 @@ Common non-linear functions: polynomial feature maps, ReLU, Sigmoid, Tanh.
 
 `image16.png`
 <img src="images/image16.png" alt="Activation Functions Table with Graphs" width="700" />
-
-`image81.png`
-<img src="images/image81.png" alt="Activation Functions on Datasets" width="700" />
 
 **Common Activation Functions:**
 

@@ -623,17 +623,61 @@ $$P(x = v \mid c) = \frac{1}{\sqrt{2\pi\sigma_c^2}} \exp\!\left(-\frac{(v - \mu_
 
 ---
 
-### 5.3 KNN vs K-Means
+### 5.3 K-Nearest Neighbors (KNN)
+
+**Non-parametric, supervised** algorithm — classifies a query point by majority vote (or averages, for regression) among its $k$ nearest training points. Based on the idea that similar points lie near one another.
+
+**Algorithm:**
+1. Compute the distance from the query point to every training point
+2. Sort ascending; take the top $k$
+3. **Classification** → majority vote of the $k$ labels; **Regression** → mean of the $k$ labels
+
+**Distance metrics:**
+
+| Metric | Formula | Best for |
+|:---|:---|:---|
+| **Euclidean (L2)** | $d(x,y) = \sqrt{\sum_i (y_i - x_i)^2}$ | Continuous, normalized, low-dimensional data |
+| **Manhattan (L1)** | $d(x,y) = \sum_i \|x_i - y_i\|$ | Different feature scales, outliers, high-dimensional/sparse data |
+
+**Why not Cosine similarity by default?**
+- Fails the **triangle inequality** → breaks tree-based indexing (KD-Tree/Ball Tree), forcing slower brute-force search
+- Ignores **magnitude** — only direction matters, so points with the same ratio but very different scale look identical (bad when scale is meaningful; good for text/embeddings)
+- If vectors are **unit-normalized**, Euclidean ranking = Cosine ranking: $\text{Euclidean} = \sqrt{2(1-\cos)}$
+
+**Pros:** simple; no training phase; only 2 hyperparameters ($k$, distance metric).
+**Cons:** doesn't scale (memory/lookup cost); low $k$ → overfits, high $k$ → underfits.
+**Use case:** small, relatively clean datasets; labeled data is scarce/expensive.
+
+---
+
+### 5.4 K-Means Clustering
+
+**Unsupervised** — partitions data into $K$ clusters by iteratively minimizing distance to cluster centroids (Expectation-Maximization).
+
+**Algorithm:**
+1. **Init** — choose $K$; place $K$ random initial centroids
+2. **Assign (E-step)** — assign each point to its nearest centroid (Euclidean distance)
+3. **Update (M-step)** — move each centroid to the mean of its assigned points
+4. Repeat 2–3 until centroids stop moving (or max iterations reached)
+
+**Why Euclidean-only?** The arithmetic mean is exactly the point that minimizes the sum of *squared Euclidean* distances. Using Manhattan distance instead requires the median (→ **K-Medians**); a custom distance requires **K-Medoids**.
+
+**Choosing $K$:** Elbow Method or Silhouette Score.
+
+---
+
+### 5.5 KNN vs K-Means
 
 | | KNN | K-Means |
 |:---|:---|:---|
 | **Type** | Supervised | Unsupervised |
-| **Task** | Classification | Clustering |
+| **Task** | Classification (or regression) | Clustering |
 | **k** | Number of neighbors | Number of clusters |
+| **Distance metric** | Euclidean, Manhattan, or Cosine | Euclidean (by design) |
 
 ---
 
-### 5.4 Decision Trees
+### 5.6 Decision Trees
 
 **Choosing the split at each node:** Grown greedily, top-down — at each node, test every feature (and threshold, for numeric features) and pick the one with the **highest Information Gain** (largest impurity drop), then recurse until a stopping rule (pure node, max depth, or min samples).
 
@@ -668,7 +712,7 @@ where $S$ is the data at the node, $S_v$ the subset where attribute $A$ takes va
 
 ---
 
-### 5.5 Ordinal Regression
+### 5.7 Ordinal Regression
 
 Train binary classifiers for each threshold, then combine:
 
@@ -697,7 +741,7 @@ P(y=5) &= P(T>4)
 
 ---
 
-### 5.6 Support Vector Machines (SVM)
+### 5.8 Support Vector Machines (SVM)
 
 **Core Concepts:**
 
@@ -732,6 +776,21 @@ With $m$ distinct training points, the Gaussian RBF kernel makes the SVM operate
 - Large C → narrower margin, fewer misclassifications (harder boundary)
 
 **Support Vector Regression (SVR):** Regression counterpart — fits data within a margin of tolerance.
+
+---
+
+### 5.9 Algorithm Quick-Reference
+
+| Algorithm | Definition | Pros | Cons |
+|:---|:---|:---|:---|
+| **Linear Regression** | Predicts a continuous target as a linear combination of features | Simple, interpretable, fast | Assumes linearity; sensitive to outliers |
+| **Decision Trees** | Hierarchical if/else rules leading to a prediction | Interpretable; handles numeric + categorical; captures non-linearity | Prone to overfitting; unstable to small data changes |
+| **Random Forest** | Ensemble of decision trees (bagging) | Robust; handles high dimensions; gives feature importance | Costlier to compute; less interpretable than a single tree |
+| **SVM** | Finds the optimal separating hyperplane (margin maximization) | Effective in high dimensions; kernel trick for non-linear data; robust to outliers | Sensitive to kernel/parameter choice; slow on large datasets |
+| **Naive Bayes** | Probabilistic classifier assuming feature independence (Bayes' theorem) | Simple, fast, works well in high dimensions and with categorical features | Independence assumption rarely holds; misses feature interactions |
+| **Neural Networks** | Layers of interconnected neurons learning complex patterns | Powerful and flexible; scales with data; handles many data types | Needs lots of data; compute-intensive; overfits without regularization |
+| **KNN** | Classifies by majority vote among the $k$ nearest training points | Simple; no training phase; good for small/non-linear data | Slow at prediction time; sensitive to irrelevant features; no explicit model |
+| **Gradient Boosting** | Ensemble that sequentially fits weak learners to residual errors | Highly accurate; handles missing values; gives feature importance | Prone to overfitting if untuned; computationally expensive |
 
 ---
 

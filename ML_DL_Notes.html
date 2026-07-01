@@ -1041,7 +1041,59 @@ blockquote{border-left:4px solid var(--sa);
 <p><strong>Gaussian Naive Bayes:</strong></p>
 <div class="math-display">$$P(x = v \mid c) = \frac{1}{\sqrt{2\pi\sigma_c^2}} \exp\!\left(-\frac{(v - \mu_c)^2}{2\sigma_c^2}\right)$$</div>
 <hr />
-<h3 id="53-knn-vs-k-means">5.3 KNN vs K-Means</h3>
+<h3 id="53-k-nearest-neighbors-knn">5.3 K-Nearest Neighbors (KNN)</h3>
+<p><strong>Non-parametric, supervised</strong> algorithm — classifies a query point by majority vote (or averages, for regression) among its $k$ nearest training points. Based on the idea that similar points lie near one another.</p>
+<p><strong>Algorithm:</strong></p>
+<ol>
+<li>Compute the distance from the query point to every training point</li>
+<li>Sort ascending; take the top $k$</li>
+<li><strong>Classification</strong> → majority vote of the $k$ labels; <strong>Regression</strong> → mean of the $k$ labels</li>
+</ol>
+<p><strong>Distance metrics:</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Metric</th>
+<th style="text-align:left">Formula</th>
+<th style="text-align:left">Best for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>Euclidean (L2)</strong></td>
+<td style="text-align:left">$d(x,y) = \sqrt{\sum_i (y_i - x_i)^2}$</td>
+<td style="text-align:left">Continuous, normalized, low-dimensional data</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Manhattan (L1)</strong></td>
+<td style="text-align:left">$d(x,y) = \sum_i \|x_i - y_i\|$</td>
+<td style="text-align:left">Different feature scales, outliers, high-dimensional/sparse data</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why not Cosine similarity by default?</strong></p>
+<ul>
+<li>Fails the <strong>triangle inequality</strong> → breaks tree-based indexing (KD-Tree/Ball Tree), forcing slower brute-force search</li>
+<li>Ignores <strong>magnitude</strong> — only direction matters, so points with the same ratio but very different scale look identical (bad when scale is meaningful; good for text/embeddings)</li>
+<li>If vectors are <strong>unit-normalized</strong>, Euclidean ranking = Cosine ranking: $\text{Euclidean} = \sqrt{2(1-\cos)}$</li>
+</ul>
+<p><strong>Pros:</strong> simple; no training phase; only 2 hyperparameters ($k$, distance metric).
+<strong>Cons:</strong> doesn't scale (memory/lookup cost); low $k$ → overfits, high $k$ → underfits.
+<strong>Use case:</strong> small, relatively clean datasets; labeled data is scarce/expensive.</p>
+<hr />
+<h3 id="54-k-means-clustering">5.4 K-Means Clustering</h3>
+<p><strong>Unsupervised</strong> — partitions data into $K$ clusters by iteratively minimizing distance to cluster centroids (Expectation-Maximization).</p>
+<p><strong>Algorithm:</strong></p>
+<ol>
+<li><strong>Init</strong> — choose $K$; place $K$ random initial centroids</li>
+<li><strong>Assign (E-step)</strong> — assign each point to its nearest centroid (Euclidean distance)</li>
+<li><strong>Update (M-step)</strong> — move each centroid to the mean of its assigned points</li>
+<li>Repeat 2–3 until centroids stop moving (or max iterations reached)</li>
+</ol>
+<p><strong>Why Euclidean-only?</strong> The arithmetic mean is exactly the point that minimizes the sum of <em>squared Euclidean</em> distances. Using Manhattan distance instead requires the median (→ <strong>K-Medians</strong>); a custom distance requires <strong>K-Medoids</strong>.</p>
+<p><strong>Choosing $K$:</strong> Elbow Method or Silhouette Score.</p>
+<hr />
+<h3 id="55-knn-vs-k-means">5.5 KNN vs K-Means</h3>
 <table>
 <thead>
 <tr>
@@ -1058,7 +1110,7 @@ blockquote{border-left:4px solid var(--sa);
 </tr>
 <tr>
 <td style="text-align:left"><strong>Task</strong></td>
-<td style="text-align:left">Classification</td>
+<td style="text-align:left">Classification (or regression)</td>
 <td style="text-align:left">Clustering</td>
 </tr>
 <tr>
@@ -1066,10 +1118,15 @@ blockquote{border-left:4px solid var(--sa);
 <td style="text-align:left">Number of neighbors</td>
 <td style="text-align:left">Number of clusters</td>
 </tr>
+<tr>
+<td style="text-align:left"><strong>Distance metric</strong></td>
+<td style="text-align:left">Euclidean, Manhattan, or Cosine</td>
+<td style="text-align:left">Euclidean (by design)</td>
+</tr>
 </tbody>
 </table>
 <hr />
-<h3 id="54-decision-trees">5.4 Decision Trees</h3>
+<h3 id="56-decision-trees">5.6 Decision Trees</h3>
 <p><strong>Choosing the split at each node:</strong> Grown greedily, top-down — at each node, test every feature (and threshold, for numeric features) and pick the one with the <strong>highest Information Gain</strong> (largest impurity drop), then recurse until a stopping rule (pure node, max depth, or min samples).</p>
 <p><strong>Information Gain</strong> — the reduction in entropy after splitting on attribute $A$ (see §1.7):</p>
 <div class="math-display">$$IG(A) = H(S) - \sum_{v} \frac{|S_v|}{|S|} H(S_v), \qquad H(S) = -\sum_i p_i \log_2 p_i$$</div>
@@ -1120,7 +1177,7 @@ blockquote{border-left:4px solid var(--sa);
 <p>Random Forest is a black box — specify <code>n_estimators</code> (number of trees) and <code>max_features</code>; accuracy improves with more trees until it plateaus and stops changing.</p>
 </blockquote>
 <hr />
-<h3 id="55-ordinal-regression">5.5 Ordinal Regression</h3>
+<h3 id="57-ordinal-regression">5.7 Ordinal Regression</h3>
 <p>Train binary classifiers for each threshold, then combine:</p>
 <pre><code>Binary target = 1 if rating &gt; 1  →  model predicts P(Target &gt; 1)
 Binary target = 1 if rating &gt; 2  →  model predicts P(Target &gt; 2)
@@ -1140,7 +1197,7 @@ P(y=5) &= P(T>4)
 <p><code>image65.png</code>
 <img src="ML%20DL/images/image65.png" alt="Ordinal Prediction" width="700" /></p>
 <hr />
-<h3 id="56-support-vector-machines-svm">5.6 Support Vector Machines (SVM)</h3>
+<h3 id="58-support-vector-machines-svm">5.8 Support Vector Machines (SVM)</h3>
 <p><strong>Core Concepts:</strong></p>
 <ul>
 <li><strong>Hyperplane</strong>: Decision boundary separating classes. In 2D it's a line; in higher dimensions, a flat affine subspace.</li>
@@ -1192,6 +1249,68 @@ P(y=5) &= P(T>4)
 <li>Large C → narrower margin, fewer misclassifications (harder boundary)</li>
 </ul>
 <p><strong>Support Vector Regression (SVR):</strong> Regression counterpart — fits data within a margin of tolerance.</p>
+<hr />
+<h3 id="59-algorithm-quick-reference">5.9 Algorithm Quick-Reference</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Algorithm</th>
+<th style="text-align:left">Definition</th>
+<th style="text-align:left">Pros</th>
+<th style="text-align:left">Cons</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>Linear Regression</strong></td>
+<td style="text-align:left">Predicts a continuous target as a linear combination of features</td>
+<td style="text-align:left">Simple, interpretable, fast</td>
+<td style="text-align:left">Assumes linearity; sensitive to outliers</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Decision Trees</strong></td>
+<td style="text-align:left">Hierarchical if/else rules leading to a prediction</td>
+<td style="text-align:left">Interpretable; handles numeric + categorical; captures non-linearity</td>
+<td style="text-align:left">Prone to overfitting; unstable to small data changes</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Random Forest</strong></td>
+<td style="text-align:left">Ensemble of decision trees (bagging)</td>
+<td style="text-align:left">Robust; handles high dimensions; gives feature importance</td>
+<td style="text-align:left">Costlier to compute; less interpretable than a single tree</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>SVM</strong></td>
+<td style="text-align:left">Finds the optimal separating hyperplane (margin maximization)</td>
+<td style="text-align:left">Effective in high dimensions; kernel trick for non-linear data; robust to outliers</td>
+<td style="text-align:left">Sensitive to kernel/parameter choice; slow on large datasets</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Naive Bayes</strong></td>
+<td style="text-align:left">Probabilistic classifier assuming feature independence (Bayes' theorem)</td>
+<td style="text-align:left">Simple, fast, works well in high dimensions and with categorical features</td>
+<td style="text-align:left">Independence assumption rarely holds; misses feature interactions</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Neural Networks</strong></td>
+<td style="text-align:left">Layers of interconnected neurons learning complex patterns</td>
+<td style="text-align:left">Powerful and flexible; scales with data; handles many data types</td>
+<td style="text-align:left">Needs lots of data; compute-intensive; overfits without regularization</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>KNN</strong></td>
+<td style="text-align:left">Classifies by majority vote among the $k$ nearest training points</td>
+<td style="text-align:left">Simple; no training phase; good for small/non-linear data</td>
+<td style="text-align:left">Slow at prediction time; sensitive to irrelevant features; no explicit model</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Gradient Boosting</strong></td>
+<td style="text-align:left">Ensemble that sequentially fits weak learners to residual errors</td>
+<td style="text-align:left">Highly accurate; handles missing values; gives feature importance</td>
+<td style="text-align:left">Prone to overfitting if untuned; computationally expensive</td>
+</tr>
+</tbody>
+</table>
 <hr />
 </div>
 <div class="content-section sec-6">

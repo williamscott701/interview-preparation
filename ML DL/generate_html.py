@@ -23,6 +23,10 @@ SCRIPT_DIR = Path(__file__).parent
 MD_FILE    = SCRIPT_DIR / "ML_DL_Notes.md"
 OUT_FILE   = SCRIPT_DIR.parent / "ML_DL_Notes.html"   # written to the repo root
 
+# Site version — shown in the top bar. Bump on every push (see CHANGELOG.md);
+# kept in sync with CV/generate_html.py's SITE_VERSION.
+SITE_VERSION = "v1.0"
+
 # Images live in this folder relative to the repo root (space → %20 for URLs).
 IMG_BASE   = "ML%20DL"
 # Cross-link to the sibling notes page (also at the repo root).
@@ -299,6 +303,9 @@ h1{font-size:2rem;font-weight:800;letter-spacing:-.03em}
 #tog-btn:hover{background:var(--bg-sub)}
 #bar-title{font-weight:700;font-size:.95rem;color:var(--text);flex:1;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.01em}
+#bar-version{font-family:var(--mono);font-size:.68rem;color:var(--muted);
+  background:var(--bg-sub);border:1px solid var(--border);border-radius:20px;
+  padding:2px 9px;white-space:nowrap}
 #dark-btn{font-size:.8rem;font-weight:600;background:none;border:1px solid var(--border);
   cursor:pointer;color:var(--muted);padding:6px 14px;border-radius:20px;white-space:nowrap}
 #dark-btn:hover{background:var(--bg-sub)}
@@ -722,6 +729,7 @@ __CSS__
 <div id="topbar">
   <button id="tog-btn">☰</button>
   <span id="bar-title">ML / DL Interview Preparation Notes</span>
+  <span id="bar-version">__VERSION__</span>
   __CROSSLINK__
   <button id="dark-btn">🌙  Dark</button>
 </div>
@@ -752,6 +760,7 @@ def assemble(body: str) -> str:
     html = html.replace('__JS__', get_js())
     html = html.replace('__CROSSLINK__',
                         f'<a id="cross-link" href="{OTHER_HREF}">{OTHER_LABEL}</a>')
+    html = html.replace('__VERSION__', SITE_VERSION)
     # Page sits at the repo root; point images at the subfolder that holds them.
     html = html.replace('src="images/', f'src="{IMG_BASE}/images/')
     return html

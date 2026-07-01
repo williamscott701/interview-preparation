@@ -79,6 +79,9 @@ h1{font-size:2rem;font-weight:800;letter-spacing:-.03em}
 #tog-btn:hover{background:var(--bg-sub)}
 #bar-title{font-weight:700;font-size:.95rem;color:var(--text);flex:1;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.01em}
+#bar-version{font-family:var(--mono);font-size:.68rem;color:var(--muted);
+  background:var(--bg-sub);border:1px solid var(--border);border-radius:20px;
+  padding:2px 9px;white-space:nowrap}
 #dark-btn{font-size:.8rem;font-weight:600;background:none;border:1px solid var(--border);
   cursor:pointer;color:var(--muted);padding:6px 14px;border-radius:20px;white-space:nowrap}
 #dark-btn:hover{background:var(--bg-sub)}
@@ -241,6 +244,7 @@ blockquote{border-left:4px solid var(--sa);
 <div id="topbar">
   <button id="tog-btn">☰</button>
   <span id="bar-title">ML / DL Interview Preparation Notes</span>
+  <span id="bar-version">v1.0</span>
   <a id="cross-link" href="CV_Notes.html">Computer Vision ↗</a>
   <button id="dark-btn">🌙  Dark</button>
 </div>
@@ -901,12 +905,14 @@ blockquote{border-left:4px solid var(--sa);
 <li>Repeat k times, average results</li>
 <li>Used to <strong>estimate generalization / tune hyperparameters</strong> — the k fold-models are only for evaluation; afterward you retrain a single final model on all data for inference (combining all k at inference is a separate technique, CV ensembling)</li>
 </ul>
+<p><em>Example (10-Fold):</em> With 100 rows, split into 10 groups of 10. Train the model 10 times — each time on 90 rows, testing on the remaining 10.</p>
 <p><strong>Leave-One-Out (LOO):</strong></p>
 <ul>
 <li>k = n (number of data points)</li>
 <li>One test point per fold</li>
 <li>Suitable for small datasets</li>
 </ul>
+<p><em>Example (LOOCV):</em> With 100 rows, split into 100 groups of 1. Train the model 100 times — each time on 99 rows, testing on exactly 1 row.</p>
 <hr />
 </div>
 <div class="content-section sec-4">

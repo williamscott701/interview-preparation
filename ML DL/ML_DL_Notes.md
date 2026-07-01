@@ -523,10 +523,14 @@ where $n$ = observations, $k$ = number of predictors.
 - Repeat k times, average results
 - Used to **estimate generalization / tune hyperparameters** — the k fold-models are only for evaluation; afterward you retrain a single final model on all data for inference (combining all k at inference is a separate technique, CV ensembling)
 
+*Example (10-Fold):* With 100 rows, split into 10 groups of 10. Train the model 10 times — each time on 90 rows, testing on the remaining 10.
+
 **Leave-One-Out (LOO):**
 - k = n (number of data points)
 - One test point per fold
 - Suitable for small datasets
+
+*Example (LOOCV):* With 100 rows, split into 100 groups of 1. Train the model 100 times — each time on 99 rows, testing on exactly 1 row.
 
 ---
 

@@ -138,9 +138,9 @@ Where:
 - $H(S)$ — entropy of the whole dataset S
 - $|S_v|$ — number of instances with value v of attribute A
 - $|S|$ — total number of instances in dataset S
-- $v$ — set of distinct values of attribute A
+- $v$ — a single value of attribute A (the index the sum runs over)
 - $S_v$ — subset of S for which attribute A has value v
-- $H(A,S)$ — entropy of attribute A
+- $H(S_v)$ — entropy of the subset $S_v$
 
 *Example*: From the total of 14 instances we have: 9 instances 'yes', 5 instances 'no'. The Entropy is:
 
@@ -276,9 +276,11 @@ Use t-distribution with appropriate degrees of freedom.
 
 #### Chi-Square Test
 
-$$\chi^2 = \sum \frac{(O - E)^2}{E}, \quad df = \text{categories} - 1$$
+$$\chi^2 = \sum \frac{(O - E)^2}{E}$$
 
-where $O$ = observed frequency, $E$ = expected frequency under the null hypothesis, and $df$ = degrees of freedom.
+where $O$ = observed frequency, $E$ = expected frequency under the null hypothesis. Degrees of freedom depend on the test:
+- **Goodness-of-fit:** $df = (\text{number of categories}) - 1$
+- **Test of independence** ($r \times c$ table): $df = (r-1)(c-1)$
 
 #### ANOVA (F-Test)
 
@@ -315,7 +317,7 @@ A probabilistic framework for **density estimation** — finding the mean and st
 
 - **Goal**: Maximize the likelihood function to find parameters that best explain the observed data
 - Provides a framework for predictive modeling where **finding model parameters = optimization problem**
-- Used in: K-Means, linear regression, logistic regression
+- Used in: Gaussian Mixture Models (via EM), linear regression, logistic regression
 
 $$\hat{\theta}_{MLE} = \arg\max_\theta \sum_{i=1}^{n} \log P(x_i \mid \theta)$$
 
@@ -339,9 +341,9 @@ $$\hat{\theta}_{MLE} = \arg\max_\theta \sum_{i=1}^{n} \log P(x_i \mid \theta)$$
 
 What we could conclude then is that MLE is a special case of MAP, where the prior is uniform.
 
-$$\theta_{MAP} = \arg\max_\theta \sum_i \log P(x_i \mid \theta) P(\theta)$$
+$$\theta_{MAP} = \arg\max_\theta \left[\sum_i \log P(x_i \mid \theta) + \log P(\theta)\right]$$
 
-$$= \arg\max_\theta \sum_i \log P(x_i \mid \theta) \cdot \text{const}$$
+$$= \arg\max_\theta \left[\sum_i \log P(x_i \mid \theta) + \text{const}\right]$$
 
 $$= \arg\max_\theta \sum_i \log P(x_i \mid \theta)$$
 
@@ -491,7 +493,7 @@ $$R^2 = 1 - \frac{SS_{\text{residual}}}{SS_{\text{total}}}$$
 
 where $SS_{\text{residual}} = \sum_i (y_i - \hat{y}_i)^2$ (sum of squared residuals) and $SS_{\text{total}} = \sum_i (y_i - \bar{y})^2$ (total sum of squares about the mean $\bar{y}$); $y_i$ = actual value, $\hat{y}_i$ = predicted value.
 
-- Range: 0 to 1
+- Range: $[0, 1]$ for in-sample OLS with an intercept; can be **negative** out-of-sample or without an intercept (model does worse than predicting the mean)
 - Higher = more variance explained by the model
 - **Limitation**: Increases with more predictors even if they don't help → doesn't penalize overfitting
 
@@ -519,7 +521,7 @@ where $n$ = observations, $k$ = number of predictors.
 **K-Fold Cross-Validation:**
 - Split data into k folds; train k-1, test on remaining fold
 - Repeat k times, average results
-- During inference, uses all k models
+- Used to **estimate generalization / tune hyperparameters** — the k fold-models are only for evaluation; afterward you retrain a single final model on all data for inference (combining all k at inference is a separate technique, CV ensembling)
 
 **Leave-One-Out (LOO):**
 - k = n (number of data points)
@@ -548,7 +550,7 @@ $$X' = \frac{X - \mu}{\sigma} \quad \text{(mean=0, std=1)}$$
 | Method | Use When |
 |:---|:---|
 | **Normalization** | Data does NOT follow Gaussian distribution; algorithms like KNN, Neural Networks |
-| **Standardization** | Data follows Gaussian distribution; robust to outliers; SVM, Linear Regression |
+| **Standardization** | Data follows (roughly) Gaussian distribution; SVM, Linear/Logistic Regression, PCA. *Note: z-score is NOT robust to outliers (mean & std are distorted by extreme values) — use RobustScaler (median + IQR) when outliers are present.* |
 
 **Why Feature Scaling Matters:**
 - Required when features have very different ranges
@@ -590,7 +592,7 @@ Models that **do not assume a fixed form** for the underlying data distribution 
 
 ### 5.2 Naive Bayes
 
-**Why "Naive"?** It assumes **absolute independence of features** — a condition virtually never met in real-world data.
+**Why "Naive"?** It assumes **conditional independence of features given the class label** — i.e., $P(x_i \mid c, x_j) = P(x_i \mid c)$ for all $i \neq j$ — a condition virtually never fully met in real-world data.
 
 **Bayes' Theorem:**
 
@@ -605,9 +607,9 @@ where:
 - $P(c)$ = **Class Prior Probability**
 - $P(x)$ = **Predictor Prior Probability** (evidence — normalising constant)
 
-With the naive independence assumption:
+With the naive independence assumption (dropping the constant evidence $P(X)$, so it's a proportionality):
 
-$$P(c \mid X) = P(x_1 \mid c) \cdot P(x_2 \mid c) \cdots P(x_n \mid c) \cdot P(c)$$
+$$P(c \mid X) \propto P(c) \cdot P(x_1 \mid c) \cdot P(x_2 \mid c) \cdots P(x_n \mid c)$$
 
 **Types:**
 
@@ -769,7 +771,7 @@ $$h_\theta(x) = \begin{cases} 1 & \text{if } \theta^T x \geq 0 \\ 0 & \text{othe
 
 **Why Gaussian RBF maps to infinite-dimensional space:**
 
-With $m$ distinct training points, the Gaussian RBF kernel makes the SVM operate in an $m$-dimensional space. As training data grows, this space grows without bound — effectively mapping inputs to infinite dimensions without explicitly computing those coordinates.
+The Gaussian RBF kernel corresponds to a fixed, **infinite-dimensional** feature space, regardless of the amount of training data. With $m$ training points, the SVM solution lies in an (at most) $m$-dimensional **subspace** of that space — the span of the mapped training points (equivalently, the rank of the $m \times m$ Gram matrix). The kernel trick lets the SVM work implicitly in this infinite-dimensional space without ever computing the coordinates.
 
 **C Parameter (Regularization):**
 - Small C → wider margin, more misclassifications allowed (softer boundary)
@@ -941,7 +943,7 @@ Subgradient methods are used to handle this.
 | **Binary Cross-Entropy (BCE)** | Loss function for binary classification | $-\frac{1}{N}\sum_{i=1}^N \left[y_i\log(p_i) + (1-y_i)\log(1-p_i)\right]$ | Binary or multi-label classification with sigmoid outputs |
 | **Hinge Loss** | Penalizes wrong and less confident predictions; used in SVMs | $\max(0, 1 - f(x) \cdot y)$ | Max-margin classifiers (SVMs); when probabilities aren't needed |
 | **Cross-Entropy** (multi-class) | Extension of BCE; $N$ samples, $M$ classes | $-\sum_{i=1}^N\sum_{j=1}^M y_{ij}\log(f(x_i)_j)$ | Single-label multi-class classification with softmax outputs |
-| **KL Divergence** | Minimises divergence between predicted and true distribution | $\sum_x f(x)\log\frac{f(x)}{y(x)}$ | Matching full distributions — soft labels, knowledge distillation, VAEs |
+| **KL Divergence** | Minimises divergence between predicted and true distribution | $\sum_x y(x)\log\frac{y(x)}{f(x)}$ | Matching full distributions — soft labels, knowledge distillation, VAEs |
 
 **Softmax** converts raw scores $s$ into probabilities before Cross-Entropy Loss is applied:
 
@@ -1215,7 +1217,7 @@ MLP is a **fully connected feed-forward network**. It is NOT:
 
 **Formula:**
 
-$$h_{\text{norm}} = \frac{h - \mu}{\sigma + \epsilon}$$
+$$h_{\text{norm}} = \frac{h - \mu}{\sqrt{\sigma^2 + \epsilon}}$$
 
 **Placement in network:**
 ```
@@ -1273,7 +1275,7 @@ $$\boxed{A^T A = V D V^T}$$
 |:---|:---|:---|
 | **What it is** | Finds axes of maximum variance | General matrix factorization |
 | **Data** | Centered data matrices | Any matrix (rectangular, sparse) |
-| **Connection** | PCA = SVD applied to mean-centered covariance matrix | More general than PCA |
+| **Connection** | PCA = SVD applied to the mean-centered **data matrix** (equivalently, eigendecomposition of the covariance matrix) | More general than PCA |
 | **Goal** | Dimensionality reduction (maximize variance) | Decomposition for various purposes |
 
 ---
@@ -1526,7 +1528,7 @@ Output (shifted right) → Embedding + Positional Encoding → [Masked MHA → A
 |:---|:---|:---|:---|
 | **Architecture** | Encoder-only | Decoder-only | Encoder-Decoder |
 | **Direction** | Bidirectional | Unidirectional (left-to-right) | Both |
-| **Pre-training** | Masked LM (MLM) + Next Sentence Prediction | Autoregressive (casual) language modeling | Span Corruption — masking entire spans of words |
+| **Pre-training** | Masked LM (MLM) + Next Sentence Prediction | Autoregressive (causal) language modeling | Denoising autoencoder — text infilling (spans, incl. zero-length, → a single [MASK]) + sentence permutation ("Span Corruption" is T5's term) |
 | **Fine-tuning** | Task-specific layer added on top | Few-shot prompting; one-shot adaptation | Versatile for various NLP tasks |
 | **Best for** | Classification, NER, Q&A, Word Classification | Text generation, Text completion, creative writing | Translation, Summarisation, Question & Answer |
 | **Original org** | Google AI | OpenAI | Facebook AI |

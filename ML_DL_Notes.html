@@ -404,9 +404,9 @@ blockquote{border-left:4px solid var(--sa);
 <li>$H(S)$ — entropy of the whole dataset S</li>
 <li>$|S_v|$ — number of instances with value v of attribute A</li>
 <li>$|S|$ — total number of instances in dataset S</li>
-<li>$v$ — set of distinct values of attribute A</li>
+<li>$v$ — a single value of attribute A (the index the sum runs over)</li>
 <li>$S_v$ — subset of S for which attribute A has value v</li>
-<li>$H(A,S)$ — entropy of attribute A</li>
+<li>$H(S_v)$ — entropy of the subset $S_v$</li>
 </ul>
 <p><em>Example</em>: From the total of 14 instances we have: 9 instances 'yes', 5 instances 'no'. The Entropy is:</p>
 <div class="math-display">$$H(S) = -\sum_{i=1}^{N} p_i \log_2 p_i = -\frac{9}{14}\log_2\frac{9}{14} - \frac{5}{14}\log_2\frac{5}{14} = 0.940$$</div>
@@ -566,8 +566,12 @@ blockquote{border-left:4px solid var(--sa);
 <p>where $\bar{x}_1, \bar{x}_2$ = the two sample means, $s_1^2, s_2^2$ = the sample variances, and $n_1, n_2$ = the sample sizes.</p>
 <p>Use t-distribution with appropriate degrees of freedom.</p>
 <h4>Chi-Square Test</h4>
-<div class="math-display">$$\chi^2 = \sum \frac{(O - E)^2}{E}, \quad df = \text{categories} - 1$$</div>
-<p>where $O$ = observed frequency, $E$ = expected frequency under the null hypothesis, and $df$ = degrees of freedom.</p>
+<div class="math-display">$$\chi^2 = \sum \frac{(O - E)^2}{E}$$</div>
+<p>where $O$ = observed frequency, $E$ = expected frequency under the null hypothesis. Degrees of freedom depend on the test:</p>
+<ul>
+<li><strong>Goodness-of-fit:</strong> $df = (\text{number of categories}) - 1$</li>
+<li><strong>Test of independence</strong> ($r \times c$ table): $df = (r-1)(c-1)$</li>
+</ul>
 <h4>ANOVA (F-Test)</h4>
 <div class="math-display">$$F = \frac{\text{Between-group variability}}{\text{Within-group variability}}$$</div>
 <p>where the numerator is the mean square <em>between</em> groups (spread of the group means around the grand mean) and the denominator is the mean square <em>within</em> groups (average spread inside each group); a larger $F$ ⇒ stronger evidence that the group means differ.</p>
@@ -614,7 +618,7 @@ blockquote{border-left:4px solid var(--sa);
 <ul>
 <li><strong>Goal</strong>: Maximize the likelihood function to find parameters that best explain the observed data</li>
 <li>Provides a framework for predictive modeling where <strong>finding model parameters = optimization problem</strong></li>
-<li>Used in: K-Means, linear regression, logistic regression</li>
+<li>Used in: Gaussian Mixture Models (via EM), linear regression, logistic regression</li>
 </ul>
 <div class="math-display">$$\hat{\theta}_{MLE} = \arg\max_\theta \sum_{i=1}^{n} \log P(x_i \mid \theta)$$</div>
 <p><code>image86.png</code>
@@ -656,8 +660,8 @@ blockquote{border-left:4px solid var(--sa);
 <hr />
 <p>What we could conclude then is that MLE is a special case of MAP, where the prior is uniform.</p>
 <div class="math-display">$$\begin{aligned}
-\theta_{MAP} &= \arg\max_\theta \sum_i \log P(x_i \mid \theta) P(\theta) \\
-&= \arg\max_\theta \sum_i \log P(x_i \mid \theta) \cdot \text{const} \\
+\theta_{MAP} &= \arg\max_\theta \left[\sum_i \log P(x_i \mid \theta) + \log P(\theta)\right] \\
+&= \arg\max_\theta \left[\sum_i \log P(x_i \mid \theta) + \text{const}\right] \\
 &= \arg\max_\theta \sum_i \log P(x_i \mid \theta) \\
 &= \theta_{MLE}
 \end{aligned}$$</div>
@@ -850,7 +854,7 @@ blockquote{border-left:4px solid var(--sa);
 <div class="math-display">$$R^2 = 1 - \frac{SS_{\text{residual}}}{SS_{\text{total}}}$$</div>
 <p>where $SS_{\text{residual}} = \sum_i (y_i - \hat{y}_i)^2$ (sum of squared residuals) and $SS_{\text{total}} = \sum_i (y_i - \bar{y})^2$ (total sum of squares about the mean $\bar{y}$); $y_i$ = actual value, $\hat{y}_i$ = predicted value.</p>
 <ul>
-<li>Range: 0 to 1</li>
+<li>Range: $[0, 1]$ for in-sample OLS with an intercept; can be <strong>negative</strong> out-of-sample or without an intercept (model does worse than predicting the mean)</li>
 <li>Higher = more variance explained by the model</li>
 <li><strong>Limitation</strong>: Increases with more predictors even if they don't help → doesn't penalize overfitting</li>
 </ul>
@@ -895,7 +899,7 @@ blockquote{border-left:4px solid var(--sa);
 <ul>
 <li>Split data into k folds; train k-1, test on remaining fold</li>
 <li>Repeat k times, average results</li>
-<li>During inference, uses all k models</li>
+<li>Used to <strong>estimate generalization / tune hyperparameters</strong> — the k fold-models are only for evaluation; afterward you retrain a single final model on all data for inference (combining all k at inference is a separate technique, CV ensembling)</li>
 </ul>
 <p><strong>Leave-One-Out (LOO):</strong></p>
 <ul>
@@ -930,7 +934,7 @@ blockquote{border-left:4px solid var(--sa);
 </tr>
 <tr>
 <td style="text-align:left"><strong>Standardization</strong></td>
-<td style="text-align:left">Data follows Gaussian distribution; robust to outliers; SVM, Linear Regression</td>
+<td style="text-align:left">Data follows (roughly) Gaussian distribution; SVM, Linear/Logistic Regression, PCA. <em>Note: z-score is NOT robust to outliers (mean &amp; std are distorted by extreme values) — use RobustScaler (median + IQR) when outliers are present.</em></td>
 </tr>
 </tbody>
 </table>
@@ -997,7 +1001,7 @@ blockquote{border-left:4px solid var(--sa);
 </table>
 <hr />
 <h3 id="52-naive-bayes">5.2 Naive Bayes</h3>
-<p><strong>Why &quot;Naive&quot;?</strong> It assumes <strong>absolute independence of features</strong> — a condition virtually never met in real-world data.</p>
+<p><strong>Why &quot;Naive&quot;?</strong> It assumes <strong>conditional independence of features given the class label</strong> — i.e., $P(x_i \mid c, x_j) = P(x_i \mid c)$ for all $i \neq j$ — a condition virtually never fully met in real-world data.</p>
 <p><strong>Bayes' Theorem:</strong></p>
 <p><code>image75.png</code>
 <img src="ML%20DL/images/image75.png" alt="Bayes Theorem with labeled terms" width="560" /></p>
@@ -1009,8 +1013,8 @@ blockquote{border-left:4px solid var(--sa);
 <li>$P(c)$ = <strong>Class Prior Probability</strong></li>
 <li>$P(x)$ = <strong>Predictor Prior Probability</strong> (evidence — normalising constant)</li>
 </ul>
-<p>With the naive independence assumption:</p>
-<div class="math-display">$$P(c \mid X) = P(x_1 \mid c) \cdot P(x_2 \mid c) \cdots P(x_n \mid c) \cdot P(c)$$</div>
+<p>With the naive independence assumption (dropping the constant evidence $P(X)$, so it's a proportionality):</p>
+<div class="math-display">$$P(c \mid X) \propto P(c) \cdot P(x_1 \mid c) \cdot P(x_2 \mid c) \cdots P(x_n \mid c)$$</div>
 <p><strong>Types:</strong></p>
 <table>
 <thead>
@@ -1242,7 +1246,7 @@ P(y=5) &= P(T>4)
 </tbody>
 </table>
 <p><strong>Why Gaussian RBF maps to infinite-dimensional space:</strong></p>
-<p>With $m$ distinct training points, the Gaussian RBF kernel makes the SVM operate in an $m$-dimensional space. As training data grows, this space grows without bound — effectively mapping inputs to infinite dimensions without explicitly computing those coordinates.</p>
+<p>The Gaussian RBF kernel corresponds to a fixed, <strong>infinite-dimensional</strong> feature space, regardless of the amount of training data. With $m$ training points, the SVM solution lies in an (at most) $m$-dimensional <strong>subspace</strong> of that space — the span of the mapped training points (equivalently, the rank of the $m \times m$ Gram matrix). The kernel trick lets the SVM work implicitly in this infinite-dimensional space without ever computing the coordinates.</p>
 <p><strong>C Parameter (Regularization):</strong></p>
 <ul>
 <li>Small C → wider margin, more misclassifications allowed (softer boundary)</li>
@@ -1623,7 +1627,7 @@ P(y=5) &= P(T>4)
 <tr>
 <td style="text-align:left"><strong>KL Divergence</strong></td>
 <td style="text-align:left">Minimises divergence between predicted and true distribution</td>
-<td style="text-align:left">$\sum_x f(x)\log\frac{f(x)}{y(x)}$</td>
+<td style="text-align:left">$\sum_x y(x)\log\frac{y(x)}{f(x)}$</td>
 <td style="text-align:left">Matching full distributions — soft labels, knowledge distillation, VAEs</td>
 </tr>
 </tbody>
@@ -2155,7 +2159,7 @@ P(y=5) &= P(T>4)
 <h3 id="98-batch-normalization">9.8 Batch Normalization</h3>
 <p><strong>Purpose:</strong> Improve performance and stability by normalizing layer inputs to have <strong>mean ≈ 0</strong> and <strong>std ≈ 1</strong>.</p>
 <p><strong>Formula:</strong></p>
-<div class="math-display">$$h_{\text{norm}} = \frac{h - \mu}{\sigma + \epsilon}$$</div>
+<div class="math-display">$$h_{\text{norm}} = \frac{h - \mu}{\sqrt{\sigma^2 + \epsilon}}$$</div>
 <p><strong>Placement in network:</strong></p>
 <pre><code>CONV/FC → BatchNorm → ReLU (or other activation) → Dropout → CONV/FC
 </code></pre>
@@ -2218,7 +2222,7 @@ P(y=5) &= P(T>4)
 </tr>
 <tr>
 <td style="text-align:left"><strong>Connection</strong></td>
-<td style="text-align:left">PCA = SVD applied to mean-centered covariance matrix</td>
+<td style="text-align:left">PCA = SVD applied to the mean-centered <strong>data matrix</strong> (equivalently, eigendecomposition of the covariance matrix)</td>
 <td style="text-align:left">More general than PCA</td>
 </tr>
 <tr>
@@ -2626,8 +2630,8 @@ P(y=5) &= P(T>4)
 <tr>
 <td style="text-align:left"><strong>Pre-training</strong></td>
 <td style="text-align:left">Masked LM (MLM) + Next Sentence Prediction</td>
-<td style="text-align:left">Autoregressive (casual) language modeling</td>
-<td style="text-align:left">Span Corruption — masking entire spans of words</td>
+<td style="text-align:left">Autoregressive (causal) language modeling</td>
+<td style="text-align:left">Denoising autoencoder — text infilling (spans, incl. zero-length, → a single [MASK]) + sentence permutation (&quot;Span Corruption&quot; is T5's term)</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Fine-tuning</strong></td>

@@ -9,23 +9,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-<!-- MathJax: render $...$ and $$...$$ -->
-<script>
-MathJax = {
-  loader: { load: ['a11y/assistive-mml'] },
-  tex: {
-    inlineMath: [['$','$'],['\\(','\\)']],
-    displayMath: [['$$','$$'],['\\[','\\]']],
-    processEscapes: true,
-    processEnvironments: true
-  },
-  options: {
-    skipHtmlTags: ['script','noscript','style','textarea','pre'],
-    menuOptions: { settings: { assistiveMml: true } }
-  }
-};
-</script>
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<!-- Temml: LaTeX → native MathML (rendered by the browser; searchable & selectable) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/temml@0.10.34/dist/Temml-Local.css">
+<script src="https://cdn.jsdelivr.net/npm/temml@0.10.34/dist/temml.min.js"></script>
 
 <style>
 
@@ -248,7 +234,7 @@ blockquote{border-left:4px solid var(--sa);
 <div id="topbar">
   <button id="tog-btn">☰</button>
   <span id="bar-title">ML / DL Interview Preparation Notes</span>
-  <span id="bar-version">v1.21</span>
+  <span id="bar-version">v1.22</span>
   <a id="cross-link" href="CV_Notes.html">Computer Vision ↗</a>
   <button id="dark-btn">🌙  Dark</button>
 </div>
@@ -323,20 +309,20 @@ blockquote{border-left:4px solid var(--sa);
 <hr />
 <h3 id="12-mean-variance--standard-deviation">1.2 Mean, Variance &amp; Standard Deviation</h3>
 <ul>
-<li><strong>Mean ($\mu$ or $\bar{x}$)</strong> — the average value; the &quot;center&quot; of the data.</li>
-<li><strong>Variance ($\sigma^2$)</strong> — average squared deviation from the mean; measures spread, in squared units.</li>
-<li><strong>Standard deviation ($\sigma$)</strong> — $\sqrt{\text{variance}}$; measures spread in the <em>original</em> units (easier to interpret than variance).</li>
+<li><strong>Mean (<span class="tex" data-display="0">\mu</span> or <span class="tex" data-display="0">\bar{x}</span>)</strong> — the average value; the &quot;center&quot; of the data.</li>
+<li><strong>Variance (<span class="tex" data-display="0">\sigma^2</span>)</strong> — average squared deviation from the mean; measures spread, in squared units.</li>
+<li><strong>Standard deviation (<span class="tex" data-display="0">\sigma</span>)</strong> — <span class="tex" data-display="0">\sqrt{\text{variance}}</span>; measures spread in the <em>original</em> units (easier to interpret than variance).</li>
 </ul>
-<div class="math-display">$$\bar{x} = \frac{1}{N}\sum_{i=1}^{N} x_i \qquad \sigma^2 = \frac{1}{N}\sum_{i=1}^{N} (x_i - \bar{x})^2 \qquad \sigma = \sqrt{\sigma^2}$$</div>
+<div class="math-display tex" data-display="1">\bar{x} = \frac{1}{N}\sum_{i=1}^{N} x_i \qquad \sigma^2 = \frac{1}{N}\sum_{i=1}^{N} (x_i - \bar{x})^2 \qquad \sigma = \sqrt{\sigma^2}</div>
 <blockquote>
-<p>Use $N$ (population) or $N-1$ (sample, Bessel's correction) in the denominator depending on whether you have the full population or a sample.</p>
+<p>Use <span class="tex" data-display="0">N</span> (population) or <span class="tex" data-display="0">N-1</span> (sample, Bessel's correction) in the denominator depending on whether you have the full population or a sample.</p>
 </blockquote>
 <hr />
 <h3 id="13-iid--independent-and-identically-distributed">1.3 IID — Independent and Identically Distributed</h3>
-<p>Random variables $X_1, X_2, \ldots, X_n$ are IID if:</p>
+<p>Random variables <span class="tex" data-display="0">X_1, X_2, \ldots, X_n</span> are IID if:</p>
 <ul>
-<li>All $X_i$ are <strong>mutually independent</strong> (outcome of one doesn't affect others)</li>
-<li>All $X_i$ follow the <strong>same distribution</strong></li>
+<li>All <span class="tex" data-display="0">X_i</span> are <strong>mutually independent</strong> (outcome of one doesn't affect others)</li>
+<li>All <span class="tex" data-display="0">X_i</span> follow the <strong>same distribution</strong></li>
 </ul>
 <p><em>Example</em>: Flipping a fair coin 100 times — each flip has the same probability (0.5) and is independent of all other flips.</p>
 <hr />
@@ -363,13 +349,13 @@ blockquote{border-left:4px solid var(--sa);
 <tbody>
 <tr>
 <td style="text-align:left"><strong>Number of Trials (n)</strong></td>
-<td style="text-align:left">Exactly 1 trial ($n=1$)</td>
-<td style="text-align:left">Multiple trials ($n>1$)</td>
+<td style="text-align:left">Exactly 1 trial (<span class="tex" data-display="0">n=1</span>)</td>
+<td style="text-align:left">Multiple trials (<span class="tex" data-display="0">n&gt;1</span>)</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Possible Outcomes</strong></td>
 <td style="text-align:left">0 (Failure) or 1 (Success)</td>
-<td style="text-align:left">Any integer from 0 to $n$</td>
+<td style="text-align:left">Any integer from 0 to <span class="tex" data-display="0">n</span></td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>What it Measures</strong></td>
@@ -378,8 +364,8 @@ blockquote{border-left:4px solid var(--sa);
 </tr>
 <tr>
 <td style="text-align:left"><strong>Parameters</strong></td>
-<td style="text-align:left">Probability of success $p$</td>
-<td style="text-align:left">Number of trials $n$ and probability of success $p$</td>
+<td style="text-align:left">Probability of success <span class="tex" data-display="0">p</span></td>
+<td style="text-align:left">Number of trials <span class="tex" data-display="0">n</span> and probability of success <span class="tex" data-display="0">p</span></td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Real-World Example</strong></td>
@@ -392,9 +378,9 @@ blockquote{border-left:4px solid var(--sa);
 <h3 id="16-gaussian--normal-distribution">1.6 Gaussian / Normal Distribution</h3>
 <p>&quot;Gaussian distribution&quot; and &quot;normal distribution&quot; refer to the <strong>same concept</strong>.</p>
 <p><strong>PDF:</strong></p>
-<div class="math-display">$$f(x \mid \mu, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)$$</div>
-<p><strong>Standard Normal</strong> ($\mu = 0$, $\sigma = 1$):</p>
-<div class="math-display">$$f(x) = \frac{1}{\sqrt{2\pi}} \exp\!\left(-\frac{x^2}{2}\right)$$</div>
+<div class="math-display tex" data-display="1">f(x \mid \mu, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)</div>
+<p><strong>Standard Normal</strong> (<span class="tex" data-display="0">\mu = 0</span>, <span class="tex" data-display="0">\sigma = 1</span>):</p>
+<div class="math-display tex" data-display="1">f(x) = \frac{1}{\sqrt{2\pi}} \exp\!\left(-\frac{x^2}{2}\right)</div>
 <p><strong>Key Characteristics:</strong></p>
 <ol>
 <li><strong>Symmetry</strong>: Symmetric around the mean</li>
@@ -406,14 +392,14 @@ blockquote{border-left:4px solid var(--sa);
 <p><code>image88.png</code>
 <img src="ML%20DL/images/image88.png" alt="Mode, Median, Mean on two Normal Distributions" width="280" /></p>
 <blockquote>
-<p>$\mu$ = mean, $\sigma$ = standard deviation, $\sigma^2$ = variance</p>
+<p><span class="tex" data-display="0">\mu</span> = mean, <span class="tex" data-display="0">\sigma</span> = standard deviation, <span class="tex" data-display="0">\sigma^2</span> = variance</p>
 </blockquote>
 <hr />
 <h3 id="17-covariance-vs-correlation">1.7 Covariance vs Correlation</h3>
 <p><strong>Covariance</strong> — how two variables vary together:</p>
-<div class="math-display">$$\text{Cov}(X, Y) = \frac{\sum (X_i - \bar{X})(Y_i - \bar{Y})}{N}$$</div>
+<div class="math-display tex" data-display="1">\text{Cov}(X, Y) = \frac{\sum (X_i - \bar{X})(Y_i - \bar{Y})}{N}</div>
 <p><strong>Correlation</strong> — how the two variables are <em>related</em> (normalized covariance):</p>
-<div class="math-display">$$\text{Corr}(X, Y) = \frac{\text{Cov}(X, Y)}{\sigma_X \cdot \sigma_Y}$$</div>
+<div class="math-display tex" data-display="1">\text{Corr}(X, Y) = \frac{\text{Cov}(X, Y)}{\sigma_X \cdot \sigma_Y}</div>
 <table>
 <thead>
 <tr>
@@ -425,8 +411,8 @@ blockquote{border-left:4px solid var(--sa);
 <tbody>
 <tr>
 <td style="text-align:left"><strong>Range</strong></td>
-<td style="text-align:left">$(-\infty, +\infty)$</td>
-<td style="text-align:left">$[-1, +1]$</td>
+<td style="text-align:left"><span class="tex" data-display="0">(-\infty, +\infty)</span></td>
+<td style="text-align:left"><span class="tex" data-display="0">[-1, +1]</span></td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Scale-dependent</strong></td>
@@ -448,44 +434,44 @@ blockquote{border-left:4px solid var(--sa);
 <hr />
 <h3 id="18-entropy--information-gain">1.8 Entropy &amp; Information Gain</h3>
 <p><strong>Entropy</strong> — measure of uncertainty in a probability distribution:</p>
-<div class="math-display">$$H(S) = -\sum_i p_i \log_2 p_i$$</div>
+<div class="math-display tex" data-display="1">H(S) = -\sum_i p_i \log_2 p_i</div>
 <p><strong>Information Gain</strong> — reduction in entropy from splitting on attribute A:</p>
-<div class="math-display">$$IG(A) = H(S) - \sum_{v} \frac{|S_v|}{|S|} H(S_v)$$</div>
+<div class="math-display tex" data-display="1">IG(A) = H(S) - \sum_{v} \frac{|S_v|}{|S|} H(S_v)</div>
 <p>Where:</p>
 <ul>
-<li>$S$ — set of all instances in the dataset</li>
-<li>$N$ — number of distinct class values</li>
-<li>$p_i$ — event probability</li>
-<li>$H(S)$ — entropy of the whole dataset S</li>
-<li>$|S_v|$ — number of instances with value v of attribute A</li>
-<li>$|S|$ — total number of instances in dataset S</li>
-<li>$v$ — a single value of attribute A (the index the sum runs over)</li>
-<li>$S_v$ — subset of S for which attribute A has value v</li>
-<li>$H(S_v)$ — entropy of the subset $S_v$</li>
+<li><span class="tex" data-display="0">S</span> — set of all instances in the dataset</li>
+<li><span class="tex" data-display="0">N</span> — number of distinct class values</li>
+<li><span class="tex" data-display="0">p_i</span> — event probability</li>
+<li><span class="tex" data-display="0">H(S)</span> — entropy of the whole dataset S</li>
+<li><span class="tex" data-display="0">|S_v|</span> — number of instances with value v of attribute A</li>
+<li><span class="tex" data-display="0">|S|</span> — total number of instances in dataset S</li>
+<li><span class="tex" data-display="0">v</span> — a single value of attribute A (the index the sum runs over)</li>
+<li><span class="tex" data-display="0">S_v</span> — subset of S for which attribute A has value v</li>
+<li><span class="tex" data-display="0">H(S_v)</span> — entropy of the subset <span class="tex" data-display="0">S_v</span></li>
 </ul>
 <p><em>Example</em>: From the total of 14 instances we have: 9 instances 'yes', 5 instances 'no'. The Entropy is:</p>
-<div class="math-display">$$H(S) = -\sum_{i=1}^{N} p_i \log_2 p_i = -\frac{9}{14}\log_2\frac{9}{14} - \frac{5}{14}\log_2\frac{5}{14} = 0.940$$</div>
+<div class="math-display tex" data-display="1">H(S) = -\sum_{i=1}^{N} p_i \log_2 p_i = -\frac{9}{14}\log_2\frac{9}{14} - \frac{5}{14}\log_2\frac{5}{14} = 0.940</div>
 <hr />
 <h3 id="19-eigenvalues--eigenvectors">1.9 Eigenvalues &amp; Eigenvectors</h3>
 <p>An <strong>eigenvector</strong> is a special non-zero vector that, when transformed by a square matrix, does not change its direction — it is only stretched, squished, or flipped in reverse.</p>
 <p>An <strong>eigenvalue</strong> is the scalar (a simple number) that tells you how much that eigenvector is stretched or shrunk:</p>
-<div class="math-display">$$A \mathbf{v} = \lambda \mathbf{v}$$</div>
+<div class="math-display tex" data-display="1">A \mathbf{v} = \lambda \mathbf{v}</div>
 <ul>
-<li>$\lambda$ = <strong>eigenvalue</strong> (the scaling factor)</li>
-<li>$\mathbf{v}$ = <strong>eigenvector</strong></li>
+<li><span class="tex" data-display="0">\lambda</span> = <strong>eigenvalue</strong> (the scaling factor)</li>
+<li><span class="tex" data-display="0">\mathbf{v}</span> = <strong>eigenvector</strong></li>
 </ul>
 <p><strong>Finding Eigenvalues:</strong></p>
-<div class="math-display">$$(A - \lambda I)\mathbf{v} = 0 \quad \Rightarrow \quad \det(A - \lambda I) = 0$$</div>
-<p><em>Example with $A = \begin{bmatrix} 0 & 1 \\ -2 & -3 \end{bmatrix}$:</em></p>
-<div class="math-display">$$\begin{vmatrix} -\lambda & 1 \\ -2 & -3-\lambda \end{vmatrix} = \lambda^2 + 3\lambda + 2 = 0 \quad \Rightarrow \quad \lambda_1 = -1,\ \lambda_2 = -2$$</div>
+<div class="math-display tex" data-display="1">(A - \lambda I)\mathbf{v} = 0 \quad \Rightarrow \quad \det(A - \lambda I) = 0</div>
+<p><em>Example with <span class="tex" data-display="0">A = \begin{bmatrix} 0 &amp; 1 \\ -2 &amp; -3 \end{bmatrix}</span>:</em></p>
+<div class="math-display tex" data-display="1">\begin{vmatrix} -\lambda &amp; 1 \\ -2 &amp; -3-\lambda \end{vmatrix} = \lambda^2 + 3\lambda + 2 = 0 \quad \Rightarrow \quad \lambda_1 = -1,\ \lambda_2 = -2</div>
 <p><strong>Finding Eigenvectors:</strong></p>
-<p>Substitute each eigenvalue back into $(A - \lambda I)\mathbf{v} = 0$ and solve the resulting homogeneous system. Because $A - \lambda I$ is <strong>singular</strong>, its rows are linearly dependent (one equation is redundant), so a free variable remains — the eigenvector is determined only <strong>up to a scalar</strong> $k$ (any nonzero multiple is also an eigenvector, usually normalized to unit length).</p>
-<p><em>For $\lambda_1 = -1$:</em> substitute into $A - \lambda_1 I = A + I$:</p>
-<div class="math-display">$$(A - \lambda_1 I)\mathbf{v}_1 = \begin{bmatrix}1 & 1\\-2 & -2\end{bmatrix}\begin{bmatrix}v_{1,1}\\v_{1,2}\end{bmatrix} = 0$$</div>
-<p>Both rows reduce to the same equation $v_{1,1} + v_{1,2} = 0 \Rightarrow v_{1,1} = -v_{1,2}$, giving $\mathbf{v}_1 = k_1\begin{bmatrix}+1\\-1\end{bmatrix}$</p>
-<p><em>For $\lambda_2 = -2$:</em> substitute into $A - \lambda_2 I = A + 2I$:</p>
-<div class="math-display">$$(A - \lambda_2 I)\mathbf{v}_2 = \begin{bmatrix}2 & 1\\-2 & -1\end{bmatrix}\begin{bmatrix}v_{2,1}\\v_{2,2}\end{bmatrix} = 0$$</div>
-<p>Both rows reduce to $2v_{2,1} + v_{2,2} = 0 \Rightarrow v_{2,2} = -2v_{2,1}$, giving $\mathbf{v}_2 = k_2\begin{bmatrix}+1\\-2\end{bmatrix}$</p>
+<p>Substitute each eigenvalue back into <span class="tex" data-display="0">(A - \lambda I)\mathbf{v} = 0</span> and solve the resulting homogeneous system. Because <span class="tex" data-display="0">A - \lambda I</span> is <strong>singular</strong>, its rows are linearly dependent (one equation is redundant), so a free variable remains — the eigenvector is determined only <strong>up to a scalar</strong> <span class="tex" data-display="0">k</span> (any nonzero multiple is also an eigenvector, usually normalized to unit length).</p>
+<p><em>For <span class="tex" data-display="0">\lambda_1 = -1</span>:</em> substitute into <span class="tex" data-display="0">A - \lambda_1 I = A + I</span>:</p>
+<div class="math-display tex" data-display="1">(A - \lambda_1 I)\mathbf{v}_1 = \begin{bmatrix}1 &amp; 1\\-2 &amp; -2\end{bmatrix}\begin{bmatrix}v_{1,1}\\v_{1,2}\end{bmatrix} = 0</div>
+<p>Both rows reduce to the same equation <span class="tex" data-display="0">v_{1,1} + v_{1,2} = 0 \Rightarrow v_{1,1} = -v_{1,2}</span>, giving <span class="tex" data-display="0">\mathbf{v}_1 = k_1\begin{bmatrix}+1\\-1\end{bmatrix}</span></p>
+<p><em>For <span class="tex" data-display="0">\lambda_2 = -2</span>:</em> substitute into <span class="tex" data-display="0">A - \lambda_2 I = A + 2I</span>:</p>
+<div class="math-display tex" data-display="1">(A - \lambda_2 I)\mathbf{v}_2 = \begin{bmatrix}2 &amp; 1\\-2 &amp; -1\end{bmatrix}\begin{bmatrix}v_{2,1}\\v_{2,2}\end{bmatrix} = 0</div>
+<p>Both rows reduce to <span class="tex" data-display="0">2v_{2,1} + v_{2,2} = 0 \Rightarrow v_{2,2} = -2v_{2,1}</span>, giving <span class="tex" data-display="0">\mathbf{v}_2 = k_2\begin{bmatrix}+1\\-2\end{bmatrix}</span></p>
 <hr />
 </div>
 <div class="content-section sec-2">
@@ -498,15 +484,15 @@ blockquote{border-left:4px solid var(--sa);
 <li>
 <p><strong>Formulate Hypotheses</strong></p>
 <ul>
-<li>$H_0$ (Null): No effect, no difference, no relationship — the status quo</li>
-<li>$H_1$ (Alternative): Opposite of null; the effect/difference you suspect exists</li>
+<li><span class="tex" data-display="0">H_0</span> (Null): No effect, no difference, no relationship — the status quo</li>
+<li><span class="tex" data-display="0">H_1</span> (Alternative): Opposite of null; the effect/difference you suspect exists</li>
 </ul>
 </li>
 <li>
 <p><strong>Choose Significance Level (α)</strong></p>
 <ul>
 <li>Commonly 0.05 (5%) or 0.01 (1%)</li>
-<li>Probability of rejecting $H_0$ when it is actually true (Type I error)</li>
+<li>Probability of rejecting <span class="tex" data-display="0">H_0</span> when it is actually true (Type I error)</li>
 </ul>
 </li>
 <li>
@@ -515,14 +501,14 @@ blockquote{border-left:4px solid var(--sa);
 <li>
 <p><strong>Calculate Test Statistic and P-Value</strong></p>
 <ul>
-<li>P-value = probability of observing results as extreme as the data, assuming $H_0$ is true</li>
+<li>P-value = probability of observing results as extreme as the data, assuming <span class="tex" data-display="0">H_0</span> is true</li>
 </ul>
 </li>
 <li>
 <p><strong>Decision Rule</strong></p>
 <ul>
-<li>If $p \leq \alpha$: <strong>Reject</strong> $H_0$</li>
-<li>If $p > \alpha$: <strong>Fail to reject</strong> $H_0$ (does NOT mean $H_0$ is true)</li>
+<li>If <span class="tex" data-display="0">p \leq \alpha</span>: <strong>Reject</strong> <span class="tex" data-display="0">H_0</span></li>
+<li>If <span class="tex" data-display="0">p &gt; \alpha</span>: <strong>Fail to reject</strong> <span class="tex" data-display="0">H_0</span> (does NOT mean <span class="tex" data-display="0">H_0</span> is true)</li>
 </ul>
 </li>
 <li>
@@ -540,15 +526,15 @@ blockquote{border-left:4px solid var(--sa);
 <tbody>
 <tr>
 <td style="text-align:left"><strong>Type I Error</strong></td>
-<td style="text-align:left">Rejecting $H_0$ when it is actually true (false positive)</td>
+<td style="text-align:left">Rejecting <span class="tex" data-display="0">H_0</span> when it is actually true (false positive)</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Type II Error</strong></td>
-<td style="text-align:left">Failing to reject $H_0$ when it is actually false (false negative)</td>
+<td style="text-align:left">Failing to reject <span class="tex" data-display="0">H_0</span> when it is actually false (false negative)</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Power</strong></td>
-<td style="text-align:left">Probability of correctly rejecting $H_0$ when it is false = $1 - P(\text{Type II})$</td>
+<td style="text-align:left">Probability of correctly rejecting <span class="tex" data-display="0">H_0</span> when it is false = <span class="tex" data-display="0">1 - P(\text{Type II})</span></td>
 </tr>
 </tbody>
 </table>
@@ -622,7 +608,7 @@ blockquote{border-left:4px solid var(--sa);
 </tr>
 <tr>
 <td style="text-align:left"><strong>Statistic</strong></td>
-<td style="text-align:left">$\chi^2 = \sum \frac{(O - E)^2}{E}$, where $O$ = observed, $E$ = expected frequency</td>
+<td style="text-align:left"><span class="tex" data-display="0">\chi^2 = \sum \frac{(O - E)^2}{E}</span>, where <span class="tex" data-display="0">O</span> = observed, <span class="tex" data-display="0">E</span> = expected frequency</td>
 <td style="text-align:left">See §2.3 for the t-statistic formula</td>
 </tr>
 </tbody>
@@ -630,26 +616,26 @@ blockquote{border-left:4px solid var(--sa);
 <hr />
 <h3 id="23-p-value-calculation">2.3 P-Value Calculation</h3>
 <h4>Z-Test (known population std dev)</h4>
-<div class="math-display">$$Z = \frac{\bar{x} - \mu}{\sigma / \sqrt{n}}$$</div>
-<p>where $\bar{x}$ = sample mean, $\mu$ = hypothesized population mean, $\sigma$ = population standard deviation, $n$ = sample size, and $Z_{stat}$ = the computed $Z$ value.</p>
+<div class="math-display tex" data-display="1">Z = \frac{\bar{x} - \mu}{\sigma / \sqrt{n}}</div>
+<p>where <span class="tex" data-display="0">\bar{x}</span> = sample mean, <span class="tex" data-display="0">\mu</span> = hypothesized population mean, <span class="tex" data-display="0">\sigma</span> = population standard deviation, <span class="tex" data-display="0">n</span> = sample size, and <span class="tex" data-display="0">Z_{stat}</span> = the computed <span class="tex" data-display="0">Z</span> value.</p>
 <ul>
-<li>Two-tailed: $p = 2 \times P(Z > |Z_{stat}|)$</li>
-<li>One-tailed: $p = P(Z > Z_{stat})$</li>
+<li>Two-tailed: <span class="tex" data-display="0">p = 2 \times P(Z &gt; |Z_{stat}|)</span></li>
+<li>One-tailed: <span class="tex" data-display="0">p = P(Z &gt; Z_{stat})</span></li>
 </ul>
 <h4>Independent T-Test</h4>
-<div class="math-display">$$t = \frac{\bar{x}_1 - \bar{x}_2}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}$$</div>
-<p>where $\bar{x}_1, \bar{x}_2$ = the two sample means, $s_1^2, s_2^2$ = the sample variances, and $n_1, n_2$ = the sample sizes.</p>
+<div class="math-display tex" data-display="1">t = \frac{\bar{x}_1 - \bar{x}_2}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}</div>
+<p>where <span class="tex" data-display="0">\bar{x}_1, \bar{x}_2</span> = the two sample means, <span class="tex" data-display="0">s_1^2, s_2^2</span> = the sample variances, and <span class="tex" data-display="0">n_1, n_2</span> = the sample sizes.</p>
 <p>Use t-distribution with appropriate degrees of freedom.</p>
 <h4>Chi-Square Test</h4>
-<div class="math-display">$$\chi^2 = \sum \frac{(O - E)^2}{E}$$</div>
-<p>where $O$ = observed frequency, $E$ = expected frequency under the null hypothesis. Degrees of freedom depend on the test:</p>
+<div class="math-display tex" data-display="1">\chi^2 = \sum \frac{(O - E)^2}{E}</div>
+<p>where <span class="tex" data-display="0">O</span> = observed frequency, <span class="tex" data-display="0">E</span> = expected frequency under the null hypothesis. Degrees of freedom depend on the test:</p>
 <ul>
-<li><strong>Goodness-of-fit:</strong> $df = (\text{number of categories}) - 1$</li>
-<li><strong>Test of independence</strong> ($r \times c$ table): $df = (r-1)(c-1)$</li>
+<li><strong>Goodness-of-fit:</strong> <span class="tex" data-display="0">df = (\text{number of categories}) - 1</span></li>
+<li><strong>Test of independence</strong> (<span class="tex" data-display="0">r \times c</span> table): <span class="tex" data-display="0">df = (r-1)(c-1)</span></li>
 </ul>
 <h4>ANOVA (F-Test)</h4>
-<div class="math-display">$$F = \frac{\text{Between-group variability}}{\text{Within-group variability}}$$</div>
-<p>where the numerator is the mean square <em>between</em> groups (spread of the group means around the grand mean) and the denominator is the mean square <em>within</em> groups (average spread inside each group); a larger $F$ ⇒ stronger evidence that the group means differ.</p>
+<div class="math-display tex" data-display="1">F = \frac{\text{Between-group variability}}{\text{Within-group variability}}</div>
+<p>where the numerator is the mean square <em>between</em> groups (spread of the group means around the grand mean) and the denominator is the mean square <em>within</em> groups (average spread inside each group); a larger <span class="tex" data-display="0">F</span> ⇒ stronger evidence that the group means differ.</p>
 <p><strong>General Steps:</strong> Calculate statistic → Identify distribution → Look up p-value → Compare to α → Report conclusion.</p>
 <hr />
 <h3 id="24-probability-vs-likelihood">2.4 Probability vs Likelihood</h3>
@@ -676,8 +662,8 @@ blockquote{border-left:4px solid var(--sa);
 </tr>
 <tr>
 <td style="text-align:left"><strong>Example</strong></td>
-<td style="text-align:left">$P(\text{height} > 170 \mid \mu = 170, \sigma = 3.5)$</td>
-<td style="text-align:left">$\mathcal{L}(\mu, \sigma \mid \text{height} > 170)$</td>
+<td style="text-align:left"><span class="tex" data-display="0">P(\text{height} &gt; 170 \mid \mu = 170, \sigma = 3.5)</span></td>
+<td style="text-align:left"><span class="tex" data-display="0">\mathcal{L}(\mu, \sigma \mid \text{height} &gt; 170)</span></td>
 </tr>
 </tbody>
 </table>
@@ -703,7 +689,7 @@ blockquote{border-left:4px solid var(--sa);
 <li>Provides a framework for predictive modeling where <strong>finding model parameters = optimization problem</strong></li>
 <li>Used in: Gaussian Mixture Models (via EM), linear regression, logistic regression</li>
 </ul>
-<div class="math-display">$$\hat{\theta}_{MLE} = \arg\max_\theta \sum_{i=1}^{n} \log P(x_i \mid \theta)$$</div>
+<div class="math-display tex" data-display="1">\hat{\theta}_{MLE} = \arg\max_\theta \sum_{i=1}^{n} \log P(x_i \mid \theta)</div>
 <p><code>image86.png</code>
 <img src="ML%20DL/images/image86.png" alt="MLE Std Dev Visualization" width="700" /></p>
 <hr />
@@ -725,12 +711,12 @@ blockquote{border-left:4px solid var(--sa);
 <tr>
 <td style="text-align:left"><strong>Prior</strong></td>
 <td style="text-align:left">None (uniform assumed)</td>
-<td style="text-align:left">Incorporates prior belief $P(\theta)$</td>
+<td style="text-align:left">Incorporates prior belief <span class="tex" data-display="0">P(\theta)</span></td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Formula</strong></td>
-<td style="text-align:left">$\arg\max \sum \log P(x_i \mid \theta)$</td>
-<td style="text-align:left">$\arg\max \sum \log P(x_i \mid \theta) + \log P(\theta)$</td>
+<td style="text-align:left"><span class="tex" data-display="0">\arg\max \sum \log P(x_i \mid \theta)</span></td>
+<td style="text-align:left"><span class="tex" data-display="0">\arg\max \sum \log P(x_i \mid \theta) + \log P(\theta)</span></td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Relation</strong></td>
@@ -742,12 +728,12 @@ blockquote{border-left:4px solid var(--sa);
 <p><strong>Relation Between MLE and MAP</strong></p>
 <hr />
 <p>What we could conclude then is that MLE is a special case of MAP, where the prior is uniform.</p>
-<div class="math-display">$$\begin{aligned}
-\theta_{MAP} &= \arg\max_\theta \left[\sum_i \log P(x_i \mid \theta) + \log P(\theta)\right] \\
-&= \arg\max_\theta \left[\sum_i \log P(x_i \mid \theta) + \text{const}\right] \\
-&= \arg\max_\theta \sum_i \log P(x_i \mid \theta) \\
-&= \theta_{MLE}
-\end{aligned}$$</div>
+<div class="math-display tex" data-display="1">\begin{aligned}
+\theta_{MAP} &amp;= \arg\max_\theta \left[\sum_i \log P(x_i \mid \theta) + \log P(\theta)\right] \\
+&amp;= \arg\max_\theta \left[\sum_i \log P(x_i \mid \theta) + \text{const}\right] \\
+&amp;= \arg\max_\theta \sum_i \log P(x_i \mid \theta) \\
+&amp;= \theta_{MLE}
+\end{aligned}</div>
 <hr />
 </div>
 <div class="content-section sec-3">
@@ -765,19 +751,19 @@ blockquote{border-left:4px solid var(--sa);
 <tbody>
 <tr>
 <td style="text-align:left"><strong>Loss Function</strong> L</td>
-<td style="text-align:left">Quantifies the error between true output $y_i$ and predicted output $h(x_i)$</td>
+<td style="text-align:left">Quantifies the error between true output <span class="tex" data-display="0">y_i</span> and predicted output <span class="tex" data-display="0">h(x_i)</span></td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>True Risk</strong> R(h)</td>
-<td style="text-align:left">$R(h) = \mathbb{E}_{(x,y) \sim p}[L(y, h(x))]$ — uses the unknown true distribution $P$</td>
+<td style="text-align:left"><span class="tex" data-display="0">R(h) = \mathbb{E}_{(x,y) \sim p}[L(y, h(x))]</span> — uses the unknown true distribution <span class="tex" data-display="0">P</span></td>
 </tr>
 <tr>
-<td style="text-align:left"><strong>Empirical Risk</strong> $\hat{R}(h)$</td>
-<td style="text-align:left">$\hat{R}(h) = \frac{1}{n} \sum_{i=1}^{n} L(y_i, h(x_i))$ — computed on training data</td>
+<td style="text-align:left"><strong>Empirical Risk</strong> <span class="tex" data-display="0">\hat{R}(h)</span></td>
+<td style="text-align:left"><span class="tex" data-display="0">\hat{R}(h) = \frac{1}{n} \sum_{i=1}^{n} L(y_i, h(x_i))</span> — computed on training data</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>ERM Objective</strong></td>
-<td style="text-align:left">$h^* = \arg\min_{h \in \mathcal{H}} \hat{R}(h)$ — find the model with the lowest average training error</td>
+<td style="text-align:left"><span class="tex" data-display="0">h^* = \arg\min_{h \in \mathcal{H}} \hat{R}(h)</span> — find the model with the lowest average training error</td>
 </tr>
 </tbody>
 </table>
@@ -788,7 +774,7 @@ blockquote{border-left:4px solid var(--sa);
 <li><strong>Bias</strong> — how far a model's predictions are from the true values, due to oversimplifying assumptions</li>
 <li><strong>Variance</strong> — how much the predictions fluctuate in response to small changes in the training data</li>
 </ul>
-<div class="math-display">$$\text{MSE} = \mathbb{E}[(\hat{y} - y)^2] = \underbrace{\mathbb{E}[(\hat{y} - \mathbb{E}[\hat{y}])^2]}_{\text{Variance}} + \underbrace{(\mathbb{E}[\hat{y}] - y)^2}_{\text{Bias}^2}$$</div>
+<div class="math-display tex" data-display="1">\text{MSE} = \mathbb{E}[(\hat{y} - y)^2] = \underbrace{\mathbb{E}[(\hat{y} - \mathbb{E}[\hat{y}])^2]}_{\text{Variance}} + \underbrace{(\mathbb{E}[\hat{y}] - y)^2}_{\text{Bias}^2}</div>
 <p><code>image56.png</code>
 <img src="ML%20DL/images/image56.png" alt="Bias-Variance Decomposition" width="700" /></p>
 <p><code>image22.png</code>
@@ -843,26 +829,26 @@ blockquote{border-left:4px solid var(--sa);
 </ol>
 <hr />
 <h3 id="33-evaluation-metrics">3.3 Evaluation Metrics</h3>
-<div class="math-display">$$\begin{aligned}
-\text{Accuracy} &= \frac{TP + TN}{TP + TN + FP + FN} \\[10pt]
-\text{Precision} &= \frac{TP}{TP + FP} \\[10pt]
-\text{Recall (Sensitivity, True Positive Rate)} &= \frac{TP}{TP + FN} \\[10pt]
-\text{Specificity (True Negative Rate)} &= \frac{TN}{TN + FP} \\[10pt]
-\text{False Positive Rate} &= \frac{FP}{FP + TN} = 1 - \text{Specificity} \\[10pt]
-\text{F1} &= \frac{2 \times \text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}} \\[10pt]
-F_\beta &= \frac{(1 + \beta^2)}{\frac{\beta^2}{\text{Recall}} + \frac{1}{\text{Precision}}}
-\end{aligned}$$</div>
+<div class="math-display tex" data-display="1">\begin{aligned}
+\text{Accuracy} &amp;= \frac{TP + TN}{TP + TN + FP + FN} \\[10pt]
+\text{Precision} &amp;= \frac{TP}{TP + FP} \\[10pt]
+\text{Recall (Sensitivity, True Positive Rate)} &amp;= \frac{TP}{TP + FN} \\[10pt]
+\text{Specificity (True Negative Rate)} &amp;= \frac{TN}{TN + FP} \\[10pt]
+\text{False Positive Rate} &amp;= \frac{FP}{FP + TN} = 1 - \text{Specificity} \\[10pt]
+\text{F1} &amp;= \frac{2 \times \text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}} \\[10pt]
+F_\beta &amp;= \frac{(1 + \beta^2)}{\frac{\beta^2}{\text{Recall}} + \frac{1}{\text{Precision}}}
+\end{aligned}</div>
 <ul>
 <li><strong>Precision</strong> — of all positive predictions, how many were correct?</li>
 <li><strong>Recall / Sensitivity</strong> — of all actual positives, how many were found?</li>
 <li><strong>Specificity</strong> — of all actual negatives, how many were correctly identified?</li>
 <li><strong>False Positive Rate</strong> — of all actual negatives, how many were incorrectly flagged positive?</li>
-<li><strong>F1</strong> — the harmonic mean of Precision and Recall; equivalently $F1 = \frac{2}{\frac{1}{\text{Precision}} + \frac{1}{\text{Recall}}}$</li>
-<li><strong>F-Beta Score</strong> — generalizes F1 with weight $\beta$ on recall:
+<li><strong>F1</strong> — the harmonic mean of Precision and Recall; equivalently <span class="tex" data-display="0">F1 = \frac{2}{\frac{1}{\text{Precision}} + \frac{1}{\text{Recall}}}</span></li>
+<li><strong>F-Beta Score</strong> — generalizes F1 with weight <span class="tex" data-display="0">\beta</span> on recall:
 <ul>
-<li>$\beta = 1$: Equal weight to precision and recall (standard F1)</li>
-<li>$\beta > 1$: More weight on recall</li>
-<li>$\beta < 1$: More weight on precision</li>
+<li><span class="tex" data-display="0">\beta = 1</span>: Equal weight to precision and recall (standard F1)</li>
+<li><span class="tex" data-display="0">\beta &gt; 1</span>: More weight on recall</li>
+<li><span class="tex" data-display="0">\beta &lt; 1</span>: More weight on precision</li>
 </ul>
 </li>
 </ul>
@@ -925,17 +911,17 @@ F_\beta &= \frac{(1 + \beta^2)}{\frac{\beta^2}{\text{Recall}} + \frac{1}{\text{P
 </tbody>
 </table>
 <p><strong>Micro Averaged metrics given two different sets of data</strong> (subscripts 1, 2 = per-class TP/FP/FN):</p>
-<div class="math-display">$$\begin{aligned}
-\text{Micro-Precision} &= \frac{TP_1 + TP_2}{TP_1 + FP_1 + TP_2 + FP_2} \\[10pt]
-\text{Micro-Recall} &= \frac{TP_1 + TP_2}{TP_1 + FN_1 + TP_2 + FN_2} \\[10pt]
-\text{Micro-F1} &= 2 \cdot \frac{\text{Micro-Precision} \cdot \text{Micro-Recall}}{\text{Micro-Precision} + \text{Micro-Recall}}
-\end{aligned}$$</div>
+<div class="math-display tex" data-display="1">\begin{aligned}
+\text{Micro-Precision} &amp;= \frac{TP_1 + TP_2}{TP_1 + FP_1 + TP_2 + FP_2} \\[10pt]
+\text{Micro-Recall} &amp;= \frac{TP_1 + TP_2}{TP_1 + FN_1 + TP_2 + FN_2} \\[10pt]
+\text{Micro-F1} &amp;= 2 \cdot \frac{\text{Micro-Precision} \cdot \text{Micro-Recall}}{\text{Micro-Precision} + \text{Micro-Recall}}
+\end{aligned}</div>
 <p><strong>Macro Averaged metrics with two datasets</strong> (subscripts 1, 2 = per-class Precision/Recall):</p>
-<div class="math-display">$$\begin{aligned}
-\text{Macro-Precision} &= \frac{P_1 + P_2}{2} \\[10pt]
-\text{Macro-Recall} &= \frac{R_1 + R_2}{2} \\[10pt]
-\text{Macro-F1} &= 2 \cdot \frac{\text{Macro-Precision} \cdot \text{Macro-Recall}}{\text{Macro-Precision} + \text{Macro-Recall}}
-\end{aligned}$$</div>
+<div class="math-display tex" data-display="1">\begin{aligned}
+\text{Macro-Precision} &amp;= \frac{P_1 + P_2}{2} \\[10pt]
+\text{Macro-Recall} &amp;= \frac{R_1 + R_2}{2} \\[10pt]
+\text{Macro-F1} &amp;= 2 \cdot \frac{\text{Macro-Precision} \cdot \text{Macro-Recall}}{\text{Macro-Precision} + \text{Macro-Recall}}
+\end{aligned}</div>
 <hr />
 <h3 id="36-roc-curve--auc">3.6 ROC Curve &amp; AUC</h3>
 <p><strong>ROC</strong> plots <strong>True Positive Rate (TPR)</strong> vs <strong>False Positive Rate (FPR)</strong> across all classification thresholds.</p>
@@ -949,16 +935,16 @@ F_\beta &= \frac{(1 + \beta^2)}{\frac{\beta^2}{\text{Recall}} + \frac{1}{\text{P
 <hr />
 <h3 id="37-r²-and-adjusted-r²">3.7 R² and Adjusted R²</h3>
 <p><strong>R² (Coefficient of Determination):</strong></p>
-<div class="math-display">$$R^2 = 1 - \frac{SS_{\text{residual}}}{SS_{\text{total}}}$$</div>
-<p>where $SS_{\text{residual}} = \sum_i (y_i - \hat{y}_i)^2$ (sum of squared residuals) and $SS_{\text{total}} = \sum_i (y_i - \bar{y})^2$ (total sum of squares about the mean $\bar{y}$); $y_i$ = actual value, $\hat{y}_i$ = predicted value.</p>
+<div class="math-display tex" data-display="1">R^2 = 1 - \frac{SS_{\text{residual}}}{SS_{\text{total}}}</div>
+<p>where <span class="tex" data-display="0">SS_{\text{residual}} = \sum_i (y_i - \hat{y}_i)^2</span> (sum of squared residuals) and <span class="tex" data-display="0">SS_{\text{total}} = \sum_i (y_i - \bar{y})^2</span> (total sum of squares about the mean <span class="tex" data-display="0">\bar{y}</span>); <span class="tex" data-display="0">y_i</span> = actual value, <span class="tex" data-display="0">\hat{y}_i</span> = predicted value.</p>
 <ul>
-<li>Range: $[0, 1]$ for in-sample OLS with an intercept; can be <strong>negative</strong> out-of-sample or without an intercept (model does worse than predicting the mean)</li>
+<li>Range: <span class="tex" data-display="0">[0, 1]</span> for in-sample OLS with an intercept; can be <strong>negative</strong> out-of-sample or without an intercept (model does worse than predicting the mean)</li>
 <li>Higher = more variance explained by the model</li>
 <li><strong>Limitation</strong>: Increases with more predictors even if they don't help → doesn't penalize overfitting</li>
 </ul>
 <p><strong>Adjusted R²:</strong></p>
-<div class="math-display">$$R^2_{\text{adj}} = 1 - \frac{(1 - R^2)(n - 1)}{n - k - 1}$$</div>
-<p>where $n$ = observations, $k$ = number of predictors.</p>
+<div class="math-display tex" data-display="1">R^2_{\text{adj}} = 1 - \frac{(1 - R^2)(n - 1)}{n - k - 1}</div>
+<p>where <span class="tex" data-display="0">n</span> = observations, <span class="tex" data-display="0">k</span> = number of predictors.</p>
 <ul>
 <li>Penalizes for adding unnecessary variables</li>
 <li>Only increases if the new variable improves the model beyond chance</li>
@@ -982,7 +968,7 @@ F_\beta &= \frac{(1 + \beta^2)}{\frac{\beta^2}{\text{Recall}} + \frac{1}{\text{P
 <tr>
 <td style="text-align:left"><strong>Range</strong></td>
 <td style="text-align:left">[0, 1]</td>
-<td style="text-align:left">$(-\infty, 1]$</td>
+<td style="text-align:left"><span class="tex" data-display="0">(-\infty, 1]</span></td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Use</strong></td>
@@ -1016,9 +1002,9 @@ F_\beta &= \frac{(1 + \beta^2)}{\frac{\beta^2}{\text{Recall}} + \frac{1}{\text{P
 <p><code>image25.png</code>
 <img src="ML%20DL/images/image25.png" alt="Feature Scaling: Normalization vs Standardization" width="560" /></p>
 <p><strong>Normalization (Min-Max Scaling):</strong></p>
-<div class="math-display">$$X_{\text{new}} = \frac{X - X_{\min}}{X_{\max} - X_{\min}} \in [0, 1]$$</div>
+<div class="math-display tex" data-display="1">X_{\text{new}} = \frac{X - X_{\min}}{X_{\max} - X_{\min}} \in [0, 1]</div>
 <p><strong>Standardization (Z-score):</strong></p>
-<div class="math-display">$$X' = \frac{X - \mu}{\sigma} \quad \text{(mean=0, std=1)}$$</div>
+<div class="math-display tex" data-display="1">X' = \frac{X - \mu}{\sigma} \quad \text{(mean=0, std=1)}</div>
 <p><strong>When to Use:</strong></p>
 <table>
 <thead>
@@ -1101,20 +1087,20 @@ F_\beta &= \frac{(1 + \beta^2)}{\frac{\beta^2}{\text{Recall}} + \frac{1}{\text{P
 </table>
 <hr />
 <h3 id="52-naive-bayes">5.2 Naive Bayes</h3>
-<p><strong>Why &quot;Naive&quot;?</strong> It assumes <strong>conditional independence of features given the class label</strong> — i.e., $P(x_i \mid c, x_j) = P(x_i \mid c)$ for all $i \neq j$ — a condition virtually never fully met in real-world data.</p>
+<p><strong>Why &quot;Naive&quot;?</strong> It assumes <strong>conditional independence of features given the class label</strong> — i.e., <span class="tex" data-display="0">P(x_i \mid c, x_j) = P(x_i \mid c)</span> for all <span class="tex" data-display="0">i \neq j</span> — a condition virtually never fully met in real-world data.</p>
 <p><strong>Bayes' Theorem:</strong></p>
 <p><code>image75.png</code>
 <img src="ML%20DL/images/image75.png" alt="Bayes Theorem with labeled terms" width="560" /></p>
-<div class="math-display">$$P(c \mid x) = \frac{P(x \mid c) \cdot P(c)}{P(x)}$$</div>
+<div class="math-display tex" data-display="1">P(c \mid x) = \frac{P(x \mid c) \cdot P(c)}{P(x)}</div>
 <p>where:</p>
 <ul>
-<li>$P(c \mid x)$ = <strong>Posterior Probability</strong> (probability of class given data)</li>
-<li>$P(x \mid c)$ = <strong>Likelihood</strong> (probability of data given class)</li>
-<li>$P(c)$ = <strong>Class Prior Probability</strong></li>
-<li>$P(x)$ = <strong>Predictor Prior Probability</strong> (evidence — normalising constant)</li>
+<li><span class="tex" data-display="0">P(c \mid x)</span> = <strong>Posterior Probability</strong> (probability of class given data)</li>
+<li><span class="tex" data-display="0">P(x \mid c)</span> = <strong>Likelihood</strong> (probability of data given class)</li>
+<li><span class="tex" data-display="0">P(c)</span> = <strong>Class Prior Probability</strong></li>
+<li><span class="tex" data-display="0">P(x)</span> = <strong>Predictor Prior Probability</strong> (evidence — normalising constant)</li>
 </ul>
-<p>With the naive independence assumption (dropping the constant evidence $P(X)$, so it's a proportionality):</p>
-<div class="math-display">$$P(c \mid X) \propto P(c) \cdot P(x_1 \mid c) \cdot P(x_2 \mid c) \cdots P(x_n \mid c)$$</div>
+<p>With the naive independence assumption (dropping the constant evidence <span class="tex" data-display="0">P(X)</span>, so it's a proportionality):</p>
+<div class="math-display tex" data-display="1">P(c \mid X) \propto P(c) \cdot P(x_1 \mid c) \cdot P(x_2 \mid c) \cdots P(x_n \mid c)</div>
 <p><strong>Types:</strong></p>
 <table>
 <thead>
@@ -1132,7 +1118,7 @@ F_\beta &= \frac{(1 + \beta^2)}{\frac{\beta^2}{\text{Recall}} + \frac{1}{\text{P
 </tr>
 <tr>
 <td style="text-align:left"><strong>Gaussian NB</strong></td>
-<td style="text-align:left">Gaussian distribution: $P(x\|c) = \mathcal{N}(\mu_c, \sigma_c^2)$</td>
+<td style="text-align:left">Gaussian distribution: <span class="tex" data-display="0">P(x\|c) = \mathcal{N}(\mu_c, \sigma_c^2)</span></td>
 <td style="text-align:left">Continuous features</td>
 </tr>
 <tr>
@@ -1143,15 +1129,15 @@ F_\beta &= \frac{(1 + \beta^2)}{\frac{\beta^2}{\text{Recall}} + \frac{1}{\text{P
 </tbody>
 </table>
 <p><strong>Gaussian Naive Bayes:</strong></p>
-<div class="math-display">$$P(x = v \mid c) = \frac{1}{\sqrt{2\pi\sigma_c^2}} \exp\!\left(-\frac{(v - \mu_c)^2}{2\sigma_c^2}\right)$$</div>
+<div class="math-display tex" data-display="1">P(x = v \mid c) = \frac{1}{\sqrt{2\pi\sigma_c^2}} \exp\!\left(-\frac{(v - \mu_c)^2}{2\sigma_c^2}\right)</div>
 <hr />
 <h3 id="53-k-nearest-neighbors-knn">5.3 K-Nearest Neighbors (KNN)</h3>
-<p><strong>Non-parametric, supervised</strong> algorithm — classifies a query point by majority vote (or averages, for regression) among its $k$ nearest training points. Based on the idea that similar points lie near one another.</p>
+<p><strong>Non-parametric, supervised</strong> algorithm — classifies a query point by majority vote (or averages, for regression) among its <span class="tex" data-display="0">k</span> nearest training points. Based on the idea that similar points lie near one another.</p>
 <p><strong>Algorithm:</strong></p>
 <ol>
 <li>Compute the distance from the query point to every training point</li>
-<li>Sort ascending; take the top $k$</li>
-<li><strong>Classification</strong> → majority vote of the $k$ labels; <strong>Regression</strong> → mean of the $k$ labels</li>
+<li>Sort ascending; take the top <span class="tex" data-display="0">k</span></li>
+<li><strong>Classification</strong> → majority vote of the <span class="tex" data-display="0">k</span> labels; <strong>Regression</strong> → mean of the <span class="tex" data-display="0">k</span> labels</li>
 </ol>
 <p><strong>Distance metrics:</strong></p>
 <table>
@@ -1165,12 +1151,12 @@ F_\beta &= \frac{(1 + \beta^2)}{\frac{\beta^2}{\text{Recall}} + \frac{1}{\text{P
 <tbody>
 <tr>
 <td style="text-align:left"><strong>Euclidean (L2)</strong></td>
-<td style="text-align:left">$d(x,y) = \sqrt{\sum_i (y_i - x_i)^2}$</td>
+<td style="text-align:left"><span class="tex" data-display="0">d(x,y) = \sqrt{\sum_i (y_i - x_i)^2}</span></td>
 <td style="text-align:left">Continuous, normalized, low-dimensional data</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Manhattan (L1)</strong></td>
-<td style="text-align:left">$d(x,y) = \sum_i \|x_i - y_i\|$</td>
+<td style="text-align:left"><span class="tex" data-display="0">d(x,y) = \sum_i \|x_i - y_i\|</span></td>
 <td style="text-align:left">Different feature scales, outliers, high-dimensional/sparse data</td>
 </tr>
 </tbody>
@@ -1179,23 +1165,23 @@ F_\beta &= \frac{(1 + \beta^2)}{\frac{\beta^2}{\text{Recall}} + \frac{1}{\text{P
 <ul>
 <li>Fails the <strong>triangle inequality</strong> → breaks tree-based indexing (KD-Tree/Ball Tree), forcing slower brute-force search</li>
 <li>Ignores <strong>magnitude</strong> — only direction matters, so points with the same ratio but very different scale look identical (bad when scale is meaningful; good for text/embeddings)</li>
-<li>If vectors are <strong>unit-normalized</strong>, Euclidean ranking = Cosine ranking: $\text{Euclidean} = \sqrt{2(1-\cos)}$</li>
+<li>If vectors are <strong>unit-normalized</strong>, Euclidean ranking = Cosine ranking: <span class="tex" data-display="0">\text{Euclidean} = \sqrt{2(1-\cos)}</span></li>
 </ul>
-<p><strong>Pros:</strong> simple; no training phase; only 2 hyperparameters ($k$, distance metric).
-<strong>Cons:</strong> doesn't scale (memory/lookup cost); low $k$ → overfits, high $k$ → underfits.
+<p><strong>Pros:</strong> simple; no training phase; only 2 hyperparameters (<span class="tex" data-display="0">k</span>, distance metric).
+<strong>Cons:</strong> doesn't scale (memory/lookup cost); low <span class="tex" data-display="0">k</span> → overfits, high <span class="tex" data-display="0">k</span> → underfits.
 <strong>Use case:</strong> small, relatively clean datasets; labeled data is scarce/expensive.</p>
 <hr />
 <h3 id="54-k-means-clustering">5.4 K-Means Clustering</h3>
-<p><strong>Unsupervised</strong> — partitions data into $K$ clusters by iteratively minimizing distance to cluster centroids (Expectation-Maximization).</p>
+<p><strong>Unsupervised</strong> — partitions data into <span class="tex" data-display="0">K</span> clusters by iteratively minimizing distance to cluster centroids (Expectation-Maximization).</p>
 <p><strong>Algorithm:</strong></p>
 <ol>
-<li><strong>Init</strong> — choose $K$; place $K$ random initial centroids</li>
+<li><strong>Init</strong> — choose <span class="tex" data-display="0">K</span>; place <span class="tex" data-display="0">K</span> random initial centroids</li>
 <li><strong>Assign (E-step)</strong> — assign each point to its nearest centroid (Euclidean distance)</li>
 <li><strong>Update (M-step)</strong> — move each centroid to the mean of its assigned points</li>
 <li>Repeat 2–3 until centroids stop moving (or max iterations reached)</li>
 </ol>
 <p><strong>Why Euclidean-only?</strong> The arithmetic mean is exactly the point that minimizes the sum of <em>squared Euclidean</em> distances. Using Manhattan distance instead requires the median (→ <strong>K-Medians</strong>); a custom distance requires <strong>K-Medoids</strong>.</p>
-<p><strong>Choosing $K$:</strong> Elbow Method or Silhouette Score.</p>
+<p><strong>Choosing <span class="tex" data-display="0">K</span>:</strong> Elbow Method or Silhouette Score.</p>
 <p><strong>K-Means vs Expectation-Maximization (EM):</strong> K-Means is technically a special, simplified version of EM — both use an iterative, two-step process to group data.</p>
 <table>
 <thead>
@@ -1258,9 +1244,9 @@ F_\beta &= \frac{(1 + \beta^2)}{\frac{\beta^2}{\text{Recall}} + \frac{1}{\text{P
 <hr />
 <h3 id="56-decision-trees">5.6 Decision Trees</h3>
 <p><strong>Choosing the split at each node:</strong> Grown greedily, top-down — at each node, test every feature (and threshold, for numeric features) and pick the one with the <strong>highest Information Gain</strong> (largest impurity drop), then recurse until a stopping rule (pure node, max depth, or min samples).</p>
-<p><strong>Information Gain</strong> — the reduction in entropy after splitting on attribute $A$ (see §1.8):</p>
-<div class="math-display">$$IG(A) = H(S) - \sum_{v} \frac{|S_v|}{|S|} H(S_v), \qquad H(S) = -\sum_i p_i \log_2 p_i$$</div>
-<p>where $S$ is the data at the node, $S_v$ the subset where attribute $A$ takes value $v$, and $H(\cdot)$ the entropy. The feature with the largest $IG$ is chosen for the split. (<strong>Gini impurity</strong> $= 1 - \sum_i p_i^2$ is the common alternative criterion used by CART.)</p>
+<p><strong>Information Gain</strong> — the reduction in entropy after splitting on attribute <span class="tex" data-display="0">A</span> (see §1.8):</p>
+<div class="math-display tex" data-display="1">IG(A) = H(S) - \sum_{v} \frac{|S_v|}{|S|} H(S_v), \qquad H(S) = -\sum_i p_i \log_2 p_i</div>
+<p>where <span class="tex" data-display="0">S</span> is the data at the node, <span class="tex" data-display="0">S_v</span> the subset where attribute <span class="tex" data-display="0">A</span> takes value <span class="tex" data-display="0">v</span>, and <span class="tex" data-display="0">H(\cdot)</span> the entropy. The feature with the largest <span class="tex" data-display="0">IG</span> is chosen for the split. (<strong>Gini impurity</strong> <span class="tex" data-display="0">= 1 - \sum_i p_i^2</span> is the common alternative criterion used by CART.)</p>
 <p><code>image40.png</code>
 <img src="ML%20DL/images/image40.png" alt="Decision Tree Example" width="700" /></p>
 <p><code>image55.png</code>
@@ -1315,13 +1301,13 @@ Binary target = 1 if rating &gt; 3  →  model predicts P(Target &gt; 3)
 Binary target = 1 if rating &gt; 4  →  model predicts P(Target &gt; 4)
 </code></pre>
 <p><strong>Convert to class probabilities:</strong></p>
-<div class="math-display">$$\begin{aligned}
-P(y=1) &= 1 - P(T>1) \\
-P(y=2) &= P(T>1) - P(T>2) \\
-P(y=3) &= P(T>2) - P(T>3) \\
-P(y=4) &= P(T>3) - P(T>4) \\
-P(y=5) &= P(T>4)
-\end{aligned}$$</div>
+<div class="math-display tex" data-display="1">\begin{aligned}
+P(y=1) &amp;= 1 - P(T&gt;1) \\
+P(y=2) &amp;= P(T&gt;1) - P(T&gt;2) \\
+P(y=3) &amp;= P(T&gt;2) - P(T&gt;3) \\
+P(y=4) &amp;= P(T&gt;3) - P(T&gt;4) \\
+P(y=5) &amp;= P(T&gt;4)
+\end{aligned}</div>
 <p><code>image50.png</code>
 <img src="ML%20DL/images/image50.png" alt="Ordinal Regression Example" width="700" /></p>
 <p><code>image65.png</code>
@@ -1336,9 +1322,9 @@ P(y=5) &= P(T>4)
 <li><strong>Kernel Trick</strong>: Transforms input data to a higher-dimensional space to find a separating hyperplane without explicitly computing coordinates.</li>
 </ul>
 <p><strong>SVM Objective (with C regularization):</strong></p>
-<div class="math-display">$$\min_\theta\ C \sum_{i=1}^{m} \left[ y^{(i)} \cdot \text{cost}_1(\theta^T x^{(i)}) + (1 - y^{(i)}) \cdot \text{cost}_0(\theta^T x^{(i)}) \right] + \frac{1}{2} \sum_{j=1}^{n} \theta_j^2$$</div>
+<div class="math-display tex" data-display="1">\min_\theta\ C \sum_{i=1}^{m} \left[ y^{(i)} \cdot \text{cost}_1(\theta^T x^{(i)}) + (1 - y^{(i)}) \cdot \text{cost}_0(\theta^T x^{(i)}) \right] + \frac{1}{2} \sum_{j=1}^{n} \theta_j^2</div>
 <p><strong>Hypothesis:</strong></p>
-<div class="math-display">$$h_\theta(x) = \begin{cases} 1 & \text{if } \theta^T x \geq 0 \\ 0 & \text{otherwise} \end{cases}$$</div>
+<div class="math-display tex" data-display="1">h_\theta(x) = \begin{cases} 1 &amp; \text{if } \theta^T x \geq 0 \\ 0 &amp; \text{otherwise} \end{cases}</div>
 <p><strong>Kernels:</strong></p>
 <table>
 <thead>
@@ -1351,22 +1337,22 @@ P(y=5) &= P(T>4)
 <tbody>
 <tr>
 <td style="text-align:left"><strong>Linear</strong></td>
-<td style="text-align:left">$k(x,y) = x^T y$</td>
+<td style="text-align:left"><span class="tex" data-display="0">k(x,y) = x^T y</span></td>
 <td style="text-align:left">Linearly separable data</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Polynomial</strong></td>
-<td style="text-align:left">$k(x,y) = (x^T y)^p$</td>
+<td style="text-align:left"><span class="tex" data-display="0">k(x,y) = (x^T y)^p</span></td>
 <td style="text-align:left">Non-linear data</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>RBF / Gaussian</strong></td>
-<td style="text-align:left">$k(x,y) = \exp\!\left(-\frac{\|x-y\|^2}{2\sigma^2}\right)$</td>
+<td style="text-align:left"><span class="tex" data-display="0">k(x,y) = \exp\!\left(-\frac{\|x-y\|^2}{2\sigma^2}\right)</span></td>
 <td style="text-align:left">Non-linear, high-dimensional data</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Sigmoid</strong></td>
-<td style="text-align:left">$k(x,y) = \tanh(\alpha x^T y + c)$</td>
+<td style="text-align:left"><span class="tex" data-display="0">k(x,y) = \tanh(\alpha x^T y + c)</span></td>
 <td style="text-align:left">Proxy for neural networks</td>
 </tr>
 </tbody>
@@ -1374,7 +1360,7 @@ P(y=5) &= P(T>4)
 <p><code>image81.png</code>
 <img src="ML%20DL/images/image81.png" alt="SVM decision boundaries by kernel (linear, poly, RBF, sigmoid) across separable, circular, moon, and spiral datasets" width="700" /></p>
 <p><strong>Why Gaussian RBF maps to infinite-dimensional space:</strong></p>
-<p>The Gaussian RBF kernel corresponds to a fixed, <strong>infinite-dimensional</strong> feature space, regardless of the amount of training data. With $m$ training points, the SVM solution lies in an (at most) $m$-dimensional <strong>subspace</strong> of that space — the span of the mapped training points (equivalently, the rank of the $m \times m$ Gram matrix). The kernel trick lets the SVM work implicitly in this infinite-dimensional space without ever computing the coordinates.</p>
+<p>The Gaussian RBF kernel corresponds to a fixed, <strong>infinite-dimensional</strong> feature space, regardless of the amount of training data. With <span class="tex" data-display="0">m</span> training points, the SVM solution lies in an (at most) <span class="tex" data-display="0">m</span>-dimensional <strong>subspace</strong> of that space — the span of the mapped training points (equivalently, the rank of the <span class="tex" data-display="0">m \times m</span> Gram matrix). The kernel trick lets the SVM work implicitly in this infinite-dimensional space without ever computing the coordinates.</p>
 <p><strong>C Parameter (Regularization):</strong></p>
 <ul>
 <li>Small C → wider margin, more misclassifications allowed (softer boundary)</li>
@@ -1431,7 +1417,7 @@ P(y=5) &= P(T>4)
 </tr>
 <tr>
 <td style="text-align:left"><strong>KNN</strong></td>
-<td style="text-align:left">Classifies by majority vote among the $k$ nearest training points</td>
+<td style="text-align:left">Classifies by majority vote among the <span class="tex" data-display="0">k</span> nearest training points</td>
 <td style="text-align:left">Simple; no training phase; good for small/non-linear data</td>
 <td style="text-align:left">Slow at prediction time; sensitive to irrelevant features; no explicit model</td>
 </tr>
@@ -1660,7 +1646,7 @@ P(y=5) &= P(T>4)
 </tbody>
 </table>
 <p><strong>L1 is not differentiable at 0:</strong></p>
-<div class="math-display">$$\frac{d|x|}{dx} = \begin{cases} -1 & x < 0 \\ +1 & x > 0 \\ \text{undefined} & x = 0 \end{cases}$$</div>
+<div class="math-display tex" data-display="1">\frac{d|x|}{dx} = \begin{cases} -1 &amp; x &lt; 0 \\ +1 &amp; x &gt; 0 \\ \text{undefined} &amp; x = 0 \end{cases}</div>
 <p>Subgradient methods are used to handle this.</p>
 <p><code>image34.png</code>
 <img src="ML%20DL/images/image34.png" alt="Lp-Norm Visualization" width="700" /></p>
@@ -1682,44 +1668,44 @@ P(y=5) &= P(T>4)
 <tr>
 <td style="text-align:left"><strong>Mean Bias Error (MBE)</strong></td>
 <td style="text-align:left">Captures average bias; rarely used for training</td>
-<td style="text-align:left">$\frac{1}{N}\sum_{i=1}^N (y_i - f(x_i))$</td>
+<td style="text-align:left"><span class="tex" data-display="0">\frac{1}{N}\sum_{i=1}^N (y_i - f(x_i))</span></td>
 <td style="text-align:left">Diagnosing directional bias (over- vs under-prediction), not training</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Mean Absolute Error (MAE)</strong></td>
 <td style="text-align:left">Measures absolute bias; also called L1 Loss</td>
-<td style="text-align:left">$\frac{1}{N}\sum_{i=1}^N \|y_i - f(x_i)\|$</td>
+<td style="text-align:left"><span class="tex" data-display="0">\frac{1}{N}\sum_{i=1}^N \|y_i - f(x_i)\|</span></td>
 <td style="text-align:left">Data with outliers you don't want to dominate; errors in original units</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Mean Squared Error (MSE)</strong></td>
 <td style="text-align:left">Average squared distance; also called L2 Loss</td>
-<td style="text-align:left">$\frac{1}{N}\sum_{i=1}^N (y_i - f(x_i))^2$</td>
+<td style="text-align:left"><span class="tex" data-display="0">\frac{1}{N}\sum_{i=1}^N (y_i - f(x_i))^2</span></td>
 <td style="text-align:left">Clean data where large errors must be punished hard; smooth gradient</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Root MSE (RMSE)</strong></td>
 <td style="text-align:left">Square root of MSE; same units as dependent variable</td>
-<td style="text-align:left">$\sqrt{\frac{1}{N}\sum_{i=1}^N (y_i - f(x_i))^2}$</td>
+<td style="text-align:left"><span class="tex" data-display="0">\sqrt{\frac{1}{N}\sum_{i=1}^N (y_i - f(x_i))^2}</span></td>
 <td style="text-align:left">Reporting/comparing MSE-based error in the target's units</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Huber Loss</strong></td>
 <td style="text-align:left">Combines MSE and MAE; less sensitive to outliers</td>
-<td style="text-align:left">$\frac{1}{2}(y - f(x))^2$ if $\|y-f(x)\| \leq \delta$, else $\delta\|y-f(x)\| - \frac{\delta^2}{2}$</td>
-<td style="text-align:left">Regression with some outliers — MSE near zero, MAE in the tails (tune $\delta$)</td>
+<td style="text-align:left"><span class="tex" data-display="0">\frac{1}{2}(y - f(x))^2</span> if <span class="tex" data-display="0">\|y-f(x)\| \leq \delta</span>, else <span class="tex" data-display="0">\delta\|y-f(x)\| - \frac{\delta^2}{2}</span></td>
+<td style="text-align:left">Regression with some outliers — MSE near zero, MAE in the tails (tune <span class="tex" data-display="0">\delta</span>)</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Log-Cosh Loss</strong></td>
 <td style="text-align:left">Like Huber but smooth everywhere; computationally expensive</td>
-<td style="text-align:left">$\frac{1}{N}\sum \log(\cosh(f(x_i) - y_i))$</td>
+<td style="text-align:left"><span class="tex" data-display="0">\frac{1}{N}\sum \log(\cosh(f(x_i) - y_i))</span></td>
 <td style="text-align:left">Huber-like robustness when you need a smooth, twice-differentiable loss</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Lp Loss (Lp-norm)</strong></td>
-<td style="text-align:left">General p-norm of the error; recovers MAE at $p=1$ and RMSE at $p=2$ — larger $p$ penalizes big errors more</td>
-<td style="text-align:left">$\left(\frac{1}{N}\sum_{i=1}^N \|y_i - f(x_i)\|^p\right)^{1/p}$</td>
-<td style="text-align:left">When you want to tune outlier sensitivity via $p$</td>
+<td style="text-align:left">General p-norm of the error; recovers MAE at <span class="tex" data-display="0">p=1</span> and RMSE at <span class="tex" data-display="0">p=2</span> — larger <span class="tex" data-display="0">p</span> penalizes big errors more</td>
+<td style="text-align:left"><span class="tex" data-display="0">\left(\frac{1}{N}\sum_{i=1}^N \|y_i - f(x_i)\|^p\right)^{1/p}</span></td>
+<td style="text-align:left">When you want to tune outlier sensitivity via <span class="tex" data-display="0">p</span></td>
 </tr>
 </tbody>
 </table>
@@ -1737,40 +1723,40 @@ P(y=5) &= P(T>4)
 <tr>
 <td style="text-align:left"><strong>Binary Cross-Entropy (BCE)</strong></td>
 <td style="text-align:left">Loss function for binary classification</td>
-<td style="text-align:left">$-\frac{1}{N}\sum_{i=1}^N \left[y_i\log(p_i) + (1-y_i)\log(1-p_i)\right]$</td>
+<td style="text-align:left"><span class="tex" data-display="0">-\frac{1}{N}\sum_{i=1}^N \left[y_i\log(p_i) + (1-y_i)\log(1-p_i)\right]</span></td>
 <td style="text-align:left">Binary or multi-label classification with sigmoid outputs</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Hinge Loss</strong></td>
 <td style="text-align:left">Penalizes wrong and less confident predictions; used in SVMs</td>
-<td style="text-align:left">$\max(0, 1 - f(x) \cdot y)$</td>
+<td style="text-align:left"><span class="tex" data-display="0">\max(0, 1 - f(x) \cdot y)</span></td>
 <td style="text-align:left">Max-margin classifiers (SVMs); when probabilities aren't needed</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Cross-Entropy</strong> (multi-class)</td>
-<td style="text-align:left">Extension of BCE; $N$ samples, $M$ classes</td>
-<td style="text-align:left">$-\sum_{i=1}^N\sum_{j=1}^M y_{ij}\log(f(x_i)_j)$</td>
+<td style="text-align:left">Extension of BCE; <span class="tex" data-display="0">N</span> samples, <span class="tex" data-display="0">M</span> classes</td>
+<td style="text-align:left"><span class="tex" data-display="0">-\sum_{i=1}^N\sum_{j=1}^M y_{ij}\log(f(x_i)_j)</span></td>
 <td style="text-align:left">Single-label multi-class classification with softmax outputs</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>KL Divergence</strong></td>
 <td style="text-align:left">Minimises divergence between predicted and true distribution</td>
-<td style="text-align:left">$\sum_x y(x)\log\frac{y(x)}{f(x)}$</td>
+<td style="text-align:left"><span class="tex" data-display="0">\sum_x y(x)\log\frac{y(x)}{f(x)}</span></td>
 <td style="text-align:left">Matching full distributions — soft labels, knowledge distillation, VAEs</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Softmax</strong> converts raw scores $s$ into probabilities before Cross-Entropy Loss is applied:</p>
-<div class="math-display">$$f(s)_i = \frac{e^{s_i}}{\sum_j e^{s_j}}, \quad \text{then } CE = -\sum_i t_i \log(f(s)_i)$$</div>
+<p><strong>Softmax</strong> converts raw scores <span class="tex" data-display="0">s</span> into probabilities before Cross-Entropy Loss is applied:</p>
+<div class="math-display tex" data-display="1">f(s)_i = \frac{e^{s_i}}{\sum_j e^{s_j}}, \quad \text{then } CE = -\sum_i t_i \log(f(s)_i)</div>
 <ul>
 <li>
-<p><strong>Hinge Loss</strong> (SVM): $\mathcal{L} = \max(0, 1 - y \cdot \hat{y})$</p>
+<p><strong>Hinge Loss</strong> (SVM): <span class="tex" data-display="0">\mathcal{L} = \max(0, 1 - y \cdot \hat{y})</span></p>
 </li>
 <li>
 <p><strong>Triplet Loss</strong> (Siamese Networks / face recognition) — uses Euclidean distance to push anchor (A) closer to positive (P) and away from negative (N):</p>
 </li>
 </ul>
-<div class="math-display">$$\mathcal{L}(A, P, N) = \max\!\left(\|f(A) - f(P)\|_2^2 - \|f(A) - f(N)\|_2^2 + \alpha,\ 0\right)$$</div>
+<div class="math-display tex" data-display="1">\mathcal{L}(A, P, N) = \max\!\left(\|f(A) - f(P)\|_2^2 - \|f(A) - f(N)\|_2^2 + \alpha,\ 0\right)</div>
 <hr />
 <h3 id="73-convex-vs-non-convex-problems">7.3 Convex vs Non-Convex Problems</h3>
 <p><strong>Convex Problems</strong> (guaranteed global minimum):</p>
@@ -1824,15 +1810,15 @@ P(y=5) &= P(T>4)
 </tbody>
 </table>
 <p><strong>Cost Function – &quot;One Half Mean Squared Error&quot;:</strong></p>
-<div class="math-display">$$J(\theta_0, \theta_1) = \frac{1}{2m} \sum_{i=1}^{m} \left(h_\theta(x^{(i)}) - y^{(i)}\right)^2$$</div>
+<div class="math-display tex" data-display="1">J(\theta_0, \theta_1) = \frac{1}{2m} \sum_{i=1}^{m} \left(h_\theta(x^{(i)}) - y^{(i)}\right)^2</div>
 <p><strong>Objective:</strong></p>
-<div class="math-display">$$\min_{\theta_0,\ \theta_1} J(\theta_0, \theta_1)$$</div>
+<div class="math-display tex" data-display="1">\min_{\theta_0,\ \theta_1} J(\theta_0, \theta_1)</div>
 <p><strong>Update rules:</strong></p>
-<div class="math-display">$$\theta_0 := \theta_0 - \alpha \frac{\partial}{\partial \theta_0} J(\theta_0, \theta_1)$$</div>
-<div class="math-display">$$\theta_1 := \theta_1 - \alpha \frac{\partial}{\partial \theta_1} J(\theta_0, \theta_1)$$</div>
+<div class="math-display tex" data-display="1">\theta_0 := \theta_0 - \alpha \frac{\partial}{\partial \theta_0} J(\theta_0, \theta_1)</div>
+<div class="math-display tex" data-display="1">\theta_1 := \theta_1 - \alpha \frac{\partial}{\partial \theta_1} J(\theta_0, \theta_1)</div>
 <p><strong>Derivatives:</strong></p>
-<div class="math-display">$$\frac{\partial}{\partial \theta_0} J(\theta_0, \theta_1) = \frac{1}{m} \sum_{i=1}^{m} \left(h_\theta(x^{(i)}) - y^{(i)}\right)$$</div>
-<div class="math-display">$$\frac{\partial}{\partial \theta_1} J(\theta_0, \theta_1) = \frac{1}{m} \sum_{i=1}^{m} \left(h_\theta(x^{(i)}) - y^{(i)}\right) \cdot x^{(i)}$$</div>
+<div class="math-display tex" data-display="1">\frac{\partial}{\partial \theta_0} J(\theta_0, \theta_1) = \frac{1}{m} \sum_{i=1}^{m} \left(h_\theta(x^{(i)}) - y^{(i)}\right)</div>
+<div class="math-display tex" data-display="1">\frac{\partial}{\partial \theta_1} J(\theta_0, \theta_1) = \frac{1}{m} \sum_{i=1}^{m} \left(h_\theta(x^{(i)}) - y^{(i)}\right) \cdot x^{(i)}</div>
 <p><code>image26.png</code>
 <img src="ML%20DL/images/image26.png" alt="Cost Function Parabola with Gradient Descent" width="680" /></p>
 <p><strong>Batch GD vs Stochastic GD — Comparison:</strong></p>
@@ -2066,8 +2052,8 @@ P(y=5) &= P(T>4)
 <h3 id="91-non-linearity">9.1 Non-Linearity</h3>
 <p><strong>Linearity</strong> requires:</p>
 <ol>
-<li>Homogeneity of degree 1: $f(ax) = af(x)$</li>
-<li>Additivity: $f(x + y) = f(x) + f(y)$</li>
+<li>Homogeneity of degree 1: <span class="tex" data-display="0">f(ax) = af(x)</span></li>
+<li>Additivity: <span class="tex" data-display="0">f(x + y) = f(x) + f(y)</span></li>
 </ol>
 <p><strong>Why non-linearity is necessary:</strong></p>
 <ul>
@@ -2128,27 +2114,27 @@ P(y=5) &= P(T>4)
 <tbody>
 <tr>
 <td style="text-align:left"><strong>Sigmoid</strong></td>
-<td style="text-align:left">$\sigma(x) = \frac{1}{1 + e^{-x}}$</td>
+<td style="text-align:left"><span class="tex" data-display="0">\sigma(x) = \frac{1}{1 + e^{-x}}</span></td>
 <td style="text-align:left">Range (0,1); suffers from saturation/vanishing gradients</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Tanh</strong></td>
-<td style="text-align:left">$\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}$</td>
+<td style="text-align:left"><span class="tex" data-display="0">\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}</span></td>
 <td style="text-align:left">Range (-1,1); zero-centered; still saturates</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>ReLU</strong></td>
-<td style="text-align:left">$f(x) = \max(0, x)$</td>
+<td style="text-align:left"><span class="tex" data-display="0">f(x) = \max(0, x)</span></td>
 <td style="text-align:left">Fast; no saturation for positive values; dying ReLU problem</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>Leaky ReLU</strong></td>
-<td style="text-align:left">$f(x) = \max(\alpha x, x)$</td>
+<td style="text-align:left"><span class="tex" data-display="0">f(x) = \max(\alpha x, x)</span></td>
 <td style="text-align:left">Fixes dying ReLU</td>
 </tr>
 <tr>
 <td style="text-align:left"><strong>ELU</strong></td>
-<td style="text-align:left">$f(x) = x$ if $x > 0$, else $\alpha(e^x - 1)$</td>
+<td style="text-align:left"><span class="tex" data-display="0">f(x) = x</span> if <span class="tex" data-display="0">x &gt; 0</span>, else <span class="tex" data-display="0">\alpha(e^x - 1)</span></td>
 <td style="text-align:left">Smooth; negative values push mean toward zero</td>
 </tr>
 </tbody>
@@ -2163,7 +2149,7 @@ P(y=5) &= P(T>4)
 <li>The input to the activation function is far from center → <strong>gradient ≈ 0</strong></li>
 <li>Weights update extremely slowly → <strong>learning stalls</strong></li>
 </ul>
-<p><strong>ReLU fix:</strong> No saturation for positive inputs → gradient is constant (1) for $x > 0$, enabling faster convergence with SGD.</p>
+<p><strong>ReLU fix:</strong> No saturation for positive inputs → gradient is constant (1) for <span class="tex" data-display="0">x &gt; 0</span>, enabling faster convergence with SGD.</p>
 <blockquote>
 <p>&quot;The biggest advantage of ReLU is non-saturation of its gradient, which greatly accelerates the convergence of stochastic gradient descent compared to sigmoid/tanh.&quot;</p>
 </blockquote>
@@ -2311,7 +2297,7 @@ P(y=5) &= P(T>4)
 <h3 id="98-batch-normalization">9.8 Batch Normalization</h3>
 <p><strong>Purpose:</strong> Improve performance and stability by normalizing layer inputs to have <strong>mean ≈ 0</strong> and <strong>std ≈ 1</strong>.</p>
 <p><strong>Formula:</strong></p>
-<div class="math-display">$$h_{\text{norm}} = \frac{h - \mu}{\sqrt{\sigma^2 + \epsilon}}$$</div>
+<div class="math-display tex" data-display="1">h_{\text{norm}} = \frac{h - \mu}{\sqrt{\sigma^2 + \epsilon}}</div>
 <p><strong>Placement in network:</strong></p>
 <pre><code>CONV/FC → BatchNorm → ReLU (or other activation) → Dropout → CONV/FC
 </code></pre>
@@ -2338,21 +2324,21 @@ P(y=5) &= P(T>4)
 
 <h3 id="101-pca-vs-svd">10.1 PCA vs SVD</h3>
 <p><strong>SVD Decomposition:</strong></p>
-<div class="math-display">$$M_{(m \times n)} = U_{(m \times m)} \cdot \Sigma_{(m \times n)} \cdot V^*_{(n \times n)}$$</div>
+<div class="math-display tex" data-display="1">M_{(m \times n)} = U_{(m \times m)} \cdot \Sigma_{(m \times n)} \cdot V^*_{(n \times n)}</div>
 <p>Where:</p>
 <ul>
-<li>$M$ = the original matrix being decomposed</li>
-<li>$U$ = left singular matrix; columns are the <strong>left singular vectors</strong> (eigenvectors of $MM^T$)</li>
-<li>$\Sigma$ = diagonal matrix of <strong>singular values</strong> (square roots of eigenvalues of $M^TM$)</li>
-<li>$V^*$ = right singular matrix; columns are the <strong>right singular vectors</strong> (eigenvectors of $M^TM$)</li>
+<li><span class="tex" data-display="0">M</span> = the original matrix being decomposed</li>
+<li><span class="tex" data-display="0">U</span> = left singular matrix; columns are the <strong>left singular vectors</strong> (eigenvectors of <span class="tex" data-display="0">MM^T</span>)</li>
+<li><span class="tex" data-display="0">\Sigma</span> = diagonal matrix of <strong>singular values</strong> (square roots of eigenvalues of <span class="tex" data-display="0">M^TM</span>)</li>
+<li><span class="tex" data-display="0">V^*</span> = right singular matrix; columns are the <strong>right singular vectors</strong> (eigenvectors of <span class="tex" data-display="0">M^TM</span>)</li>
 </ul>
 <p><code>image9.png</code>
 <img src="ML%20DL/images/image9.png" alt="SVD Diagram" width="700" /></p>
 <p><strong>SVD Derivation:</strong></p>
-<div class="math-display">$$A^T A = (U\Sigma V^T)^T(U\Sigma V^T) = V\Sigma^T U^T U \Sigma V^T$$</div>
-<p>Since $U$ is orthonormal ($U^T U = I$):</p>
-<div class="math-display">$$= V\Sigma^T \Sigma V^T \quad \text{Let } D = \Sigma^T\Sigma$$</div>
-<div class="math-display">$$\boxed{A^T A = V D V^T}$$</div>
+<div class="math-display tex" data-display="1">A^T A = (U\Sigma V^T)^T(U\Sigma V^T) = V\Sigma^T U^T U \Sigma V^T</div>
+<p>Since <span class="tex" data-display="0">U</span> is orthonormal (<span class="tex" data-display="0">U^T U = I</span>):</p>
+<div class="math-display tex" data-display="1">= V\Sigma^T \Sigma V^T \quad \text{Let } D = \Sigma^T\Sigma</div>
+<div class="math-display tex" data-display="1">\boxed{A^T A = V D V^T}</div>
 <table>
 <thead>
 <tr>
@@ -2661,12 +2647,12 @@ P(y=5) &= P(T>4)
 <li>Values must stay small to avoid shifting word embeddings too far in embedding space</li>
 <li>Alternated <strong>sine</strong> and <strong>cosine</strong> at <strong>increasing frequencies</strong> for each dimension:</li>
 </ul>
-<div class="math-display">$$PE_{(pos, 2i)} = \sin\!\left(\frac{pos}{10000^{2i/d_{model}}}\right)$$</div>
-<div class="math-display">$$PE_{(pos, 2i+1)} = \cos\!\left(\frac{pos}{10000^{2i/d_{model}}}\right)$$</div>
+<div class="math-display tex" data-display="1">PE_{(pos, 2i)} = \sin\!\left(\frac{pos}{10000^{2i/d_{model}}}\right)</div>
+<div class="math-display tex" data-display="1">PE_{(pos, 2i+1)} = \cos\!\left(\frac{pos}{10000^{2i/d_{model}}}\right)</div>
 <hr />
 <h3 id="123-qkv-attention-mechanism">12.3 QKV Attention Mechanism</h3>
 <p>Q, K, V are derived from input embeddings via <strong>learned linear transformations</strong>:</p>
-<div class="math-display">$$X \cdot W^Q = Q, \quad X \cdot W^K = K, \quad X \cdot W^V = V$$</div>
+<div class="math-display tex" data-display="1">X \cdot W^Q = Q, \quad X \cdot W^K = K, \quad X \cdot W^V = V</div>
 <table>
 <thead>
 <tr>
@@ -2690,9 +2676,9 @@ P(y=5) &= P(T>4)
 </tbody>
 </table>
 <p><strong>Scaled Dot-Product Attention:</strong></p>
-<div class="math-display">$$\text{Attention}(Q, K, V) = \text{softmax}\!\left(\frac{QK^T}{\sqrt{d_k}}\right) V = Z$$</div>
+<div class="math-display tex" data-display="1">\text{Attention}(Q, K, V) = \text{softmax}\!\left(\frac{QK^T}{\sqrt{d_k}}\right) V = Z</div>
 <ul>
-<li>$\sqrt{d_k}$ scaling prevents dot products from becoming too large (which causes softmax gradients to vanish)</li>
+<li><span class="tex" data-display="0">\sqrt{d_k}</span> scaling prevents dot products from becoming too large (which causes softmax gradients to vanish)</li>
 </ul>
 <hr />
 <h3 id="124-multi-head-attention">12.4 Multi-Head Attention</h3>
@@ -2700,9 +2686,9 @@ P(y=5) &= P(T>4)
 <ol>
 <li>Split input into 8 (or more) heads</li>
 <li>Each head computes its own Q, K, V projections independently</li>
-<li>Each head runs scaled dot-product attention → output $Z_i$</li>
-<li>Concatenate all $Z_i$ matrices</li>
-<li>Multiply by learned weight matrix $W^O$ → final output</li>
+<li>Each head runs scaled dot-product attention → output <span class="tex" data-display="0">Z_i</span></li>
+<li>Concatenate all <span class="tex" data-display="0">Z_i</span> matrices</li>
+<li>Multiply by learned weight matrix <span class="tex" data-display="0">W^O</span> → final output</li>
 </ol>
 <p>This allows the model to <strong>simultaneously attend to information from different representation subspaces</strong> at different positions.</p>
 <hr />
@@ -2808,7 +2794,7 @@ P(y=5) &= P(T>4)
 <hr />
 <h3 id="128-kl-divergence">12.8 KL Divergence</h3>
 <p>Measures how one probability distribution <strong>diverges</strong> from a reference distribution:</p>
-<div class="math-display">$$D_{KL}(p \| q) = \sum_{x \in X} p(x) \ln\!\frac{p(x)}{q(x)}$$</div>
+<div class="math-display tex" data-display="1">D_{KL}(p \| q) = \sum_{x \in X} p(x) \ln\!\frac{p(x)}{q(x)}</div>
 <p><strong>Applications:</strong></p>
 <ul>
 <li>Measuring difference between two distributions</li>
@@ -2818,8 +2804,8 @@ P(y=5) &= P(T>4)
 <hr />
 <h3 id="129-llama-pre-training--rlhf">12.9 LLaMA Pre-training &amp; RLHF</h3>
 <p><strong>Pre-training Loss:</strong> Standard <strong>cross-entropy loss</strong> over next-token prediction:</p>
-<div class="math-display">$$\mathcal{L} = -\sum_{i=1}^{N} y_i \log \hat{y}_i$$</div>
-<p>where $y_i$ is one-hot (correct token = 1, others = 0) and $\hat{y}_i$ is predicted probability distribution.</p>
+<div class="math-display tex" data-display="1">\mathcal{L} = -\sum_{i=1}^{N} y_i \log \hat{y}_i</div>
+<p>where <span class="tex" data-display="0">y_i</span> is one-hot (correct token = 1, others = 0) and <span class="tex" data-display="0">\hat{y}_i</span> is predicted probability distribution.</p>
 <p><strong>Training Process:</strong></p>
 <ol>
 <li>Model predicts next token given previous tokens</li>
@@ -2965,7 +2951,7 @@ P(y=5) &= P(T>4)
 <p><strong>Strategies:</strong></p>
 <ul>
 <li><strong>ε-greedy</strong>: Decides what fraction ε of decisions to spend exploring (trying new options) and fraction (1-ε) exploiting the best known option</li>
-<li><strong>UCB (Upper Confidence Bound)</strong>: Selects the action with the highest upper confidence bound $\mu + \beta\sigma$, where $\beta$ is a trade-off parameter. High $\beta$ favors exploration; $\beta \to 0$ approaches pure exploitation</li>
+<li><strong>UCB (Upper Confidence Bound)</strong>: Selects the action with the highest upper confidence bound <span class="tex" data-display="0">\mu + \beta\sigma</span>, where <span class="tex" data-display="0">\beta</span> is a trade-off parameter. High <span class="tex" data-display="0">\beta</span> favors exploration; <span class="tex" data-display="0">\beta \to 0</span> approaches pure exploitation</li>
 <li><strong>Thompson Sampling</strong>: Draw one sample from each action's posterior distribution of expected reward. Rank actions based on sampled reward values and select the highest</li>
 </ul>
 <hr />
@@ -3532,8 +3518,19 @@ const bt = document.getElementById('back-top');
 window.addEventListener('scroll', () => bt.classList.toggle('show', window.scrollY > 350));
 bt.addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));
 
+/* ── Math: LaTeX → native MathML via Temml (searchable & selectable) ─────── */
+function renderMath() {
+  if (typeof temml === 'undefined') return;
+  document.querySelectorAll('.tex').forEach(el => {
+    const tex = el.textContent;
+    try { temml.render(tex, el, { displayMode: el.dataset.display === '1', throwOnError: false }); }
+    catch (e) { /* leave the raw LaTeX text in place (still searchable) */ }
+  });
+}
+
 /* ── Init ────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
+  renderMath();
   buildSidebar();
   decorateHeadings();
   initScrollSpy();

@@ -25,7 +25,7 @@ OUT_FILE   = SCRIPT_DIR.parent / "ML_DL_Notes.html"   # written to the repo root
 
 # Site version — shown in the top bar. Bump on every push (see CHANGELOG.md);
 # kept in sync with CV/generate_html.py's SITE_VERSION.
-SITE_VERSION = "v1.21"
+SITE_VERSION = "v1.22"
 
 # Images live in this folder relative to the repo root (space → %20 for URLs).
 IMG_BASE   = "ML%20DL"
@@ -128,11 +128,24 @@ def protect_math(text):
 
 
 def restore_math(html, store):
-    def repl_block(m):
-        return f'<div class="math-display">{store[int(m.group(1))]}</div>'
+    """Emit render-ready elements holding the LaTeX (HTML-escaped) as text.
+    Temml converts them to native MathML in the browser — searchable & selectable."""
+    def strip(expr):
+        e = expr.strip()
+        if e.startswith('$$') and e.endswith('$$'):
+            return _html.escape(e[2:-2], quote=False), True    # display
+        if e.startswith('$') and e.endswith('$'):
+            return _html.escape(e[1:-1], quote=False), False    # inline
+        return _html.escape(e, quote=False), False
 
-    html = re.sub(r'<p>\s*MLMATH(\d+)MLEND\s*</p>', repl_block, html)
-    html = re.sub(r'MLMATH(\d+)MLEND', lambda m: store[int(m.group(1))], html)
+    def as_el(idx):
+        tex, disp = strip(store[idx])
+        if disp:
+            return f'<div class="math-display tex" data-display="1">{tex}</div>'
+        return f'<span class="tex" data-display="0">{tex}</span>'
+
+    html = re.sub(r'<p>\s*MLMATH(\d+)MLEND\s*</p>', lambda m: as_el(int(m.group(1))), html)
+    html = re.sub(r'MLMATH(\d+)MLEND', lambda m: as_el(int(m.group(1))), html)
     return html
 
 
@@ -681,8 +694,19 @@ const bt = document.getElementById('back-top');
 window.addEventListener('scroll', () => bt.classList.toggle('show', window.scrollY > 350));
 bt.addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));
 
+/* ── Math: LaTeX → native MathML via Temml (searchable & selectable) ─────── */
+function renderMath() {
+  if (typeof temml === 'undefined') return;
+  document.querySelectorAll('.tex').forEach(el => {
+    const tex = el.textContent;
+    try { temml.render(tex, el, { displayMode: el.dataset.display === '1', throwOnError: false }); }
+    catch (e) { /* leave the raw LaTeX text in place (still searchable) */ }
+  });
+}
+
 /* ── Init ────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
+  renderMath();
   buildSidebar();
   decorateHeadings();
   initScrollSpy();
@@ -706,23 +730,9 @@ _HTML_TEMPLATE = """<!DOCTYPE html>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-<!-- MathJax: render $...$ and $$...$$ -->
-<script>
-MathJax = {
-  loader: { load: ['a11y/assistive-mml'] },
-  tex: {
-    inlineMath: [['$','$'],['\\\\(','\\\\)']],
-    displayMath: [['$$','$$'],['\\\\[','\\\\]']],
-    processEscapes: true,
-    processEnvironments: true
-  },
-  options: {
-    skipHtmlTags: ['script','noscript','style','textarea','pre'],
-    menuOptions: { settings: { assistiveMml: true } }
-  }
-};
-</script>
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<!-- Temml: LaTeX → native MathML (rendered by the browser; searchable & selectable) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/temml@0.10.34/dist/Temml-Local.css">
+<script src="https://cdn.jsdelivr.net/npm/temml@0.10.34/dist/temml.min.js"></script>
 
 <style>
 __CSS__

@@ -9,23 +9,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-<!-- MathJax: render $...$ and $$...$$ -->
-<script>
-MathJax = {
-  loader: { load: ['a11y/assistive-mml'] },
-  tex: {
-    inlineMath: [['$','$'],['\\(','\\)']],
-    displayMath: [['$$','$$'],['\\[','\\]']],
-    processEscapes: true,
-    processEnvironments: true
-  },
-  options: {
-    skipHtmlTags: ['script','noscript','style','textarea','pre'],
-    menuOptions: { settings: { assistiveMml: true } }
-  }
-};
-</script>
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<!-- Temml: LaTeX → native MathML (rendered by the browser; searchable & selectable) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/temml@0.10.34/dist/Temml-Local.css">
+<script src="https://cdn.jsdelivr.net/npm/temml@0.10.34/dist/temml.min.js"></script>
 
 <style>
 
@@ -248,7 +234,7 @@ blockquote{border-left:4px solid var(--sa);
 <div id="topbar">
   <button id="tog-btn">☰</button>
   <span id="bar-title">Computer Vision — Interview Notes</span>
-  <span id="bar-version">v1.21</span>
+  <span id="bar-version">v1.22</span>
   <a id="cross-link" href="ML_DL_Notes.html">ML/DL Notes ↗</a>
   <button id="dark-btn">🌙  Dark</button>
 </div>
@@ -414,7 +400,7 @@ blockquote{border-left:4px solid var(--sa);
 <li>A larger stride can lead to faster computations and reduced memory usage but might result in a loss of spatial resolution and detail.</li>
 <li>The output size can be calculated using the formula:</li>
 </ul>
-<div class="math-display">$$\text{Output size} = \left\lfloor \frac{\text{Input size} - \text{Filter size}}{\text{Stride}} \right\rfloor + 1$$</div>
+<div class="math-display tex" data-display="1">\text{Output size} = \left\lfloor \frac{\text{Input size} - \text{Filter size}}{\text{Stride}} \right\rfloor + 1</div>
 <h3 id="33-dilated-convolutions">3.3 Dilated Convolutions</h3>
 <p><em>What are dilated convolutions, and what advantages do they offer over standard convolutions?</em></p>
 <p>Dilated convolutions, also known as atrous convolutions, introduce spaces between the filter weights by skipping certain pixels. This is controlled by a dilation rate parameter, which defines the spacing between the weights. For a dilation rate of 1, the dilated convolution is equivalent to a standard convolution. Higher dilation rates spread the filter weights further apart, allowing the network to have a larger receptive field without increasing the number of parameters. The advantages of dilated convolutions include:</p>
@@ -433,8 +419,8 @@ blockquote{border-left:4px solid var(--sa);
 <h3 id="35-residual-blocks-resnet">3.5 Residual Blocks (ResNet)</h3>
 <p><em>Explain the concept of a residual block in ResNet architectures and its importance.</em></p>
 <p>The residual block is a key component of ResNet (Residual Networks) architectures, designed to address the problem of vanishing/exploding gradients in very deep networks. A residual block consists of a few convolutional layers with an identity shortcut connection that skips one or more layers. The output of the residual block is the sum of the input to the block and the output of the convolutional layers:</p>
-<div class="math-display">$$\mathbf{y} = \mathcal{F}(\mathbf{x}, \{W_i\}) + \mathbf{x}$$</div>
-<p>where $\mathbf{x}$ is the input, $\mathcal{F}$ represents the convolutional layers, and $W_i$ are the weights. The importance of the residual block includes:</p>
+<div class="math-display tex" data-display="1">\mathbf{y} = \mathcal{F}(\mathbf{x}, \{W_i\}) + \mathbf{x}</div>
+<p>where <span class="tex" data-display="0">\mathbf{x}</span> is the input, <span class="tex" data-display="0">\mathcal{F}</span> represents the convolutional layers, and <span class="tex" data-display="0">W_i</span> are the weights. The importance of the residual block includes:</p>
 <ul>
 <li>It allows gradients to flow more easily through the network, enabling the training of much deeper networks.</li>
 <li>It mitigates the degradation problem, where adding more layers leads to higher training error.</li>
@@ -686,8 +672,19 @@ const bt = document.getElementById('back-top');
 window.addEventListener('scroll', () => bt.classList.toggle('show', window.scrollY > 350));
 bt.addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));
 
+/* ── Math: LaTeX → native MathML via Temml (searchable & selectable) ─────── */
+function renderMath() {
+  if (typeof temml === 'undefined') return;
+  document.querySelectorAll('.tex').forEach(el => {
+    const tex = el.textContent;
+    try { temml.render(tex, el, { displayMode: el.dataset.display === '1', throwOnError: false }); }
+    catch (e) { /* leave the raw LaTeX text in place (still searchable) */ }
+  });
+}
+
 /* ── Init ────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
+  renderMath();
   buildSidebar();
   decorateHeadings();
   initScrollSpy();

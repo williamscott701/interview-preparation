@@ -2,6 +2,13 @@
 
 Version shown in the top bar of both notes pages. Bumped on every push from here on.
 
+## v1.22 — 2026-07-01
+- Formulas are now genuinely searchable (Ctrl+F) and selectable: switched
+  math rendering from MathJax to **Temml** (LaTeX → native browser MathML).
+  The descriptive words in formulas (Precision, Recall, Variance, ...) match
+  find-in-page; the look is essentially unchanged. (v1.21's assistive-MathML
+  approach was clipped to 1px, which Chrome find-in-page skips.)
+
 ## v1.21 — 2026-07-01
 - Formulas are now searchable (Ctrl+F) and copyable: enabled MathJax
   Assistive MathML, which adds a real-text MathML copy of each equation to

@@ -2,6 +2,9 @@
 
 Version shown in the top bar of both notes pages. Bumped on every push from here on.
 
+## v1.7 — 2026-07-01
+- §2.1: add Significance Level (α) vs P-Value comparison table + high-jump analogy
+
 ## v1.6 — 2026-07-01
 - §1.9: split the eigenvector/eigenvalue intro onto separate lines
 

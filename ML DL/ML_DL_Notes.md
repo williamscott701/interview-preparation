@@ -240,6 +240,19 @@ A framework to make inferences about a population based on sample data.
 | **Type II Error** | Failing to reject $H_0$ when it is actually false (false negative) |
 | **Power** | Probability of correctly rejecting $H_0$ when it is false = $1 - P(\text{Type II})$ |
 
+**Significance Level (α) vs P-Value:**
+
+| Feature | Significance Level (α) | P-Value |
+|:---|:---|:---|
+| **What it is** | A pre-set cutoff for risk | The probability of your observed data happening by chance |
+| **When it is set** | Before collecting data | After analyzing data |
+| **Control** | Chosen entirely by the researcher | Calculated from the sample data |
+| **Common values** | Typically 0.05, 0.01, or 0.10 | Variable (any number between 0 and 1) |
+
+- Think of the significance level as a high-jump bar set at a specific height (e.g., 5 feet) before the competition starts.
+- The p-value represents the actual performance of the athlete.
+- If the athlete clears the bar (if the p-value is lower than the threshold of error you are willing to accept), they pass the test.
+
 ---
 
 ### 2.2 Statistical Tests: Chi-Square vs T-Test

@@ -2,6 +2,10 @@
 
 Version shown in the top bar of both notes pages. Bumped on every push from here on.
 
+## v1.15 — 2026-07-01
+- §3.3: add Sensitivity/Specificity formulas, remove image24, align all
+  formulas' "=" in one block (Accuracy/Precision/Recall/Specificity/F1/F-Beta)
+
 ## v1.14 — 2026-07-01
 - §3.2: reformat the Bias/Variance intro as a bullet list
 

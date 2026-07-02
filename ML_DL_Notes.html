@@ -244,7 +244,7 @@ blockquote{border-left:4px solid var(--sa);
 <div id="topbar">
   <button id="tog-btn">☰</button>
   <span id="bar-title">ML / DL Interview Preparation Notes</span>
-  <span id="bar-version">v1.14</span>
+  <span id="bar-version">v1.15</span>
   <a id="cross-link" href="CV_Notes.html">Computer Vision ↗</a>
   <button id="dark-btn">🌙  Dark</button>
 </div>
@@ -839,18 +839,26 @@ blockquote{border-left:4px solid var(--sa);
 </ol>
 <hr />
 <h3 id="33-evaluation-metrics">3.3 Evaluation Metrics</h3>
-<p><code>image24.png</code>
-<img src="ML%20DL/images/image24.png" alt="Classification Metrics Reference" width="620" /></p>
-<div class="math-display">$$\text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}$$</div>
-<div class="math-display">$$\text{Precision} = \frac{TP}{TP + FP} \quad \text{(of all positive predictions, how many were correct?)}$$</div>
-<div class="math-display">$$\text{Recall} = \frac{TP}{TP + FN} \quad \text{(of all actual positives, how many were found?)}$$</div>
-<div class="math-display">$$\text{F1} = \frac{2}{\frac{1}{\text{Precision}} + \frac{1}{\text{Recall}}} = \frac{2 \times \text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}$$</div>
-<p><strong>F-Beta Score</strong> — generalizes F1 with weight $\beta$ on recall:</p>
-<div class="math-display">$$F_\beta = \frac{(1 + \beta^2)}{\frac{\beta^2}{\text{Recall}} + \frac{1}{\text{Precision}}}$$</div>
+<div class="math-display">$$\begin{aligned}
+\text{Accuracy} &= \frac{TP + TN}{TP + TN + FP + FN} \\
+\text{Precision} &= \frac{TP}{TP + FP} \\
+\text{Recall (Sensitivity, True Positive Rate)} &= \frac{TP}{TP + FN} \\
+\text{Specificity (True Negative Rate)} &= \frac{TN}{TN + FP} \\
+\text{F1} &= \frac{2 \times \text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}} \\
+F_\beta &= \frac{(1 + \beta^2)}{\frac{\beta^2}{\text{Recall}} + \frac{1}{\text{Precision}}}
+\end{aligned}$$</div>
+<ul>
+<li><strong>Precision</strong> — of all positive predictions, how many were correct?</li>
+<li><strong>Recall / Sensitivity</strong> — of all actual positives, how many were found?</li>
+<li><strong>Specificity</strong> — of all actual negatives, how many were correctly identified?</li>
+<li><strong>F1</strong> — harmonic mean of Precision and Recall: $F1 = \frac{2}{\frac{1}{\text{Precision}} + \frac{1}{\text{Recall}}}$ (equivalent to the form above)</li>
+<li><strong>F-Beta Score</strong> — generalizes F1 with weight $\beta$ on recall:
 <ul>
 <li>$\beta = 1$: Equal weight to precision and recall (standard F1)</li>
 <li>$\beta > 1$: More weight on recall</li>
 <li>$\beta < 1$: More weight on precision</li>
+</ul>
+</li>
 </ul>
 <p><strong>F1 is preferred when:</strong></p>
 <ul>

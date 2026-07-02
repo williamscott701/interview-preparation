@@ -422,24 +422,23 @@ $$\text{MSE} = \mathbb{E}[(\hat{y} - y)^2] = \underbrace{\mathbb{E}[(\hat{y} - \
 
 ### 3.3 Evaluation Metrics
 
-`image24.png`
-<img src="images/image24.png" alt="Classification Metrics Reference" width="620" />
+$$\begin{aligned}
+\text{Accuracy} &= \frac{TP + TN}{TP + TN + FP + FN} \\
+\text{Precision} &= \frac{TP}{TP + FP} \\
+\text{Recall (Sensitivity, True Positive Rate)} &= \frac{TP}{TP + FN} \\
+\text{Specificity (True Negative Rate)} &= \frac{TN}{TN + FP} \\
+\text{F1} &= \frac{2 \times \text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}} \\
+F_\beta &= \frac{(1 + \beta^2)}{\frac{\beta^2}{\text{Recall}} + \frac{1}{\text{Precision}}}
+\end{aligned}$$
 
-$$\text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}$$
-
-$$\text{Precision} = \frac{TP}{TP + FP} \quad \text{(of all positive predictions, how many were correct?)}$$
-
-$$\text{Recall} = \frac{TP}{TP + FN} \quad \text{(of all actual positives, how many were found?)}$$
-
-$$\text{F1} = \frac{2}{\frac{1}{\text{Precision}} + \frac{1}{\text{Recall}}} = \frac{2 \times \text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}$$
-
-**F-Beta Score** — generalizes F1 with weight $\beta$ on recall:
-
-$$F_\beta = \frac{(1 + \beta^2)}{\frac{\beta^2}{\text{Recall}} + \frac{1}{\text{Precision}}}$$
-
-- $\beta = 1$: Equal weight to precision and recall (standard F1)
-- $\beta > 1$: More weight on recall
-- $\beta < 1$: More weight on precision
+- **Precision** — of all positive predictions, how many were correct?
+- **Recall / Sensitivity** — of all actual positives, how many were found?
+- **Specificity** — of all actual negatives, how many were correctly identified?
+- **F1** — harmonic mean of Precision and Recall: $F1 = \frac{2}{\frac{1}{\text{Precision}} + \frac{1}{\text{Recall}}}$ (equivalent to the form above)
+- **F-Beta Score** — generalizes F1 with weight $\beta$ on recall:
+  - $\beta = 1$: Equal weight to precision and recall (standard F1)
+  - $\beta > 1$: More weight on recall
+  - $\beta < 1$: More weight on precision
 
 **F1 is preferred when:**
 - There is **class imbalance**

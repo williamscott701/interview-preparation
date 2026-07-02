@@ -684,6 +684,16 @@ $$P(x = v \mid c) = \frac{1}{\sqrt{2\pi\sigma_c^2}} \exp\!\left(-\frac{(v - \mu_
 
 **Choosing $K$:** Elbow Method or Silhouette Score.
 
+**K-Means vs Expectation-Maximization (EM):** K-Means is technically a special, simplified version of EM — both use an iterative, two-step process to group data.
+
+| | K-Means | EM |
+|:---|:---|:---|
+| **The "E" step** | **Assign**: points are definitively assigned to the closest center (hard assignment) | **Expectation**: points are assigned probabilities of belonging to each group (soft assignment) |
+| **The "M" step** | **Update**: centers are moved to the exact mean of their assigned points | **Maximization**: group parameters (mean, size, and shape) are updated to maximize the data's likelihood |
+
+- **K-Means** is like deciding which room you are in — you are either definitively in Room A or Room B.
+- **EM** is like being asked how you feel — you might say, "I am 80% sure I belong in Room A, but 20% sure I belong in Room B."
+
 ---
 
 ### 5.5 KNN vs K-Means

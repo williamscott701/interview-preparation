@@ -2,6 +2,9 @@
 
 Version shown in the top bar of both notes pages. Bumped on every push from here on.
 
+## v1.12 — 2026-07-01
+- §5.4: add K-Means vs EM comparison table (hard vs soft assignment) + room analogy
+
 ## v1.11 — 2026-07-01
 - §2.4: keep both Probability/Likelihood definitions — new phrasing plus the
   original as a nested sub-bullet under each

@@ -427,14 +427,14 @@ $$\begin{aligned}
 \text{Precision} &= \frac{TP}{TP + FP} \\
 \text{Recall (Sensitivity, True Positive Rate)} &= \frac{TP}{TP + FN} \\
 \text{Specificity (True Negative Rate)} &= \frac{TN}{TN + FP} \\
-\text{F1} &= \frac{2 \times \text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}} \\
+\text{F1 (Harmonic Mean of Precision \& Recall)} &= \frac{2 \times \text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}} \\
 F_\beta &= \frac{(1 + \beta^2)}{\frac{\beta^2}{\text{Recall}} + \frac{1}{\text{Precision}}}
 \end{aligned}$$
 
 - **Precision** — of all positive predictions, how many were correct?
 - **Recall / Sensitivity** — of all actual positives, how many were found?
 - **Specificity** — of all actual negatives, how many were correctly identified?
-- **F1** — harmonic mean of Precision and Recall: $F1 = \frac{2}{\frac{1}{\text{Precision}} + \frac{1}{\text{Recall}}}$ (equivalent to the form above)
+- **F1** — the harmonic mean of Precision and Recall; equivalently $F1 = \frac{2}{\frac{1}{\text{Precision}} + \frac{1}{\text{Recall}}}$
 - **F-Beta Score** — generalizes F1 with weight $\beta$ on recall:
   - $\beta = 1$: Equal weight to precision and recall (standard F1)
   - $\beta > 1$: More weight on recall

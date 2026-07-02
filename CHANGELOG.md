@@ -2,6 +2,10 @@
 
 Version shown in the top bar of both notes pages. Bumped on every push from here on.
 
+## v1.16 — 2026-07-01
+- §3.3: label F1 as "Harmonic Mean of Precision & Recall" directly in the
+  aligned formula block
+
 ## v1.15 — 2026-07-01
 - §3.3: add Sensitivity/Specificity formulas, remove image24, align all
   formulas' "=" in one block (Accuracy/Precision/Recall/Specificity/F1/F-Beta)

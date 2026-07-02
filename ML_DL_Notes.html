@@ -244,7 +244,7 @@ blockquote{border-left:4px solid var(--sa);
 <div id="topbar">
   <button id="tog-btn">☰</button>
   <span id="bar-title">ML / DL Interview Preparation Notes</span>
-  <span id="bar-version">v1.13</span>
+  <span id="bar-version">v1.14</span>
   <a id="cross-link" href="CV_Notes.html">Computer Vision ↗</a>
   <button id="dark-btn">🌙  Dark</button>
 </div>
@@ -779,7 +779,11 @@ blockquote{border-left:4px solid var(--sa);
 </table>
 <hr />
 <h3 id="32-bias-variance-tradeoff">3.2 Bias-Variance Tradeoff</h3>
-<p>Bias and variance are the two primary sources of error in predictive models. <strong>Bias</strong> measures how far a model's predictions are from the true values due to oversimplifying assumptions. <strong>Variance</strong> measures how much the predictions fluctuate in response to small changes in the training data.</p>
+<p>Bias and variance are the two primary sources of error in predictive models:</p>
+<ul>
+<li><strong>Bias</strong> — how far a model's predictions are from the true values, due to oversimplifying assumptions</li>
+<li><strong>Variance</strong> — how much the predictions fluctuate in response to small changes in the training data</li>
+</ul>
 <div class="math-display">$$\text{MSE} = \mathbb{E}[(\hat{y} - y)^2] = \underbrace{\mathbb{E}[(\hat{y} - \mathbb{E}[\hat{y}])^2]}_{\text{Variance}} + \underbrace{(\mathbb{E}[\hat{y}] - y)^2}_{\text{Bias}^2}$$</div>
 <p><code>image56.png</code>
 <img src="ML%20DL/images/image56.png" alt="Bias-Variance Decomposition" width="700" /></p>

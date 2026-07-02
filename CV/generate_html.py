@@ -25,7 +25,7 @@ OUT_FILE   = SCRIPT_DIR.parent / "CV_Notes.html"   # written to the repo root
 
 # Site version — shown in the top bar. Bump on every push (see CHANGELOG.md);
 # kept in sync with ML DL/generate_html.py's SITE_VERSION.
-SITE_VERSION = "v1.13"
+SITE_VERSION = "v1.14"
 
 # Images live in this folder relative to the repo root (space → %20 for URLs).
 IMG_BASE   = "CV"

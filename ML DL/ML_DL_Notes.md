@@ -382,7 +382,10 @@ ERM is the foundational principle in machine learning: find parameters that mini
 
 ### 3.2 Bias-Variance Tradeoff
 
-Bias and variance are the two primary sources of error in predictive models. **Bias** measures how far a model's predictions are from the true values due to oversimplifying assumptions. **Variance** measures how much the predictions fluctuate in response to small changes in the training data.
+Bias and variance are the two primary sources of error in predictive models:
+
+- **Bias** — how far a model's predictions are from the true values, due to oversimplifying assumptions
+- **Variance** — how much the predictions fluctuate in response to small changes in the training data
 
 $$\text{MSE} = \mathbb{E}[(\hat{y} - y)^2] = \underbrace{\mathbb{E}[(\hat{y} - \mathbb{E}[\hat{y}])^2]}_{\text{Variance}} + \underbrace{(\mathbb{E}[\hat{y}] - y)^2}_{\text{Bias}^2}$$
 

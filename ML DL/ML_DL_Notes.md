@@ -43,7 +43,19 @@
 
 ---
 
-### 1.2 IID — Independent and Identically Distributed
+### 1.2 Mean, Variance & Standard Deviation
+
+- **Mean ($\mu$ or $\bar{x}$)** — the average value; the "center" of the data.
+- **Variance ($\sigma^2$)** — average squared deviation from the mean; measures spread, in squared units.
+- **Standard deviation ($\sigma$)** — $\sqrt{\text{variance}}$; measures spread in the *original* units (easier to interpret than variance).
+
+$$\bar{x} = \frac{1}{N}\sum_{i=1}^{N} x_i \qquad \sigma^2 = \frac{1}{N}\sum_{i=1}^{N} (x_i - \bar{x})^2 \qquad \sigma = \sqrt{\sigma^2}$$
+
+> Use $N$ (population) or $N-1$ (sample, Bessel's correction) in the denominator depending on whether you have the full population or a sample.
+
+---
+
+### 1.3 IID — Independent and Identically Distributed
 
 Random variables $X_1, X_2, \ldots, X_n$ are IID if:
 - All $X_i$ are **mutually independent** (outcome of one doesn't affect others)
@@ -53,7 +65,7 @@ Random variables $X_1, X_2, \ldots, X_n$ are IID if:
 
 ---
 
-### 1.3 Probability Distributions
+### 1.4 Probability Distributions
 
 `image2.png`
 <img src="images/image2.png" alt="Common Probability Distributions" width="700" />
@@ -65,7 +77,7 @@ Key distributions: **Uniform, Binomial, Bernoulli, Poisson, Normal, T-distributi
 
 ---
 
-### 1.4 Bernoulli Trial vs Binomial Distribution
+### 1.5 Bernoulli Trial vs Binomial Distribution
 
 - **Bernoulli trial**: A single experiment with only two outcomes (success/failure)
 - **Binomial distribution**: Number of successes in a **sequence** of independent Bernoulli experiments
@@ -80,7 +92,7 @@ Key distributions: **Uniform, Binomial, Bernoulli, Poisson, Normal, T-distributi
 
 ---
 
-### 1.5 Gaussian / Normal Distribution
+### 1.6 Gaussian / Normal Distribution
 
 "Gaussian distribution" and "normal distribution" refer to the **same concept**.
 
@@ -106,7 +118,7 @@ $$f(x) = \frac{1}{\sqrt{2\pi}} \exp\!\left(-\frac{x^2}{2}\right)$$
 
 ---
 
-### 1.6 Covariance vs Correlation
+### 1.7 Covariance vs Correlation
 
 **Covariance** — how two variables vary together:
 
@@ -129,7 +141,7 @@ $$\text{Corr}(X, Y) = \frac{\text{Cov}(X, Y)}{\sigma_X \cdot \sigma_Y}$$
 
 ---
 
-### 1.7 Entropy & Information Gain
+### 1.8 Entropy & Information Gain
 
 **Entropy** — measure of uncertainty in a probability distribution:
 
@@ -156,7 +168,7 @@ $$H(S) = -\sum_{i=1}^{N} p_i \log_2 p_i = -\frac{9}{14}\log_2\frac{9}{14} - \fra
 
 ---
 
-### 1.8 Eigenvalues & Eigenvectors
+### 1.9 Eigenvalues & Eigenvectors
 
 In linear algebra, an **eigenvector** of a linear transformation is a non-zero vector that changes only in scale (not direction) when the transformation is applied:
 
@@ -695,7 +707,7 @@ $$P(x = v \mid c) = \frac{1}{\sqrt{2\pi\sigma_c^2}} \exp\!\left(-\frac{(v - \mu_
 
 **Choosing the split at each node:** Grown greedily, top-down — at each node, test every feature (and threshold, for numeric features) and pick the one with the **highest Information Gain** (largest impurity drop), then recurse until a stopping rule (pure node, max depth, or min samples).
 
-**Information Gain** — the reduction in entropy after splitting on attribute $A$ (see §1.7):
+**Information Gain** — the reduction in entropy after splitting on attribute $A$ (see §1.8):
 
 $$IG(A) = H(S) - \sum_{v} \frac{|S_v|}{|S|} H(S_v), \qquad H(S) = -\sum_i p_i \log_2 p_i$$
 

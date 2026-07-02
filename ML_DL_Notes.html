@@ -244,7 +244,7 @@ blockquote{border-left:4px solid var(--sa);
 <div id="topbar">
   <button id="tog-btn">☰</button>
   <span id="bar-title">ML / DL Interview Preparation Notes</span>
-  <span id="bar-version">v1.3</span>
+  <span id="bar-version">v1.4</span>
   <a id="cross-link" href="CV_Notes.html">Computer Vision ↗</a>
   <button id="dark-btn">🌙  Dark</button>
 </div>
@@ -317,7 +317,18 @@ blockquote{border-left:4px solid var(--sa);
 </tbody>
 </table>
 <hr />
-<h3 id="12-iid--independent-and-identically-distributed">1.2 IID — Independent and Identically Distributed</h3>
+<h3 id="12-mean-variance--standard-deviation">1.2 Mean, Variance &amp; Standard Deviation</h3>
+<ul>
+<li><strong>Mean ($\mu$ or $\bar{x}$)</strong> — the average value; the &quot;center&quot; of the data.</li>
+<li><strong>Variance ($\sigma^2$)</strong> — average squared deviation from the mean; measures spread, in squared units.</li>
+<li><strong>Standard deviation ($\sigma$)</strong> — $\sqrt{\text{variance}}$; measures spread in the <em>original</em> units (easier to interpret than variance).</li>
+</ul>
+<div class="math-display">$$\bar{x} = \frac{1}{N}\sum_{i=1}^{N} x_i \qquad \sigma^2 = \frac{1}{N}\sum_{i=1}^{N} (x_i - \bar{x})^2 \qquad \sigma = \sqrt{\sigma^2}$$</div>
+<blockquote>
+<p>Use $N$ (population) or $N-1$ (sample, Bessel's correction) in the denominator depending on whether you have the full population or a sample.</p>
+</blockquote>
+<hr />
+<h3 id="13-iid--independent-and-identically-distributed">1.3 IID — Independent and Identically Distributed</h3>
 <p>Random variables $X_1, X_2, \ldots, X_n$ are IID if:</p>
 <ul>
 <li>All $X_i$ are <strong>mutually independent</strong> (outcome of one doesn't affect others)</li>
@@ -325,14 +336,14 @@ blockquote{border-left:4px solid var(--sa);
 </ul>
 <p><em>Example</em>: Flipping a fair coin 100 times — each flip has the same probability (0.5) and is independent of all other flips.</p>
 <hr />
-<h3 id="13-probability-distributions">1.3 Probability Distributions</h3>
+<h3 id="14-probability-distributions">1.4 Probability Distributions</h3>
 <p><code>image2.png</code>
 <img src="ML%20DL/images/image2.png" alt="Common Probability Distributions" width="700" /></p>
 <p><code>image43.png</code>
 <img src="ML%20DL/images/image43.png" alt="More Distributions" width="700" /></p>
 <p>Key distributions: <strong>Uniform, Binomial, Bernoulli, Poisson, Normal, T-distribution, Exponential, Log-normal, Beta, Gamma</strong>.</p>
 <hr />
-<h3 id="14-bernoulli-trial-vs-binomial-distribution">1.4 Bernoulli Trial vs Binomial Distribution</h3>
+<h3 id="15-bernoulli-trial-vs-binomial-distribution">1.5 Bernoulli Trial vs Binomial Distribution</h3>
 <ul>
 <li><strong>Bernoulli trial</strong>: A single experiment with only two outcomes (success/failure)</li>
 <li><strong>Binomial distribution</strong>: Number of successes in a <strong>sequence</strong> of independent Bernoulli experiments</li>
@@ -374,7 +385,7 @@ blockquote{border-left:4px solid var(--sa);
 </tbody>
 </table>
 <hr />
-<h3 id="15-gaussian--normal-distribution">1.5 Gaussian / Normal Distribution</h3>
+<h3 id="16-gaussian--normal-distribution">1.6 Gaussian / Normal Distribution</h3>
 <p>&quot;Gaussian distribution&quot; and &quot;normal distribution&quot; refer to the <strong>same concept</strong>.</p>
 <p><strong>PDF:</strong></p>
 <div class="math-display">$$f(x \mid \mu, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)$$</div>
@@ -394,7 +405,7 @@ blockquote{border-left:4px solid var(--sa);
 <p>$\mu$ = mean, $\sigma$ = standard deviation, $\sigma^2$ = variance</p>
 </blockquote>
 <hr />
-<h3 id="16-covariance-vs-correlation">1.6 Covariance vs Correlation</h3>
+<h3 id="17-covariance-vs-correlation">1.7 Covariance vs Correlation</h3>
 <p><strong>Covariance</strong> — how two variables vary together:</p>
 <div class="math-display">$$\text{Cov}(X, Y) = \frac{\sum (X_i - \bar{X})(Y_i - \bar{Y})}{N}$$</div>
 <p><strong>Correlation</strong> — how the two variables are <em>related</em> (normalized covariance):</p>
@@ -431,7 +442,7 @@ blockquote{border-left:4px solid var(--sa);
 <p><code>image79.jpg</code>
 <img src="ML%20DL/images/image79.jpg" alt="Covariance vs Correlation Scatter Plots" width="620" /></p>
 <hr />
-<h3 id="17-entropy--information-gain">1.7 Entropy &amp; Information Gain</h3>
+<h3 id="18-entropy--information-gain">1.8 Entropy &amp; Information Gain</h3>
 <p><strong>Entropy</strong> — measure of uncertainty in a probability distribution:</p>
 <div class="math-display">$$H(S) = -\sum_i p_i \log_2 p_i$$</div>
 <p><strong>Information Gain</strong> — reduction in entropy from splitting on attribute A:</p>
@@ -451,7 +462,7 @@ blockquote{border-left:4px solid var(--sa);
 <p><em>Example</em>: From the total of 14 instances we have: 9 instances 'yes', 5 instances 'no'. The Entropy is:</p>
 <div class="math-display">$$H(S) = -\sum_{i=1}^{N} p_i \log_2 p_i = -\frac{9}{14}\log_2\frac{9}{14} - \frac{5}{14}\log_2\frac{5}{14} = 0.940$$</div>
 <hr />
-<h3 id="18-eigenvalues--eigenvectors">1.8 Eigenvalues &amp; Eigenvectors</h3>
+<h3 id="19-eigenvalues--eigenvectors">1.9 Eigenvalues &amp; Eigenvectors</h3>
 <p>In linear algebra, an <strong>eigenvector</strong> of a linear transformation is a non-zero vector that changes only in scale (not direction) when the transformation is applied:</p>
 <div class="math-display">$$A \mathbf{v} = \lambda \mathbf{v}$$</div>
 <ul>
@@ -1174,7 +1185,7 @@ blockquote{border-left:4px solid var(--sa);
 <hr />
 <h3 id="56-decision-trees">5.6 Decision Trees</h3>
 <p><strong>Choosing the split at each node:</strong> Grown greedily, top-down — at each node, test every feature (and threshold, for numeric features) and pick the one with the <strong>highest Information Gain</strong> (largest impurity drop), then recurse until a stopping rule (pure node, max depth, or min samples).</p>
-<p><strong>Information Gain</strong> — the reduction in entropy after splitting on attribute $A$ (see §1.7):</p>
+<p><strong>Information Gain</strong> — the reduction in entropy after splitting on attribute $A$ (see §1.8):</p>
 <div class="math-display">$$IG(A) = H(S) - \sum_{v} \frac{|S_v|}{|S|} H(S_v), \qquad H(S) = -\sum_i p_i \log_2 p_i$$</div>
 <p>where $S$ is the data at the node, $S_v$ the subset where attribute $A$ takes value $v$, and $H(\cdot)$ the entropy. The feature with the largest $IG$ is chosen for the split. (<strong>Gini impurity</strong> $= 1 - \sum_i p_i^2$ is the common alternative criterion used by CART.)</p>
 <p><code>image40.png</code>

@@ -427,7 +427,7 @@ $$\begin{aligned}
 \text{Precision} &= \frac{TP}{TP + FP} \\[10pt]
 \text{Recall (Sensitivity, True Positive Rate)} &= \frac{TP}{TP + FN} \\[10pt]
 \text{Specificity (True Negative Rate)} &= \frac{TN}{TN + FP} \\[10pt]
-\text{F1 (Harmonic Mean of Precision \& Recall)} &= \frac{2 \times \text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}} \\[10pt]
+\text{F1} &= \frac{2 \times \text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}} \\[10pt]
 F_\beta &= \frac{(1 + \beta^2)}{\frac{\beta^2}{\text{Recall}} + \frac{1}{\text{Precision}}}
 \end{aligned}$$
 

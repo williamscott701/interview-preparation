@@ -2,6 +2,10 @@
 
 Version shown in the top bar of both notes pages. Bumped on every push from here on.
 
+## v1.18 — 2026-07-01
+- §3.3: drop the "Harmonic Mean of Precision & Recall" label from the F1
+  formula — already stated in the bullet notes below
+
 ## v1.17 — 2026-07-01
 - §3.3: add vertical spacing between rows of the aligned formula block
 

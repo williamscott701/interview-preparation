@@ -236,7 +236,7 @@ span.tex math{font-size:1.15em}
 <div id="topbar">
   <button id="tog-btn">☰</button>
   <span id="bar-title">ML / DL Interview Preparation Notes</span>
-  <span id="bar-version">v1.23</span>
+  <span id="bar-version">v1.24</span>
   <a id="cross-link" href="CV_Notes.html">Computer Vision ↗</a>
   <button id="dark-btn">🌙  Dark</button>
 </div>
@@ -1003,8 +1003,21 @@ F_\beta &amp;= \frac{(1 + \beta^2)}{\frac{\beta^2}{\text{Recall}} + \frac{1}{\te
 <h3 id="41-feature-scaling">4.1 Feature Scaling</h3>
 <p><code>image25.png</code>
 <img src="ML%20DL/images/image25.png" alt="Feature Scaling: Normalization vs Standardization" width="560" /></p>
-<p><strong>Normalization (Min-Max Scaling):</strong></p>
-<div class="math-display tex" data-display="1">X_{\text{new}} = \frac{X - X_{\min}}{X_{\max} - X_{\min}} \in [0, 1]</div>
+<p><strong>Normalization (Min-Max Scaling):</strong> — three variants:</p>
+<p><strong>1. Standard Min-Max <span class="tex" data-display="0">[0, 1]</span></strong> — most common; smallest value → 0, largest → 1.</p>
+<div class="math-display tex" data-display="1">x_{\text{scaled}} = \frac{x - \min(x)}{\max(x) - \min(x)}</div>
+<p><em>Use:</em> Neural Networks, KNN — where inputs must be uniform so larger numbers don't dominate.</p>
+<p><strong>2. Custom Range <span class="tex" data-display="0">[a, b]</span></strong> — scale to your own bounds.</p>
+<div class="math-display tex" data-display="1">x_{\text{scaled}} = \frac{x - \min(x)}{\max(x) - \min(x)} \times (b - a) + a</div>
+<p><em>Use:</em> when an algorithm expects a specific range, e.g. <span class="tex" data-display="0">[-1, 1]</span>.</p>
+<p><strong>3. Max-Absolute Scaling (MaxAbs)</strong> — divide by the max absolute value; doesn't shift the minimum, so it preserves the sign and the zeros.</p>
+<div class="math-display tex" data-display="1">x_{\text{scaled}} = \frac{x}{\max(|x|)}</div>
+<p><em>Use:</em> sparse data (many zeros) — it doesn't destroy the zero entries.</p>
+<p><strong>Min-Max — Pros &amp; Cons:</strong></p>
+<ul>
+<li><strong>Pro:</strong> keeps the exact shape and proportional relationships of the original data.</li>
+<li><strong>Con:</strong> highly sensitive to outliers — extreme values compress the rest of the data into a very small range.</li>
+</ul>
 <p><strong>Standardization (Z-score):</strong></p>
 <div class="math-display tex" data-display="1">X' = \frac{X - \mu}{\sigma} \quad \text{(mean=0, std=1)}</div>
 <p><strong>When to Use:</strong></p>

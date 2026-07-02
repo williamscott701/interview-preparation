@@ -2,6 +2,10 @@
 
 Version shown in the top bar of both notes pages. Bumped on every push from here on.
 
+## v1.24 — 2026-07-01
+- §4.1: expand Min-Max normalization into 3 variants (standard [0,1],
+  custom range [a,b], MaxAbs) with formulas, use cases, and pros/cons
+
 ## v1.23 — 2026-07-01
 - Increase formula font size (display ~1.3x, inline ~1.15x)
 

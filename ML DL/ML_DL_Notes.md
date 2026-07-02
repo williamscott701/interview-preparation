@@ -558,9 +558,29 @@ where $n$ = observations, $k$ = number of predictors.
 `image25.png`
 <img src="images/image25.png" alt="Feature Scaling: Normalization vs Standardization" width="560" />
 
-**Normalization (Min-Max Scaling):**
+**Normalization (Min-Max Scaling):** — three variants:
 
-$$X_{\text{new}} = \frac{X - X_{\min}}{X_{\max} - X_{\min}} \in [0, 1]$$
+**1. Standard Min-Max $[0, 1]$** — most common; smallest value → 0, largest → 1.
+
+$$x_{\text{scaled}} = \frac{x - \min(x)}{\max(x) - \min(x)}$$
+
+*Use:* Neural Networks, KNN — where inputs must be uniform so larger numbers don't dominate.
+
+**2. Custom Range $[a, b]$** — scale to your own bounds.
+
+$$x_{\text{scaled}} = \frac{x - \min(x)}{\max(x) - \min(x)} \times (b - a) + a$$
+
+*Use:* when an algorithm expects a specific range, e.g. $[-1, 1]$.
+
+**3. Max-Absolute Scaling (MaxAbs)** — divide by the max absolute value; doesn't shift the minimum, so it preserves the sign and the zeros.
+
+$$x_{\text{scaled}} = \frac{x}{\max(|x|)}$$
+
+*Use:* sparse data (many zeros) — it doesn't destroy the zero entries.
+
+**Min-Max — Pros & Cons:**
+- **Pro:** keeps the exact shape and proportional relationships of the original data.
+- **Con:** highly sensitive to outliers — extreme values compress the rest of the data into a very small range.
 
 **Standardization (Z-score):**
 

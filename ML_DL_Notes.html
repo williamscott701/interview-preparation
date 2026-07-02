@@ -244,7 +244,7 @@ blockquote{border-left:4px solid var(--sa);
 <div id="topbar">
   <button id="tog-btn">☰</button>
   <span id="bar-title">ML / DL Interview Preparation Notes</span>
-  <span id="bar-version">v1.18</span>
+  <span id="bar-version">v1.19</span>
   <a id="cross-link" href="CV_Notes.html">Computer Vision ↗</a>
   <button id="dark-btn">🌙  Dark</button>
 </div>
@@ -918,14 +918,18 @@ F_\beta &= \frac{(1 + \beta^2)}{\frac{\beta^2}{\text{Recall}} + \frac{1}{\text{P
 </tr>
 </tbody>
 </table>
-<p><strong>Micro Averaged metrics given two different set of data:</strong></p>
-<div class="math-display">$$Micro - Precision = \frac{TruePositives1 + TruePositives2}{TruePositives1 + FalsePositives1 + TruePositives2 + FalsePositives2}$$</div>
-<div class="math-display">$$Micro - Recall = \frac{TruePositives1 + TruePositives2}{TruePositives1 + FalseNegatives1 + TruePositives2 + FalseNegatives2}$$</div>
-<div class="math-display">$$Micro - F - Score = 2 \cdot \frac{Micro{-}Precision \cdot Micro{-}Recall}{Micro{-}Precision + Micro{-}Recall}$$</div>
-<p><strong>Macro Averaged metrics with two datasets:</strong></p>
-<div class="math-display">$$Macro - Precision = \frac{Precision1 + Precision2}{2}$$</div>
-<div class="math-display">$$Macro - Recall = \frac{Recall1 + Recall2}{2}$$</div>
-<div class="math-display">$$Macro - F - Score = 2 \cdot \frac{Macro{-}Precision \cdot Macro{-}Recall}{Macro{-}Precision + Macro{-}Recall}$$</div>
+<p><strong>Micro Averaged metrics given two different sets of data</strong> (subscripts 1, 2 = per-class TP/FP/FN):</p>
+<div class="math-display">$$\begin{aligned}
+\text{Micro-Precision} &= \frac{TP_1 + TP_2}{TP_1 + FP_1 + TP_2 + FP_2} \\[10pt]
+\text{Micro-Recall} &= \frac{TP_1 + TP_2}{TP_1 + FN_1 + TP_2 + FN_2} \\[10pt]
+\text{Micro-F1} &= 2 \cdot \frac{\text{Micro-Precision} \cdot \text{Micro-Recall}}{\text{Micro-Precision} + \text{Micro-Recall}}
+\end{aligned}$$</div>
+<p><strong>Macro Averaged metrics with two datasets</strong> (subscripts 1, 2 = per-class Precision/Recall):</p>
+<div class="math-display">$$\begin{aligned}
+\text{Macro-Precision} &= \frac{P_1 + P_2}{2} \\[10pt]
+\text{Macro-Recall} &= \frac{R_1 + R_2}{2} \\[10pt]
+\text{Macro-F1} &= 2 \cdot \frac{\text{Macro-Precision} \cdot \text{Macro-Recall}}{\text{Macro-Precision} + \text{Macro-Recall}}
+\end{aligned}$$</div>
 <ul>
 <li><strong>True Positive Rate (Sensitivity/Recall)</strong> = $TP / P$</li>
 <li><strong>False Positive Rate</strong> = $1 - \text{Specificity}$ = $FP / N$</li>

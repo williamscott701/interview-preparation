@@ -469,21 +469,21 @@ F_\beta &= \frac{(1 + \beta^2)}{\frac{\beta^2}{\text{Recall}} + \frac{1}{\text{P
 | **Imbalanced labels — bias toward most populated** | Use **Micro** averaging |
 | **Imbalanced labels — equal weight to all classes** | Use **Macro** averaging |
 
-**Micro Averaged metrics given two different set of data:**
+**Micro Averaged metrics given two different sets of data** (subscripts 1, 2 = per-class TP/FP/FN):
 
-$$Micro - Precision = \frac{TruePositives1 + TruePositives2}{TruePositives1 + FalsePositives1 + TruePositives2 + FalsePositives2}$$
+$$\begin{aligned}
+\text{Micro-Precision} &= \frac{TP_1 + TP_2}{TP_1 + FP_1 + TP_2 + FP_2} \\[10pt]
+\text{Micro-Recall} &= \frac{TP_1 + TP_2}{TP_1 + FN_1 + TP_2 + FN_2} \\[10pt]
+\text{Micro-F1} &= 2 \cdot \frac{\text{Micro-Precision} \cdot \text{Micro-Recall}}{\text{Micro-Precision} + \text{Micro-Recall}}
+\end{aligned}$$
 
-$$Micro - Recall = \frac{TruePositives1 + TruePositives2}{TruePositives1 + FalseNegatives1 + TruePositives2 + FalseNegatives2}$$
+**Macro Averaged metrics with two datasets** (subscripts 1, 2 = per-class Precision/Recall):
 
-$$Micro - F - Score = 2 \cdot \frac{Micro{-}Precision \cdot Micro{-}Recall}{Micro{-}Precision + Micro{-}Recall}$$
-
-**Macro Averaged metrics with two datasets:**
-
-$$Macro - Precision = \frac{Precision1 + Precision2}{2}$$
-
-$$Macro - Recall = \frac{Recall1 + Recall2}{2}$$
-
-$$Macro - F - Score = 2 \cdot \frac{Macro{-}Precision \cdot Macro{-}Recall}{Macro{-}Precision + Macro{-}Recall}$$
+$$\begin{aligned}
+\text{Macro-Precision} &= \frac{P_1 + P_2}{2} \\[10pt]
+\text{Macro-Recall} &= \frac{R_1 + R_2}{2} \\[10pt]
+\text{Macro-F1} &= 2 \cdot \frac{\text{Macro-Precision} \cdot \text{Macro-Recall}}{\text{Macro-Precision} + \text{Macro-Recall}}
+\end{aligned}$$
 
 - **True Positive Rate (Sensitivity/Recall)** = $TP / P$
 - **False Positive Rate** = $1 - \text{Specificity}$ = $FP / N$

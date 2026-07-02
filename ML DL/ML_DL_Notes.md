@@ -427,6 +427,7 @@ $$\begin{aligned}
 \text{Precision} &= \frac{TP}{TP + FP} \\[10pt]
 \text{Recall (Sensitivity, True Positive Rate)} &= \frac{TP}{TP + FN} \\[10pt]
 \text{Specificity (True Negative Rate)} &= \frac{TN}{TN + FP} \\[10pt]
+\text{False Positive Rate} &= \frac{FP}{FP + TN} = 1 - \text{Specificity} \\[10pt]
 \text{F1} &= \frac{2 \times \text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}} \\[10pt]
 F_\beta &= \frac{(1 + \beta^2)}{\frac{\beta^2}{\text{Recall}} + \frac{1}{\text{Precision}}}
 \end{aligned}$$
@@ -434,6 +435,7 @@ F_\beta &= \frac{(1 + \beta^2)}{\frac{\beta^2}{\text{Recall}} + \frac{1}{\text{P
 - **Precision** — of all positive predictions, how many were correct?
 - **Recall / Sensitivity** — of all actual positives, how many were found?
 - **Specificity** — of all actual negatives, how many were correctly identified?
+- **False Positive Rate** — of all actual negatives, how many were incorrectly flagged positive?
 - **F1** — the harmonic mean of Precision and Recall; equivalently $F1 = \frac{2}{\frac{1}{\text{Precision}} + \frac{1}{\text{Recall}}}$
 - **F-Beta Score** — generalizes F1 with weight $\beta$ on recall:
   - $\beta = 1$: Equal weight to precision and recall (standard F1)
@@ -484,9 +486,6 @@ $$\begin{aligned}
 \text{Macro-Recall} &= \frac{R_1 + R_2}{2} \\[10pt]
 \text{Macro-F1} &= 2 \cdot \frac{\text{Macro-Precision} \cdot \text{Macro-Recall}}{\text{Macro-Precision} + \text{Macro-Recall}}
 \end{aligned}$$
-
-- **True Positive Rate (Sensitivity/Recall)** = $TP / P$
-- **False Positive Rate** = $1 - \text{Specificity}$ = $FP / N$
 
 ---
 

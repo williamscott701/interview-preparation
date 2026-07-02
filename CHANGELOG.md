@@ -2,6 +2,10 @@
 
 Version shown in the top bar of both notes pages. Bumped on every push from here on.
 
+## v1.20 — 2026-07-01
+- §3.3: add False Positive Rate to the aligned formula block + bullet note
+- §3.5: remove the trailing TPR/FPR note now duplicated by §3.3
+
 ## v1.19 — 2026-07-01
 - §3.5: align Micro/Macro formulas (2 groups, "=" aligned + row spacing),
   switch to short forms (TP/FP/FN, P/R) instead of spelled-out names

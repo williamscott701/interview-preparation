@@ -2,6 +2,9 @@
 
 Version shown in the top bar of both notes pages. Bumped on every push from here on.
 
+## v1.6 — 2026-07-01
+- §1.9: split the eigenvector/eigenvalue intro onto separate lines
+
 ## v1.5 — 2026-07-01
 - §1.9: clearer, more intuitive eigenvector/eigenvalue intro
 

@@ -170,7 +170,9 @@ $$H(S) = -\sum_{i=1}^{N} p_i \log_2 p_i = -\frac{9}{14}\log_2\frac{9}{14} - \fra
 
 ### 1.9 Eigenvalues & Eigenvectors
 
-An **eigenvector** is a special non-zero vector that, when transformed by a square matrix, does not change its direction — it is only stretched, squished, or flipped in reverse. An **eigenvalue** is the scalar (a simple number) that tells you how much that eigenvector is stretched or shrunk:
+An **eigenvector** is a special non-zero vector that, when transformed by a square matrix, does not change its direction — it is only stretched, squished, or flipped in reverse.
+
+An **eigenvalue** is the scalar (a simple number) that tells you how much that eigenvector is stretched or shrunk:
 
 $$A \mathbf{v} = \lambda \mathbf{v}$$
 

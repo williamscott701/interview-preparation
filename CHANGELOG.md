@@ -2,6 +2,9 @@
 
 Version shown in the top bar of both notes pages. Bumped on every push from here on.
 
+## v1.5 — 2026-07-01
+- §1.9: clearer, more intuitive eigenvector/eigenvalue intro
+
 ## v1.4 — 2026-07-01
 - New §1.2 Mean, Variance & Standard Deviation (formulas + concise notes);
   renumbered the rest of §1 (1.2-1.8 → 1.3-1.9) and updated the §1.7→§1.8

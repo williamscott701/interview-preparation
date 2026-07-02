@@ -2,6 +2,9 @@
 
 Version shown in the top bar of both notes pages. Bumped on every push from here on.
 
+## v1.13 — 2026-07-01
+- §3.2: add plain-language Bias/Variance definitions before the MSE decomposition
+
 ## v1.12 — 2026-07-01
 - §5.4: add K-Means vs EM comparison table (hard vs soft assignment) + room analogy
 

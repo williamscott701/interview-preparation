@@ -70,6 +70,14 @@ Key distributions: **Uniform, Binomial, Bernoulli, Poisson, Normal, T-distributi
 - **Bernoulli trial**: A single experiment with only two outcomes (success/failure)
 - **Binomial distribution**: Number of successes in a **sequence** of independent Bernoulli experiments
 
+| Feature | Bernoulli Distribution | Binomial Distribution |
+|:---|:---|:---|
+| **Number of Trials (n)** | Exactly 1 trial ($n=1$) | Multiple trials ($n>1$) |
+| **Possible Outcomes** | 0 (Failure) or 1 (Success) | Any integer from 0 to $n$ |
+| **What it Measures** | The result of a single event | The total count of successes |
+| **Parameters** | Probability of success $p$ | Number of trials $n$ and probability of success $p$ |
+| **Real-World Example** | Flipping a coin once to see if it lands on Heads | Flipping a coin 10 times and counting how many times it lands on Heads |
+
 ---
 
 ### 1.5 Gaussian / Normal Distribution

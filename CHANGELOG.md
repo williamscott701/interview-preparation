@@ -2,6 +2,9 @@
 
 Version shown in the top bar of both notes pages. Bumped on every push from here on.
 
+## v1.3 — 2026-07-01
+- §1.4: add a Bernoulli vs Binomial comparison table
+
 ## v1.2 — 2026-07-01
 - §9.4 MLP: add a concise NN → FFNN → MLP hierarchy (diagram + comparison table)
 

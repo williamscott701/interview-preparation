@@ -25,7 +25,7 @@ OUT_FILE   = SCRIPT_DIR.parent / "CV_Notes.html"   # written to the repo root
 
 # Site version — shown in the top bar. Bump on every push (see CHANGELOG.md);
 # kept in sync with ML DL/generate_html.py's SITE_VERSION.
-SITE_VERSION = "v1.20"
+SITE_VERSION = "v1.21"
 
 # Images live in this folder relative to the repo root (space → %20 for URLs).
 IMG_BASE   = "CV"
@@ -709,13 +709,17 @@ _HTML_TEMPLATE = """<!DOCTYPE html>
 <!-- MathJax: render $...$ and $$...$$ -->
 <script>
 MathJax = {
+  loader: { load: ['a11y/assistive-mml'] },
   tex: {
     inlineMath: [['$','$'],['\\\\(','\\\\)']],
     displayMath: [['$$','$$'],['\\\\[','\\\\]']],
     processEscapes: true,
     processEnvironments: true
   },
-  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+  options: {
+    skipHtmlTags: ['script','noscript','style','textarea','pre'],
+    menuOptions: { settings: { assistiveMml: true } }
+  }
 };
 </script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>

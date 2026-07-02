@@ -12,13 +12,17 @@
 <!-- MathJax: render $...$ and $$...$$ -->
 <script>
 MathJax = {
+  loader: { load: ['a11y/assistive-mml'] },
   tex: {
     inlineMath: [['$','$'],['\\(','\\)']],
     displayMath: [['$$','$$'],['\\[','\\]']],
     processEscapes: true,
     processEnvironments: true
   },
-  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+  options: {
+    skipHtmlTags: ['script','noscript','style','textarea','pre'],
+    menuOptions: { settings: { assistiveMml: true } }
+  }
 };
 </script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
@@ -244,7 +248,7 @@ blockquote{border-left:4px solid var(--sa);
 <div id="topbar">
   <button id="tog-btn">☰</button>
   <span id="bar-title">Computer Vision — Interview Notes</span>
-  <span id="bar-version">v1.20</span>
+  <span id="bar-version">v1.21</span>
   <a id="cross-link" href="ML_DL_Notes.html">ML/DL Notes ↗</a>
   <button id="dark-btn">🌙  Dark</button>
 </div>

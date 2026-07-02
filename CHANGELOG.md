@@ -2,6 +2,12 @@
 
 Version shown in the top bar of both notes pages. Bumped on every push from here on.
 
+## v1.21 — 2026-07-01
+- Formulas are now searchable (Ctrl+F) and copyable: enabled MathJax
+  Assistive MathML, which adds a real-text MathML copy of each equation to
+  the DOM. Rendering is unchanged (still CHTML). Copy via right-click →
+  MathJax menu → Copy to Clipboard.
+
 ## v1.20 — 2026-07-01
 - §3.3: add False Positive Rate to the aligned formula block + bullet note
 - §3.5: remove the trailing TPR/FPR note now duplicated by §3.3

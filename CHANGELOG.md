@@ -2,6 +2,9 @@
 
 Version shown in the top bar of both notes pages. Bumped on every push from here on.
 
+## v1.17 — 2026-07-01
+- §3.3: add vertical spacing between rows of the aligned formula block
+
 ## v1.16 — 2026-07-01
 - §3.3: label F1 as "Harmonic Mean of Precision & Recall" directly in the
   aligned formula block

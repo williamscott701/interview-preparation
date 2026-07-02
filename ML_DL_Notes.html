@@ -244,7 +244,7 @@ blockquote{border-left:4px solid var(--sa);
 <div id="topbar">
   <button id="tog-btn">☰</button>
   <span id="bar-title">ML / DL Interview Preparation Notes</span>
-  <span id="bar-version">v1.7</span>
+  <span id="bar-version">v1.8</span>
   <a id="cross-link" href="CV_Notes.html">Computer Vision ↗</a>
   <button id="dark-btn">🌙  Dark</button>
 </div>
@@ -587,57 +587,39 @@ blockquote{border-left:4px solid var(--sa);
 </ul>
 <hr />
 <h3 id="22-statistical-tests-chi-square-vs-t-test">2.2 Statistical Tests: Chi-Square vs T-Test</h3>
-<h4>Chi-Square Test</h4>
-<ul>
-<li><strong>Purpose</strong>: Test for significant <strong>association between categorical variables</strong></li>
-<li><strong>Types</strong>:
-<ul>
-<li><em>Test of independence</em>: Are two categorical variables related?</li>
-<li><em>Goodness of fit</em>: Do observed data fit a theoretical distribution?</li>
-</ul>
-</li>
-<li><strong>Data Type</strong>: Categorical</li>
-<li><strong>Assumptions</strong>: Variables are categorical; observations are independent; expected frequency in each cell ≥ 5</li>
-<li><strong>Statistic</strong>:</li>
-</ul>
-<div class="math-display">$$\chi^2 = \sum \frac{(O - E)^2}{E}$$</div>
-<p>where $O$ = observed frequency, $E$ = expected frequency.</p>
-<h4>T-Test</h4>
-<ul>
-<li><strong>Purpose</strong>: Test for significant <strong>difference between means of two groups</strong></li>
-<li><strong>Types</strong>:
-<ul>
-<li><em>Independent t-test</em>: Two independent groups</li>
-<li><em>Paired t-test</em>: Two related groups (e.g., before/after)</li>
-</ul>
-</li>
-<li><strong>Data Type</strong>: Numerical (continuous)</li>
-<li><strong>Assumptions</strong>: Data approximately normally distributed; equal variances; independent observations</li>
-</ul>
-<h4>Key Differences</h4>
 <table>
 <thead>
 <tr>
 <th style="text-align:left"></th>
-<th style="text-align:left">Chi-Square</th>
+<th style="text-align:left">Chi-Square Test</th>
 <th style="text-align:left">T-Test</th>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left"><strong>Purpose</strong></td>
+<td style="text-align:left">Test for significant association between <strong>categorical variables</strong></td>
+<td style="text-align:left">Test for significant difference between the <strong>means of two groups</strong></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Types</strong></td>
+<td style="text-align:left"><em>Test of independence</em> (are two categorical variables related?); <em>Goodness of fit</em> (do observed data fit a theoretical distribution?)</td>
+<td style="text-align:left"><em>Independent t-test</em> (two independent groups); <em>Paired t-test</em> (two related groups, e.g. before/after)</td>
+</tr>
 <tr>
 <td style="text-align:left"><strong>Data Type</strong></td>
 <td style="text-align:left">Categorical</td>
 <td style="text-align:left">Numerical (continuous)</td>
 </tr>
 <tr>
-<td style="text-align:left"><strong>Purpose</strong></td>
-<td style="text-align:left">Association between variables</td>
-<td style="text-align:left">Difference in means</td>
+<td style="text-align:left"><strong>Assumptions</strong></td>
+<td style="text-align:left">Variables are categorical; observations are independent; expected frequency in each cell ≥ 5</td>
+<td style="text-align:left">Data approximately normally distributed; equal variances; independent observations</td>
 </tr>
 <tr>
-<td style="text-align:left"><strong>Assumptions</strong></td>
-<td style="text-align:left">Categorical data, independence</td>
-<td style="text-align:left">Normal distribution, independence</td>
+<td style="text-align:left"><strong>Statistic</strong></td>
+<td style="text-align:left">$\chi^2 = \sum \frac{(O - E)^2}{E}$, where $O$ = observed, $E$ = expected frequency</td>
+<td style="text-align:left">See §2.3 for the t-statistic formula</td>
 </tr>
 </tbody>
 </table>

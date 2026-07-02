@@ -257,36 +257,13 @@ A framework to make inferences about a population based on sample data.
 
 ### 2.2 Statistical Tests: Chi-Square vs T-Test
 
-#### Chi-Square Test
-
-- **Purpose**: Test for significant **association between categorical variables**
-- **Types**:
-  - *Test of independence*: Are two categorical variables related?
-  - *Goodness of fit*: Do observed data fit a theoretical distribution?
-- **Data Type**: Categorical
-- **Assumptions**: Variables are categorical; observations are independent; expected frequency in each cell ≥ 5
-- **Statistic**:
-
-$$\chi^2 = \sum \frac{(O - E)^2}{E}$$
-
-where $O$ = observed frequency, $E$ = expected frequency.
-
-#### T-Test
-
-- **Purpose**: Test for significant **difference between means of two groups**
-- **Types**:
-  - *Independent t-test*: Two independent groups
-  - *Paired t-test*: Two related groups (e.g., before/after)
-- **Data Type**: Numerical (continuous)
-- **Assumptions**: Data approximately normally distributed; equal variances; independent observations
-
-#### Key Differences
-
-| | Chi-Square | T-Test |
+| | Chi-Square Test | T-Test |
 |:---|:---|:---|
+| **Purpose** | Test for significant association between **categorical variables** | Test for significant difference between the **means of two groups** |
+| **Types** | *Test of independence* (are two categorical variables related?); *Goodness of fit* (do observed data fit a theoretical distribution?) | *Independent t-test* (two independent groups); *Paired t-test* (two related groups, e.g. before/after) |
 | **Data Type** | Categorical | Numerical (continuous) |
-| **Purpose** | Association between variables | Difference in means |
-| **Assumptions** | Categorical data, independence | Normal distribution, independence |
+| **Assumptions** | Variables are categorical; observations are independent; expected frequency in each cell ≥ 5 | Data approximately normally distributed; equal variances; independent observations |
+| **Statistic** | $\chi^2 = \sum \frac{(O - E)^2}{E}$, where $O$ = observed, $E$ = expected frequency | See §2.3 for the t-statistic formula |
 
 ---
 

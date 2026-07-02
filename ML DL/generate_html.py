@@ -25,7 +25,7 @@ OUT_FILE   = SCRIPT_DIR.parent / "ML_DL_Notes.html"   # written to the repo root
 
 # Site version — shown in the top bar. Bump on every push (see CHANGELOG.md);
 # kept in sync with CV/generate_html.py's SITE_VERSION.
-SITE_VERSION = "v1.22"
+SITE_VERSION = "v1.23"
 
 # Images live in this folder relative to the repo root (space → %20 for URLs).
 IMG_BASE   = "ML%20DL"
@@ -422,6 +422,8 @@ blockquote{border-left:4px solid var(--sa);
 .math-display{overflow-x:auto;margin:14px 0;padding:12px 18px;text-align:center;
   background:var(--bg-sub);border:1px solid var(--border);
   border-left:3px solid var(--sa);border-radius:10px}
+.math-display math{font-size:1.3em}
+span.tex math{font-size:1.15em}
 
 /* ─ Images ──────────────────────────────────────────────── */
 .img-fig{position:relative;margin:20px 0;text-align:center}

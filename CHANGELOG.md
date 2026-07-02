@@ -2,6 +2,9 @@
 
 Version shown in the top bar of both notes pages. Bumped on every push from here on.
 
+## v1.23 — 2026-07-01
+- Increase formula font size (display ~1.3x, inline ~1.15x)
+
 ## v1.22 — 2026-07-01
 - Formulas are now genuinely searchable (Ctrl+F) and selectable: switched
   math rendering from MathJax to **Temml** (LaTeX → native browser MathML).

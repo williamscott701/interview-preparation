@@ -260,7 +260,7 @@ A framework to make inferences about a population based on sample data.
 | | Chi-Square Test | T-Test |
 |:---|:---|:---|
 | **Purpose** | Test for significant association between **categorical variables** | Test for significant difference between the **means of two groups** |
-| **Types** | *Test of independence* (are two categorical variables related?); *Goodness of fit* (do observed data fit a theoretical distribution?) | *Independent t-test* (two independent groups); *Paired t-test* (two related groups, e.g. before/after) |
+| **Types** | *Test of independence* (are two categorical variables related?)<br>*Goodness of fit* (do observed data fit a theoretical distribution?) | *Independent t-test* (two independent groups)<br>*Paired t-test* (two related groups, e.g. before/after) |
 | **Data Type** | Categorical | Numerical (continuous) |
 | **Assumptions** | Variables are categorical; observations are independent; expected frequency in each cell ≥ 5 | Data approximately normally distributed; equal variances; independent observations |
 | **Statistic** | $\chi^2 = \sum \frac{(O - E)^2}{E}$, where $O$ = observed, $E$ = expected frequency | See §2.3 for the t-statistic formula |

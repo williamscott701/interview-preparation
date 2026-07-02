@@ -315,8 +315,8 @@ where the numerator is the mean square *between* groups (spread of the group mea
 | **What is fixed** | Distribution parameters | Observed data |
 | **Example** | $P(\text{height} > 170 \mid \mu = 170, \sigma = 3.5)$ | $\mathcal{L}(\mu, \sigma \mid \text{height} > 170)$ |
 
-- **Probability**: Feature values vary; distribution parameters are fixed
-- **Likelihood**: Parameters vary; observed data is fixed — we find which parameters best explain the observed data
+- **Probability** measures the likelihood of an event occurring based on a given distribution
+- **Likelihood** measures the plausibility of different parameter values within a statistical model, based on observed data
 
 ---
 

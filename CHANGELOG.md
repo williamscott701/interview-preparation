@@ -2,6 +2,10 @@
 
 Version shown in the top bar of both notes pages. Bumped on every push from here on.
 
+## v1.11 — 2026-07-01
+- §2.4: keep both Probability/Likelihood definitions — new phrasing plus the
+  original as a nested sub-bullet under each
+
 ## v1.10 — 2026-07-01
 - §2.4: clearer Probability vs Likelihood definitions
 

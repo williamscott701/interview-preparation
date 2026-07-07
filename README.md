@@ -40,11 +40,11 @@ Plus a large **References** section with curated reading, grouped by topic.
 
 ## ✨ Reading experience
 
-The HTML pages are **single self-contained files** (inline CSS/JS — only MathJax and the web font load from a CDN) and include:
+The HTML pages are **single self-contained files** (inline CSS/JS — only [Temml](https://temml.org/) and the Google Fonts web fonts load from a CDN) and include:
 
 - 🎨 **Per-section accent colors** and a collapsible **sidebar** with live **scroll-spy**
 - 🌙 **Dark mode** toggle and a **reading-progress** bar
-- ∑ **LaTeX math** via MathJax, with multi-line equations aligned on `=`
+- ∑ **LaTeX math** via Temml, rendered client-side to native (searchable/selectable) MathML — with multi-line equations aligned on `=`
 - 🖼️ **Image controls** — hover any figure for its filename and a size control (S / M / L / Full + slider); the chosen size is **remembered per image**
 - 🔗 GitHub-style heading anchors and a cross-link between the two documents
 
@@ -58,6 +58,7 @@ The HTML pages are **single self-contained files** (inline CSS/JS — only MathJ
 ├── ML_DL_Notes.html      # Generated ML/DL site  (images → ML%20DL/images/…)
 ├── CV_Notes.html         # Generated Computer Vision site  (images → CV/images/…)
 ├── .nojekyll             # Serve folders/paths verbatim on GitHub Pages
+├── CHANGELOG.md          # Version history shown in the top bar of both pages
 │
 ├── ML DL/
 │   ├── ML_DL_Notes.md    # Source notes (edit this)
@@ -100,9 +101,9 @@ python3 "CV/generate_html.py"      # → CV_Notes.html
 1. **Protect math** — `$…$` / `$$…$$` are stashed so Markdown can't mangle them, and consecutive `=` lines are merged into an aligned block.
 2. **Render** with `markdown-it-py` (CommonMark + GFM tables + raw HTML) so output matches a Markdown preview exactly.
 3. **Post-process** — restore math, add GitHub-style heading IDs, wrap each `##` section in a colored card (the title block and Table of Contents are dropped from the page since the top bar and sidebar replace them), and rewrite image paths for the repo-root layout.
-4. **Assemble** the final document with inline CSS/JS, MathJax, the sidebar, and the image/size controls.
+4. **Assemble** the final document with inline CSS/JS, the Temml math renderer, the sidebar, and the image/size controls.
 
-Math and the Inter web font require an internet connection to render; everything else works offline.
+The script installs `markdown-it-py` automatically via `pip` on first run if it isn't already present. Math (Temml) and the Inter/JetBrains Mono web fonts are loaded from CDNs at page view time, so viewing the HTML requires an internet connection; everything else (layout, dark mode, image controls) works offline.
 
 ---
 
@@ -110,3 +111,4 @@ Math and the Inter web font require an internet connection to render; everything
 
 - Content is compiled from personal interview-preparation materials and a range of public resources (linked in the References section of the ML/DL notes).
 - The `raw/` folders keep the original Google-Doc exports for reference.
+- See [`CHANGELOG.md`](CHANGELOG.md) for the version history (the version number shown in the top bar of both pages is bumped on every change).
